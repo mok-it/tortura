@@ -40,9 +40,16 @@ fun CreateTeam(competition: Competition) {
                         Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                             Row {
                                 Text(team.id.toString())
-                                //Button(onClick = { teams.remove(team) }) {}
-                                IconButton(onClick = { teams.remove(team) }, modifier = Modifier.size(90.dp)) {
-                                    Icon(Icons.Filled.Delete, "asdf")
+                                IconButton(onClick = {
+                                    teams.remove(team)
+                                    for (i in 0..<teams.size) {
+                                        if (teams[i].id > team.id) {
+                                            val t = teams.removeAt(i)
+                                            teams.add(i, Team(t.id - 1, t.students, t.competition))
+                                        }
+                                    }
+                                }, modifier = Modifier.size(90.dp)) {
+                                    Icon(Icons.Filled.Delete, "Törlés")
                                 }
                             }
 
@@ -90,4 +97,14 @@ fun CreateTeam(competition: Competition) {
         }
     }
 
+    fun deleteTeam(team: Team) {
+        teams.remove(team)
+        for (t in teams) {
+            if (t.id > team.id) {
+                teams.remove(t)
+                teams.add(Team(t.id - 1, t.students, t.competition))
+            }
+        }
+    }
 }
+
