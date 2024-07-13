@@ -1,5 +1,7 @@
 package ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -14,11 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import model.Student
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun StudentCard(s: Student, onDeleteStudent: () -> Unit) {
+fun StudentCard(s: Student, interactionSource: MutableInteractionSource, onDeleteStudent: () -> Unit) {
     var student by remember { mutableStateOf(s) }
 
-    Card(modifier = Modifier.padding(8.dp)) {
+    Card(
+        onClick = {},
+        modifier = Modifier.padding(8.dp),
+        interactionSource = interactionSource
+    ) {
         Column {
             Row {
                 TextField(
@@ -30,6 +37,20 @@ fun StudentCard(s: Student, onDeleteStudent: () -> Unit) {
                     label = { Text("Diák neve") }
                 )
                 IconButton(onClick = onDeleteStudent) { Icon(Icons.Filled.Delete, "Diák törlése") }
+//                IconButton(
+//                    modifier = Modifier
+//                        .draggableHandle(
+//                            onDragStarted = {
+//                            },
+//                            onDragStopped = {
+//                            },
+//                            interactionSource = interactionSource,
+//                        )
+//                        .clearAndSetSemantics { },
+//                    onClick = {},
+//                ) {
+//                    Icon(Icons.Rounded.Settings, contentDescription = "Reorder")
+//                }
             }
             Row {
                 TextField(

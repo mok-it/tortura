@@ -9,14 +9,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.dp
 import model.Competition
 import model.Student
@@ -27,7 +27,7 @@ import viewmodel.CreateTeamViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun CreateTeam(competition: Competition) {
+fun CreateTeam2(competition: Competition) {
     val viewModel = CreateTeamViewModel(competition)
     val teams = remember { viewModel.teams }
 
@@ -66,11 +66,54 @@ fun CreateTeam(competition: Competition) {
 
                             val interactionSource = remember { MutableInteractionSource() }
 
-                            StudentCard(student, interactionSource) {
-                                teams.remove(team)
-                                val students = team.students
-                                students.remove(student)
-                                teams.add(Team(team.id, students, team.competition))
+                            Card(
+                                onClick = {},
+                                modifier = Modifier.padding(8.dp),
+                                interactionSource = interactionSource
+                            ) {
+                                Column {
+                                    Row {
+                                        TextField(
+                                            modifier = Modifier.padding(8.dp),
+                                            value = student.name,
+                                            onValueChange = { /*student = student.copy(name = it)*/ },
+                                            enabled = true,
+                                            leadingIcon = { Icon(Icons.Filled.Person, "Diák neve") },
+                                            label = { Text("Diák neve") }
+                                        )
+                                        IconButton(onClick = {  }) { Icon(Icons.Filled.Delete, "Diák törlése") }
+                IconButton(
+                    modifier = Modifier
+                        .draggableHandle(
+                            onDragStarted = {
+                            },
+                            onDragStopped = {
+                            },
+                            interactionSource = interactionSource,
+                        )
+                        .clearAndSetSemantics { },
+                    onClick = {},
+                ) {
+                    Icon(Icons.Rounded.Settings, contentDescription = "Reorder")
+                }
+                                    }
+                                    Row {
+                                        TextField(
+                                            modifier = Modifier.padding(8.dp),
+                                            value = student.group,
+                                            leadingIcon = { Icon(Icons.Filled.Home, "Csoport") },
+                                            onValueChange = { /*student = student.copy(group = it)*/ },
+                                            label = { Text("Csoport") }
+                                        )
+                                        TextField(
+                                            modifier = Modifier.padding(8.dp),
+                                            value = student.klass,
+                                            leadingIcon = { Icon(Icons.Filled.DateRange, "Osztály") },
+                                            onValueChange = { /*student = student.copy(klass = it)*/ },
+                                            label = { Text("Osztály") }
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
