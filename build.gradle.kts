@@ -21,6 +21,7 @@ dependencies {
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
     implementation("sh.calvin.reorderable:reorderable:2.1.1")
+    implementation("org.jetbrains.androidx.navigation:navigation-compose:2.7.0-alpha07")
 }
 
 compose.desktop {

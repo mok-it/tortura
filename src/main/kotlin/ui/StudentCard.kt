@@ -25,7 +25,6 @@ fun StudentCard(s: Student, onDeleteStudent: () -> Unit) {
                     modifier = Modifier.padding(8.dp),
                     value = student.name,
                     onValueChange = { student = student.copy(name = it) },
-                    enabled = true,
                     leadingIcon = { Icon(Icons.Filled.Person, "Diák neve") },
                     label = { Text("Diák neve") }
                 )

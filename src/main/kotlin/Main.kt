@@ -3,23 +3,21 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import model.Block
-import model.Competition
-import model.Task
-import ui.CreateTeam
+import navigation.NavGraph
 
 @Composable
 @Preview
 fun App() {
 
     MaterialTheme {
-        CreateTeam(
-            Competition(
-                "ABC", listOf(
-                    Block(listOf(Task("Micimackó?", "42")), 1)
-                )
-            )
-        )
+        NavGraph()
+//        CreateTeam(
+//            Competition(
+//                "ABC", listOf(
+//                    Block(listOf(Task("Micimackó?", "42")), 1)
+//                )
+//            )
+//        )
     }
 }
 

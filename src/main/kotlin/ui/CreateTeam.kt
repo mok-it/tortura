@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import model.Competition
 import model.Student
 import model.Team
@@ -26,8 +27,12 @@ import viewmodel.CreateTeamViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CreateTeam(competition: Competition) {
-    val viewModel = CreateTeamViewModel(competition)
+fun CreateTeam(
+    competition: Competition,
+    onNext: () -> Unit,
+    viewModel: CreateTeamViewModel = viewModel { CreateTeamViewModel(competition) }
+) {
+    //val viewModel = CreateTeamViewModel(competition)
     val teams = remember { viewModel.teams }
 
     val lazyListState = rememberLazyListState()
@@ -95,6 +100,11 @@ fun CreateTeam(competition: Competition) {
                             Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
                             Text("Csapat hozzáadása")
                         }
+                    }
+                }
+                item {
+                    Button(onClick = onNext) {
+                        Text("Tovább")
                     }
                 }
             }
