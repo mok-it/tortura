@@ -31,7 +31,7 @@ fun NavGraph(
             )
         }
         composable(Screen.CreateTasks.route) {
-            CreateTask(Competition("", emptyList()))
+            CreateTask()
         }
     }
 }

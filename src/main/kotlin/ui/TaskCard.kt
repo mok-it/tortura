@@ -8,28 +8,32 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import model.Task
 
 @Composable
-fun TaskCard(t: Task, onDeleteTask: () -> Unit) {
-    var task by remember { mutableStateOf(t) }
+fun TaskCard(
+    task: Task,
+    onChangeText: (String) -> Unit,
+    onChangeSolution: (String) -> Unit,
+    onDeleteTask: () -> Unit
+) {
     Card(modifier = Modifier.padding(8.dp)) {
         Column {
             Row {
                 TextField(
                     modifier = Modifier.padding(8.dp),
                     value = task.text,
-                    onValueChange = { task = task.copy(text = it) },
+                    onValueChange = onChangeText,
                     leadingIcon = { Icon(Icons.Filled.Edit, "Feladat szövege") },
                     label = { Text("Feladat szövege") }
                 )
                 TextField(
                     modifier = Modifier.padding(8.dp),
                     value = task.solution,
-                    onValueChange = { task = task.copy(solution = it) },
+                    onValueChange = onChangeSolution,
                     leadingIcon = { Icon(Icons.Filled.Check, "Feladat megoldása") },
                     label = { Text("Feladat megoldása") }
                 )
