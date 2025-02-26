@@ -10,6 +10,8 @@ import model.Competition
 import model.Task
 import ui.CreateTask
 import ui.CreateTeam
+import ui.Menu
+import kotlin.system.exitProcess
 
 @Composable
 fun NavGraph(
@@ -17,7 +19,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.CreateTeams.route
+        startDestination = Screen.Menu.route
     ) {
         composable(Screen.CreateTeams.route) {
             CreateTeam(
@@ -32,6 +34,13 @@ fun NavGraph(
         }
         composable(Screen.CreateTasks.route) {
             CreateTask()
+        }
+        composable(Screen.Menu.route) {
+            Menu(
+                onCompetitionCreation = { navController.navigate(Screen.CreateTasks.route) },
+                onTeamCreation = { navController.navigate(Screen.CreateTasks.route) },
+                onExit = { exitProcess(0) }
+            )
         }
     }
 }
