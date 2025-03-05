@@ -38,7 +38,7 @@ fun NavGraph(
         composable(Screen.Menu.route) {
             Menu(
                 onCompetitionCreation = { navController.navigate(Screen.CreateTasks.route) },
-                onTeamCreation = { navController.navigate(Screen.CreateTasks.route) },
+                onTeamCreation = { navController.navigate(Screen.CreateTeams.route) },
                 onExit = { exitProcess(0) }
             )
         }
