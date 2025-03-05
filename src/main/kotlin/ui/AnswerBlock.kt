@@ -3,6 +3,7 @@ package ui
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
@@ -21,25 +22,27 @@ import model.Task
 fun AnswerBlock(
     block: Block,
     indexOffset: Int = 0,
-    onCheckSolutions: (List<String>) -> Unit
+    onCheckSolutions: (List<String>) -> Unit,
+    textColor: Color = Color.Unspecified,
+    backgroundColor: Color = Color.Unspecified,
 ) {
 
     val solution = remember { mutableStateOf(List(block.tasks.size) { "" }) }
 
-    Column {
+    Column{
         for( i in 0..<block.tasks.size ) {
 
             val task = block.tasks[i]
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.border(1.dp, Color.Blue)
+                modifier = Modifier.border(1.dp, if(backgroundColor == Color.Unspecified) Color.Blue else backgroundColor),
             ) {
                 Text(
                     text ="${indexOffset + block.tasks.indexOf(task) + 1}.",
                     fontSize = 40.sp,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.width(100.dp)
+                    modifier = Modifier.width(100.dp),
                 )
                 Text(
                     text = task.text,
@@ -63,16 +66,17 @@ fun AnswerBlock(
         Spacer(modifier = Modifier.height(25.dp))
         Button(
             onClick = { onCheckSolutions( solution.value ) },
-            modifier = Modifier.align(Alignment.End)
+            modifier = Modifier.align(Alignment.End),
+            colors = buttonColors( backgroundColor = backgroundColor )
         ){
-            Text("Ellenőrzés")
+            Text(text= "Ellenőrzés", color= textColor)
         }
 
     }
 }
 
 @Composable
-fun SolveBlockPreview() {
+fun AnswerBlockPreview() {
 
     val block = Block( listOf(
         Task("The path of the righteous man is beset on all sides by the\n" +
