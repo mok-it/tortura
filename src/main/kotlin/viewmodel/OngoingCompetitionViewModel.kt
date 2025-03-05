@@ -34,7 +34,7 @@ class OngoingCompetitionViewModel : ViewModel() {
     val teams = mutableListOf(
         Team(mutableListOf(Student("Anna"), Student("Béla"))),
         Team(mutableListOf(Student("Cecil"), Student("Dénes"))),
-        Team(mutableListOf(Student("Erik"), Student("Ferenc"))),
+        Team(mutableListOf(Student("Ezékiel"), Student("Ferenc"))),
         Team(mutableListOf(Student("Gábor"), Student("Hanna"))),
         Team(mutableListOf(Student("Ivett"), Student("János"))),
         Team(mutableListOf(Student("Kata"), Student("László"))),

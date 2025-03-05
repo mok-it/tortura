@@ -11,7 +11,7 @@ class CreateTeamAssignmentViewModel(val competition: ProblemSet) : ViewModel() {
     val teams =
         mutableStateListOf(
             Team(mutableListOf(Student("Ádám"), Student("Béla"), Student("Cecil"))),
-            Team(mutableListOf(Student("Dénes"), Student("Elemér"), Student("Ferenc"))),
+            Team(mutableListOf(Student("Dénes"), Student("Ezékiel"), Student("Ferenc"))),
             Team(mutableListOf(Student("Géza"), Student("Hilbert"), Student("Imre")))
         )
 
