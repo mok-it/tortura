@@ -21,12 +21,15 @@ import model.Task
 fun AnswerBlock(
     block: Block,
     indexOffset: Int = 0,
-    onCheckSolutions: () -> Unit
+    onCheckSolutions: (List<String>) -> Unit
 ) {
-    Column {
-        for( task in block.tasks ) {
 
-            val solution = remember { mutableStateOf("") }
+    val solution = remember { mutableStateOf(List(block.tasks.size) { "" }) }
+
+    Column {
+        for( i in 0..<block.tasks.size ) {
+
+            val task = block.tasks[i]
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -47,15 +50,19 @@ fun AnswerBlock(
                         .width(300.dp)
                 )
                 TextField(
-                    value = solution.value,
-                    onValueChange = { solution.value = it },
+                    value = solution.value[i],
+                    onValueChange = {
+                                        val list = solution.value.toMutableList()
+                                        list[i] = it
+                                        solution.value = list
+                                    },
                     modifier = Modifier.width(100.dp).padding(0.dp,0.dp,10.dp,0.dp)
                 )
             }
         }
         Spacer(modifier = Modifier.height(25.dp))
         Button(
-            onClick = onCheckSolutions,
+            onClick = { onCheckSolutions( solution.value ) },
             modifier = Modifier.align(Alignment.End)
         ){
             Text("Ellenőrzés")
@@ -86,5 +93,11 @@ fun SolveBlockPreview() {
             "And you will know\n" +
             "My name is the Lord when I lay my vengeance upon thee", "25"), Task("Micimackó","17")
     ),1 )
-    AnswerBlock( block, 3, {})
+    AnswerBlock(
+        block,
+        3,
+        { list ->
+            list.forEachIndexed { index, solution -> println("${index+1}. mo:  $solution") }
+        }
+    )
 }

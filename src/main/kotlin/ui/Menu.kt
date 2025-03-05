@@ -27,6 +27,5 @@ fun Menu( onCompetitionCreation: () -> Unit = {},
         Button(onClick = onExit) {
             Text("Exit")
         }
-        SolveBlockPreview()
     }
 }
