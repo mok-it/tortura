@@ -3,7 +3,7 @@ package ui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
@@ -17,12 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import model.Competition
 import model.Student
 import model.Team
-import sh.calvin.reorderable.ReorderableItem
-import sh.calvin.reorderable.rememberReorderableLazyListState
 import viewmodel.CreateTeamViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -30,52 +27,39 @@ import viewmodel.CreateTeamViewModel
 fun CreateTeam(
     competition: Competition,
     onNext: () -> Unit,
-    viewModel: CreateTeamViewModel = viewModel { CreateTeamViewModel(competition) }
 ) {
-    //val viewModel = CreateTeamViewModel(competition)
+    val viewModel = CreateTeamViewModel(competition)
     val teams = remember { viewModel.teams }
 
     val lazyListState = rememberLazyListState()
-    val reorderableLazyListState = rememberReorderableLazyListState(lazyListState) { from, to ->
-        viewModel.moveStudent(from, to)
-    }
 
     Row {
         Surface {
             LazyColumn(state = lazyListState) {
-
-                for (team in teams.sortedBy { it.id }) {
+                for (team in teams) {
                     stickyHeader {
                         Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("${team.id}. csapat", modifier = Modifier.padding(end = 8.dp))
+                                Text("${teams.indexOf(team) + 1}. csapat", modifier = Modifier.padding(end = 8.dp))
                                 IconButton(onClick = {
                                     teams.remove(team)
-                                    for (i in 0..<teams.size) {
-                                        if (teams[i].id > team.id) {
-                                            val t = teams.removeAt(i)
-                                            teams.add(i, Team(t.id - 1, t.students, t.competition))
-                                        }
-                                    }
                                 }, modifier = Modifier.size(40.dp)) {
                                     Icon(Icons.Filled.Delete, "Csapat törlése")
                                 }
                             }
-
                         }
                     }
 
-                    itemsIndexed(team.students, key = { _, student -> student.id }) { index, student ->
-                        ReorderableItem(reorderableLazyListState, key = student.id) { isDragging ->
+                    items(team.students) { student ->
 
-                            StudentCard(student) {
-                                teams.remove(team)
-                                val students = team.students
-                                students.remove(student)
-                                teams.add(Team(team.id, students, team.competition))
-                            }
+                        StudentCard(student) {
+                            teams.remove(team)
+                            val students = team.students
+                            students.remove(student)
+                            teams.add(Team(students))
                         }
                     }
+
                     item {
                         Button(
                             onClick = {
@@ -90,33 +74,24 @@ fun CreateTeam(
                             }
                         }
                     }
-                }
 
-                item {
-                    Button(shape = CircleShape, onClick = {
-                        teams.add(Team(viewModel.newTeamId(), mutableListOf(), competition))
-                    }) {
-                        Row {
-                            Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
-                            Text("Csapat hozzáadása")
+
+                    item {
+                        Button(shape = CircleShape, onClick = {
+                            teams.add(Team(mutableListOf()))
+                        }) {
+                            Row {
+                                Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
+                                Text("Csapat hozzáadása")
+                            }
+                        }
+                    }
+                    item {
+                        Button(onClick = onNext) {
+                            Text("Tovább")
                         }
                     }
                 }
-                item {
-                    Button(onClick = onNext) {
-                        Text("Tovább")
-                    }
-                }
-            }
-        }
-    }
-
-    fun deleteTeam(team: Team) {
-        teams.remove(team)
-        for (t in teams) {
-            if (t.id > team.id) {
-                teams.remove(t)
-                teams.add(Team(t.id - 1, t.students, t.competition))
             }
         }
     }
