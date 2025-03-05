@@ -23,7 +23,7 @@ fun OngoingCompetition() {
 
     var tabIndex by remember { mutableStateOf(0) }
 
-    val tabs = viewModel.teams.map { team -> team.id.toString() }
+    val tabs = viewModel.teams.map { team -> viewModel.teams.indexOf(team).toString() }
 
     Column(
         modifier = Modifier
@@ -33,20 +33,21 @@ fun OngoingCompetition() {
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        for( i in tabs.indices ){
+        for (i in tabs.indices) {
             val colors = when (i) {
                 in 0..3 -> CategoryColors.BOCS
                 in 4..6 -> CategoryColors.KIS
-                in 7.. 9 -> CategoryColors.NAGY
+                in 7..9 -> CategoryColors.NAGY
                 else -> CategoryColors.JEGES
             }
 
-            if( i == tabIndex ){
+            if (i == tabIndex) {
                 AnswerBlock(
-                    viewModel.teams[ i ].competition.blocks[0],
+                    //viewModel.teams[i].competition.blocks[0],
+                    viewModel.block,
                     0,
                     { list ->
-                        viewModel.onEvent( OnGoingCompetitionEvent.SubmitSolution( viewModel.teams[ i ], list ) )
+                        viewModel.onEvent(OnGoingCompetitionEvent.SubmitSolution(viewModel.teams[i], list))
                     },
                     textColor = colors.textColor,
                     backgroundColor = colors.backgroundColor,
@@ -62,11 +63,12 @@ fun OngoingCompetition() {
                 val colors = when (index) {
                     in 0..3 -> CategoryColors.BOCS
                     in 4..6 -> CategoryColors.KIS
-                    in 7.. 9 -> CategoryColors.NAGY
+                    in 7..9 -> CategoryColors.NAGY
                     else -> CategoryColors.JEGES
                 }
 
-                Tab(text = { Text( text =  title, color = colors.textColor) },
+                Tab(
+                    text = { Text(text = title, color = colors.textColor) },
                     selected = tabIndex == index,
                     onClick = { tabIndex = index },
                     modifier = Modifier.background(color = colors.backgroundColor)

@@ -3,11 +3,11 @@ package viewmodel
 import androidx.compose.foundation.lazy.LazyListItemInfo
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import model.Competition
+import model.ProblemSet
 import model.Student
 import model.Team
 
-class CreateTeamViewModel(val competition: Competition) : ViewModel() {
+class CreateTeamAssignmentViewModel(val competition: ProblemSet) : ViewModel() {
     val teams =
         mutableStateListOf(
             Team(mutableListOf(Student("Ádám"), Student("Béla"), Student("Cecil"))),

@@ -23,7 +23,7 @@ import viewmodel.CreateTaskViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CreateTask(
+fun CreateProblemSet(
 ) {
     val viewModel: CreateTaskViewModel = viewModel { CreateTaskViewModel() }
     val competition by remember { viewModel.competition }

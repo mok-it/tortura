@@ -17,18 +17,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import model.Competition
+import model.ProblemSet
 import model.Student
 import model.Team
-import viewmodel.CreateTeamViewModel
+import viewmodel.CreateTeamAssignmentViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CreateTeam(
-    competition: Competition,
+fun CreateTeamAssignment(
+    competition: ProblemSet,
     onNext: () -> Unit,
 ) {
-    val viewModel = CreateTeamViewModel(competition)
+    val viewModel = CreateTeamAssignmentViewModel(competition)
     val teams = remember { viewModel.teams }
 
     val lazyListState = rememberLazyListState()

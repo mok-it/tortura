@@ -1,6 +1,6 @@
 package model
 
-data class Competition(val name: String, val blocks: List<Block>, val category: String = "") {
+data class ProblemSet(val name: String, val blocks: List<Block>, val category: String = "") {
 
     fun getTotalTasks(): Int {
         var sum = 0

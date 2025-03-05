@@ -3,11 +3,11 @@ package viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import model.Block
-import model.Competition
+import model.ProblemSet
 import model.Task
 
 class CreateTaskViewModel : ViewModel() {
-    val competition = mutableStateOf<Competition>(Competition("", listOf()))
+    val competition = mutableStateOf<ProblemSet>(ProblemSet("", listOf()))
 
 
     private fun addTask(block: Block) {
