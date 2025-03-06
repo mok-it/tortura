@@ -12,14 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.viewmodel.compose.viewModel
 import viewmodel.OnGoingCompetitionEvent
 import viewmodel.OngoingCompetitionViewModel
 
 @Composable
 fun OngoingCompetition() {
 
-    val viewModel: OngoingCompetitionViewModel = viewModel()
+    val viewModel = OngoingCompetitionViewModel()
 
     var tabIndex by remember { mutableStateOf(0) }
 

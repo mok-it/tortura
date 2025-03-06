@@ -10,22 +10,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun Menu( onCompetitionCreation: () -> Unit = {},
-          onTeamCreation: () -> Unit = {},
-          onExit: () -> Unit = {},){
+fun MainMenu(
+        onSetUp: (() -> Unit),
+        onCompetition: (()->Unit),
+        onExit: (()->Unit),
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround,
-    ) {
-        Button(onClick = onCompetitionCreation) {
-            Text("Competition")
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ){
+        Button(onClick = onSetUp ) {
+            Text( text = "SetUp")
         }
-        Button(onClick = onTeamCreation) {
-            Text("Team")
+        Button(onClick = onCompetition ) {
+            Text(text="Tortúra!!!")
         }
-        Button(onClick = onExit) {
-            Text("Exit")
+        Button(onClick = onExit ) {
+            Text(text="Jó éjszakát, szevasztok!")
         }
+
     }
 }

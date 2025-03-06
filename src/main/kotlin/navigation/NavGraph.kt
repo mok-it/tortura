@@ -8,9 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import model.Block
 import model.ProblemSet
 import model.Task
-import ui.CreateProblemSet
-import ui.CreateTeamAssignment
-import ui.Menu
+import ui.*
 import kotlin.system.exitProcess
 
 @Composable
@@ -19,7 +17,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Menu.route
+        startDestination = Screen.MainMenu.route
     ) {
         composable(Screen.CreateTeams.route) {
             CreateTeamAssignment(
@@ -35,12 +33,22 @@ fun NavGraph(
         composable(Screen.CreateTasks.route) {
             CreateProblemSet()
         }
-        composable(Screen.Menu.route) {
-            Menu(
+        composable(Screen.SetUpMenu.route) {
+            SetUpMenu(
                 onCompetitionCreation = { navController.navigate(Screen.CreateTasks.route) },
                 onTeamCreation = { navController.navigate(Screen.CreateTeams.route) },
-                onExit = { exitProcess(0) }
+                onBack = { navController.navigate(Screen.MainMenu.route) }
             )
+        }
+        composable(Screen.MainMenu.route) {
+            MainMenu(
+                onSetUp = { navController.navigate(Screen.SetUpMenu.route) },
+                onCompetition = { navController.navigate(Screen.OngoingCompetition.route) },
+                onExit = { exitProcess(0) },
+            )
+        }
+        composable(Screen.OngoingCompetition.route) {
+            OngoingCompetition()
         }
     }
 }
