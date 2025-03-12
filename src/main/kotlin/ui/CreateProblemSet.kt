@@ -26,7 +26,7 @@ import viewmodel.CreateTaskViewModel
 fun CreateProblemSet(
 ) {
     val viewModel: CreateTaskViewModel = viewModel { CreateTaskViewModel() }
-    val competition by remember { viewModel.competition }
+    val competition by remember { viewModel.problemSet }
     LazyColumn {
         for (block in competition.blocks) {
             stickyHeader {

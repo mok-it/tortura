@@ -21,6 +21,10 @@ enum class CategoryColors(
     JEGES(
         backgroundColor = Color(37, 195, 219),
         textColor = Color.White
+    ),
+    UNDIFINED(
+        backgroundColor = Color.Unspecified,
+        textColor = Color.Unspecified
     )
 
 }

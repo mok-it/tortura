@@ -4,11 +4,15 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults.buttonColors
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,12 +26,13 @@ import model.Task
 fun AnswerBlock(
     block: Block,
     indexOffset: Int = 0,
-    onCheckSolutions: (List<String>) -> Unit,
+    modifyAnswer: (task: Task, newAnswer: Boolean? ) -> Unit,
+    onCheckSolutions: () -> Unit,
     textColor: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
 ) {
 
-    val solution = remember { mutableStateOf(List(block.tasks.size) { "" }) }
+//    val solution = remember { mutableStateOf(List(block.tasks.size) { "" }) }
 
     Column{
         for( i in 0..<block.tasks.size ) {
@@ -52,20 +57,37 @@ fun AnswerBlock(
                         .padding(10.dp,0.dp)
                         .width(300.dp)
                 )
-                TextField(
-                    value = solution.value[i],
-                    onValueChange = {
-                                        val list = solution.value.toMutableList()
-                                        list[i] = it
-                                        solution.value = list
-                                    },
-                    modifier = Modifier.width(100.dp).padding(0.dp,0.dp,10.dp,0.dp)
-                )
+                var answer by remember{ mutableStateOf(false) }
+                IconButton(
+                    onClick = {
+                        modifyAnswer(task, true )
+                        answer = true
+                              },
+                    ){
+                    Icon( if(answer) Icons.Filled.CheckCircle else Icons.Filled.Check, contentDescription = "", tint = Color.Green )
+                }
+                IconButton(
+                    onClick = {
+                        modifyAnswer(task, false )
+                        answer = false
+                    },
+                ){
+                    Icon( if(!answer) Icons.Filled.AccountBox else Icons.Filled.Close, contentDescription = "", tint = Color.Red )
+                }
+//                TextField(
+//                    value = solution.value[i],
+//                    onValueChange = {
+//                                        val list = solution.value.toMutableList()
+//                                        list[i] = it
+//                                        solution.value = list
+//                                    },
+//                    modifier = Modifier.width(100.dp).padding(0.dp,0.dp,10.dp,0.dp)
+//                )
             }
         }
         Spacer(modifier = Modifier.height(25.dp))
         Button(
-            onClick = { onCheckSolutions( solution.value ) },
+            onClick = { onCheckSolutions() },
             modifier = Modifier.align(Alignment.End),
             colors = buttonColors( backgroundColor = backgroundColor )
         ){
@@ -73,35 +95,4 @@ fun AnswerBlock(
         }
 
     }
-}
-
-@Composable
-fun AnswerBlockPreview() {
-
-    val block = Block( listOf(
-        Task("The path of the righteous man is beset on all sides by the\n" +
-            "Inequities of the selfish and the tyranny of evil men\n" +
-            "Blessed is he who, in the name of charity and good will\n" +
-            "shepherds the weak through the valley of darkness\n" +
-            "for he is truly his brother's keeper and the finder of lost children\n" +
-            "And I will strike down upon thee with great vengeance and furious\n" +
-            "Anger those who attempt to poison and destroy my brothers\n" +
-            "And you will know\n" +
-            "My name is the Lord when I lay my vengeance upon theeThe path of the righteous man is beset on all sides by the\n" +
-            "Inequities of the selfish and the tyranny of evil men\n" +
-            "Blessed is he who, in the name of charity and good will\n" +
-            "shepherds the weak through the valley of darkness\n" +
-            "for he is truly his brother's keeper and the finder of lost children\n" +
-            "And I will strike down upon thee with great vengeance and furious\n" +
-            "Anger those who attempt to poison and destroy my brothers\n" +
-            "And you will know\n" +
-            "My name is the Lord when I lay my vengeance upon thee", "25"), Task("Micimackó","17")
-    ),1 )
-    AnswerBlock(
-        block,
-        3,
-        { list ->
-            list.forEachIndexed { index, solution -> println("${index+1}. mo:  $solution") }
-        }
-    )
 }

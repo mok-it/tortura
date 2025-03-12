@@ -2,10 +2,11 @@ package viewmodel
 
 import androidx.lifecycle.ViewModel
 import model.*
+import ui.CategoryColors
 
 class OngoingCompetitionViewModel : ViewModel() {
 
-    val block = Block(
+    private val block = Block(
         listOf(
             Task(
                 "The path of the righteous man is beset on all sides by the\n" +
@@ -29,9 +30,13 @@ class OngoingCompetitionViewModel : ViewModel() {
         ), 1
     )
 
-    val competition = ProblemSet("Teszt", listOf(block, block, block))
+    private val polarBlock = Block( block.tasks.map { task: Task -> Task( "JEGES ${task.text}", task.solution ) }, 2 )
 
-    val teams = mutableListOf(
+    private val problemSet = ProblemSet("Teszt", listOf(block, block, block))
+
+    private val polarProblemSet = ProblemSet("JEGES", listOf(polarBlock, polarBlock))
+
+    private val teams = mutableListOf(
         Team(mutableListOf(Student("Anna"), Student("Béla"))),
         Team(mutableListOf(Student("Cecil"), Student("Dénes"))),
         Team(mutableListOf(Student("Ezékiel"), Student("Ferenc"))),
@@ -48,6 +53,12 @@ class OngoingCompetitionViewModel : ViewModel() {
         Team(mutableListOf(Student("Ádám"), Student("Borbála"))),
         Team(mutableListOf(Student("Csaba"), Student("Dorina")))
     )
+
+    private val teamAssignment = TeamAssignment( "Kibaszott Koalák", teams, CategoryColors.BOCS )
+
+    private val polarTeamAssignment = TeamAssignment( "Jeges", teams, CategoryColors.JEGES )
+
+    val competitions = listOf(Competition(teamAssignment, problemSet),Competition(polarTeamAssignment, polarProblemSet))
 
 
     fun onEvent(event: OnGoingCompetitionEvent) {

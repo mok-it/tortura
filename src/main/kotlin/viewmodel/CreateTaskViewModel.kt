@@ -7,12 +7,12 @@ import model.ProblemSet
 import model.Task
 
 class CreateTaskViewModel : ViewModel() {
-    val competition = mutableStateOf<ProblemSet>(ProblemSet("", listOf()))
+    val problemSet = mutableStateOf<ProblemSet>(ProblemSet("", listOf()))
 
 
     private fun addTask(block: Block) {
-        val blockIndex = competition.value.blocks.indexOf(block)
-        val b = competition.value.blocks.filter { it != block }.toMutableList()
+        val blockIndex = problemSet.value.blocks.indexOf(block)
+        val b = problemSet.value.blocks.filter { it != block }.toMutableList()
         b.add(
             blockIndex,
             block.copy(
@@ -22,32 +22,32 @@ class CreateTaskViewModel : ViewModel() {
                 )
             )
         )
-        competition.value = competition.value.copy(blocks = b)
+        problemSet.value = problemSet.value.copy(blocks = b)
     }
 
     fun onEvent(event: CompetitionEditEvent) {
         when (event) {
             is CompetitionEditEvent.AddTask -> addTask(event.block)
 
-            is CompetitionEditEvent.AddBlock -> competition.value =
-                competition.value.copy(
-                    blocks = competition.value.blocks + Block(listOf(), 0)
+            is CompetitionEditEvent.AddBlock -> problemSet.value =
+                problemSet.value.copy(
+                    blocks = problemSet.value.blocks + Block(listOf(), 0)
                 )
 
             is CompetitionEditEvent.DeleteTask -> {
                 println(event.task.text)
                 val newTasks = event.block.tasks.filter { it != event.task }
                 val newBlock = event.block.copy(tasks = newTasks)
-                val blockIndex = competition.value.blocks.indexOf(event.block)
-                val newBlocks = competition.value.blocks
+                val blockIndex = problemSet.value.blocks.indexOf(event.block)
+                val newBlocks = problemSet.value.blocks
                     .filter { it != event.block }
                     .toMutableList()
                 newBlocks.add(blockIndex, newBlock)
-                competition.value = competition.value.copy(blocks = newBlocks)
+                problemSet.value = problemSet.value.copy(blocks = newBlocks)
             }
 
-            is CompetitionEditEvent.DeleteBlock -> competition.value =
-                competition.value.copy(blocks = competition.value.blocks.filter { it != event.block })
+            is CompetitionEditEvent.DeleteBlock -> problemSet.value =
+                problemSet.value.copy(blocks = problemSet.value.blocks.filter { it != event.block })
 
             is CompetitionEditEvent.ChangeTaskText -> {
                 val newTask = event.task.copy(text = event.text)
@@ -55,10 +55,10 @@ class CreateTaskViewModel : ViewModel() {
                 val newTasks = event.block.tasks.filter { it != event.task }.toMutableList()
                 newTasks.add(taskIndex, newTask)
                 val newBlock = event.block.copy(tasks = newTasks)
-                val blockIndex = competition.value.blocks.indexOf(event.block)
-                val newBocks = competition.value.blocks.filter { it != event.block }.toMutableList()
+                val blockIndex = problemSet.value.blocks.indexOf(event.block)
+                val newBocks = problemSet.value.blocks.filter { it != event.block }.toMutableList()
                 newBocks.add(blockIndex, newBlock)
-                competition.value = competition.value.copy(blocks = newBocks)
+                problemSet.value = problemSet.value.copy(blocks = newBocks)
             }
 
             is CompetitionEditEvent.ChangeTaskSolution -> {
@@ -67,10 +67,10 @@ class CreateTaskViewModel : ViewModel() {
                 val newTasks = event.block.tasks.filter { it != event.task }.toMutableList()
                 newTasks.add(taskIndex, newTask)
                 val newBlock = event.block.copy(tasks = newTasks)
-                val blockIndex = competition.value.blocks.indexOf(event.block)
-                val newBocks = competition.value.blocks.filter { it != event.block }.toMutableList()
+                val blockIndex = problemSet.value.blocks.indexOf(event.block)
+                val newBocks = problemSet.value.blocks.filter { it != event.block }.toMutableList()
                 newBocks.add(blockIndex, newBlock)
-                competition.value = competition.value.copy(blocks = newBocks)
+                problemSet.value = problemSet.value.copy(blocks = newBocks)
             }
 
         }
