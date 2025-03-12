@@ -12,14 +12,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import model.ProblemSet
-import model.Student
-import model.Team
+import viewmodel.CreateTeamAssignmentEvent
 import viewmodel.CreateTeamAssignmentViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -29,20 +29,23 @@ fun CreateTeamAssignment(
     onNext: () -> Unit,
 ) {
     val viewModel = CreateTeamAssignmentViewModel(competition)
-    val teams = remember { viewModel.teams }
+    val teamAssignment by remember { viewModel.teamAssignment }
 
     val lazyListState = rememberLazyListState()
 
     Row {
         Surface {
             LazyColumn(state = lazyListState) {
-                for (team in teams) {
+                for (team in teamAssignment.teams) {
                     stickyHeader {
                         Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                Text("${teams.indexOf(team) + 1}. csapat", modifier = Modifier.padding(end = 8.dp))
+                                Text(
+                                    "${teamAssignment.teams.indexOf(team) + 1}. csapat",
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
                                 IconButton(onClick = {
-                                    teams.remove(team)
+                                    viewModel.onEvent(CreateTeamAssignmentEvent.DeleteTeam(team))
                                 }, modifier = Modifier.size(40.dp)) {
                                     Icon(Icons.Filled.Delete, "Csapat törlése")
                                 }
@@ -51,21 +54,15 @@ fun CreateTeamAssignment(
                     }
 
                     items(team.students) { student ->
-
                         StudentCard(student) {
-                            teams.remove(team)
-                            val students = team.students
-                            students.remove(student)
-                            teams.add(Team(students))
+                            viewModel.onEvent(CreateTeamAssignmentEvent.DeleteMember(team, student))
                         }
                     }
 
                     item {
                         Button(
                             onClick = {
-                                teams.remove(team)
-                                team.students.add(Student(""))
-                                teams.add(team)
+                                viewModel.onEvent(CreateTeamAssignmentEvent.AddStudent(team))
                             },
                         ) {
                             Row {
@@ -78,7 +75,7 @@ fun CreateTeamAssignment(
 
                     item {
                         Button(shape = CircleShape, onClick = {
-                            teams.add(Team(mutableListOf()))
+                            viewModel.onEvent(CreateTeamAssignmentEvent.AddTeam)
                         }) {
                             Row {
                                 Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
@@ -96,4 +93,3 @@ fun CreateTeamAssignment(
         }
     }
 }
-
