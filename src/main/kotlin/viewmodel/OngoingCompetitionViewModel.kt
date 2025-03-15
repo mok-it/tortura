@@ -26,7 +26,7 @@ class OngoingCompetitionViewModel : ViewModel() {
                         "Anger those who attempt to poison and destroy my brothers\n" +
                         "And you will know\n" +
                         "My name is the Lord when I lay my vengeance upon thee", "25"
-            ), Task("Micimackó", "17")
+            ), Task("Micimackó", "17"), Task( solution = "43" ), Task( solution = "43" ), Task( solution = "43" )
         ), 1
     )
 

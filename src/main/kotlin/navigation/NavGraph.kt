@@ -5,10 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import model.Block
-import model.ProblemSet
-import model.Task
-import ui.*
+import ui.screens.*
 import kotlin.system.exitProcess
 
 @Composable
@@ -22,12 +19,6 @@ fun NavGraph(
         composable(Screen.CreateTeams.route) {
             CreateTeamAssignment(
                 onNext = { navController.navigate(Screen.CreateTasks.route) },
-                competition = ProblemSet(
-                    "ABC",
-                    listOf(
-                        Block(listOf(Task("Micimackó?", "42")), 1)
-                    ),
-                )
             )
         }
         composable(Screen.CreateTasks.route) {
@@ -48,7 +39,9 @@ fun NavGraph(
             )
         }
         composable(Screen.OngoingCompetition.route) {
-            OngoingCompetition()
+            OngoingCompetition(
+                onBack = { navController.navigate(Screen.MainMenu.route) },
+            )
         }
     }
 }

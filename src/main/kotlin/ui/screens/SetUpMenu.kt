@@ -1,4 +1,4 @@
-package ui
+package ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,25 +10,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun MainMenu(
-        onSetUp: (() -> Unit),
-        onCompetition: (()->Unit),
-        onExit: (()->Unit),
-) {
+fun SetUpMenu(
+    onCompetitionCreation: () -> Unit = {},
+    onTeamCreation: () -> Unit = {},
+    onBack: () -> Unit = {}
+){
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally,
-    ){
-        Button(onClick = onSetUp ) {
-            Text( text = "SetUp")
+        verticalArrangement = Arrangement.SpaceAround,
+    ) {
+        Button(onClick = onCompetitionCreation) {
+            Text("Feladatsor")
         }
-        Button(onClick = onCompetition ) {
-            Text(text="Tortúra!!!")
+        Button(onClick = onTeamCreation) {
+            Text("Csapatok")
         }
-        Button(onClick = onExit ) {
-            Text(text="Jó éjszakát, szevasztok!")
+        Button(onClick = onBack) {
+            Text("Vissza")
         }
-
     }
 }

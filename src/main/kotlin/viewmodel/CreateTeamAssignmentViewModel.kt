@@ -2,12 +2,11 @@ package viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import model.ProblemSet
 import model.Student
 import model.Team
 import model.TeamAssignment
 
-class CreateTeamAssignmentViewModel(val competition: ProblemSet) : ViewModel() {
+class CreateTeamAssignmentViewModel : ViewModel() {
     val teamAssignment =
         mutableStateOf(
             TeamAssignment(
@@ -22,8 +21,11 @@ class CreateTeamAssignmentViewModel(val competition: ProblemSet) : ViewModel() {
 
     fun onEvent(event: CreateTeamAssignmentEvent) {
         when (event) {
-            is CreateTeamAssignmentEvent.AddTeam -> teamAssignment.value =
-                teamAssignment.value.copy(teams = teamAssignment.value.teams + Team(mutableListOf()))
+            is CreateTeamAssignmentEvent.AddTeam -> {
+                teamAssignment.value =
+                    teamAssignment.value.copy(teams = teamAssignment.value.teams + Team(mutableListOf()))
+                println( "Benne vagyunk az onEventbe jól ${ teamAssignment.value.teams.size } " )
+            }
 
             is CreateTeamAssignmentEvent.AddStudent -> {
                 val newTeam = event.team.copy(

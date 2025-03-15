@@ -1,4 +1,4 @@
-package ui
+package ui.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -18,17 +18,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import model.ProblemSet
+import ui.components.StudentCard
 import viewmodel.CreateTeamAssignmentEvent
 import viewmodel.CreateTeamAssignmentViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CreateTeamAssignment(
-    competition: ProblemSet,
     onNext: () -> Unit,
 ) {
-    val viewModel = CreateTeamAssignmentViewModel(competition)
+    val viewModel = CreateTeamAssignmentViewModel()
     val teamAssignment by remember { viewModel.teamAssignment }
 
     val lazyListState = rememberLazyListState()
@@ -72,21 +71,21 @@ fun CreateTeamAssignment(
                         }
                     }
 
-
-                    item {
-                        Button(shape = CircleShape, onClick = {
-                            viewModel.onEvent(CreateTeamAssignmentEvent.AddTeam)
-                        }) {
-                            Row {
-                                Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
-                                Text("Csapat hozzáadása")
-                            }
+                }
+                item {
+                    Button(shape = CircleShape, onClick = {
+                        println( "Új csapat ${teamAssignment.teams.size}" )
+                        viewModel.onEvent(CreateTeamAssignmentEvent.AddTeam)
+                    }) {
+                        Row {
+                            Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
+                            Text("Csapat hozzáadása")
                         }
                     }
-                    item {
-                        Button(onClick = onNext) {
-                            Text("Tovább")
-                        }
+                }
+                item {
+                    Button(onClick = onNext) {
+                        Text("Tovább")
                     }
                 }
             }
