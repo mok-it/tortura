@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ui.components.StudentCard
 import viewmodel.CreateTeamAssignmentEvent
 import viewmodel.CreateTeamAssignmentViewModel
@@ -27,7 +28,7 @@ import viewmodel.CreateTeamAssignmentViewModel
 fun CreateTeamAssignment(
     onNext: () -> Unit,
 ) {
-    val viewModel = CreateTeamAssignmentViewModel()
+    val viewModel = viewModel { CreateTeamAssignmentViewModel() }
     val teamAssignment by remember { viewModel.teamAssignment }
 
     val lazyListState = rememberLazyListState()
