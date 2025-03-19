@@ -24,15 +24,18 @@ class CreateTeamAssignmentViewModel : ViewModel() {
             is CreateTeamAssignmentEvent.AddTeam -> {
                 teamAssignment.value =
                     teamAssignment.value.copy(teams = teamAssignment.value.teams + Team(mutableListOf()))
-                println( "Benne vagyunk az onEventbe jól ${ teamAssignment.value.teams.size } " )
+                println("Benne vagyunk az onEventbe jól ${teamAssignment.value.teams.size} ")
             }
 
             is CreateTeamAssignmentEvent.AddStudent -> {
+                val teamIndex = teamAssignment.value.teams.indexOf(event.team)
                 val newTeam = event.team.copy(
                     students = (event.team.students + Student("", "", "")).toMutableList()
                 )
+                val newTeams = teamAssignment.value.teams.filter { it != event.team }.toMutableList()
+                newTeams.add(teamIndex, newTeam)
                 teamAssignment.value = teamAssignment.value.copy(
-                    teams = teamAssignment.value.teams.filter { it != event.team } + newTeam
+                    teams = newTeams
                 )
             }
 
