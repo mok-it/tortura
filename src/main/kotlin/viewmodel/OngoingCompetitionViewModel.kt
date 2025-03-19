@@ -1,5 +1,6 @@
 package viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import model.*
 import ui.CategoryColors
@@ -58,13 +59,19 @@ class OngoingCompetitionViewModel : ViewModel() {
 
     private val polarTeamAssignment = TeamAssignment( "Jeges", teams, CategoryColors.JEGES )
 
-    val competitions = listOf(Competition(teamAssignment, problemSet),Competition(polarTeamAssignment, polarProblemSet))
+    private val _competitions = listOf(Competition(teamAssignment, problemSet),Competition(polarTeamAssignment, polarProblemSet))
+
+    val competitions = mutableStateOf(_competitions)
 
 
     fun onEvent(event: OnGoingCompetitionEvent) {
         when (event) {
-            is OnGoingCompetitionEvent.SubmitSolution -> {
-
+            is OnGoingCompetitionEvent.ModifyAnswer -> {
+                val newCompetition = event.competition.answerTask( event.team, event.task, event.newAnswer )
+                val newCompetitionIdx = competitions.value.indexOf(event.competition)
+                val newCompetitions = competitions.value.filter { it != event.competition }.toMutableList()
+                newCompetitions.add(newCompetitionIdx, newCompetition)
+                competitions.value = newCompetitions
             }
         }
 
@@ -72,5 +79,5 @@ class OngoingCompetitionViewModel : ViewModel() {
 }
 
 sealed class OnGoingCompetitionEvent {
-    data class SubmitSolution(val team: Team, val solutions: List<String>) : OnGoingCompetitionEvent()
+    data class ModifyAnswer(val competition: Competition, val team: Team, val task: Task, val newAnswer: SolutionState) : OnGoingCompetitionEvent()
 }

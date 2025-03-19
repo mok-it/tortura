@@ -11,11 +11,9 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import model.Block
+import model.BlockAnswer
 import model.SolutionState
 import model.Task
 
@@ -30,17 +29,22 @@ import model.Task
 fun AnswerBlock(
     block: Block,
     teamName: String,
+    answers: BlockAnswer,
     indexOffset: Int = 0,
     modifyAnswer: (task: Task, newAnswer: SolutionState ) -> Unit,
     onCheckSolutions: () -> Unit,
     textColor: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
+    modifier: Modifier = Modifier,
 ) {
 
-//    val solution = remember { mutableStateOf(List(block.tasks.size) { "" }) }
+    val iconSize = 30.dp
+
+    val currentAnswers = answers.answerHistory.last()
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
     ){
 
         item {
@@ -75,7 +79,7 @@ fun AnswerBlock(
                         minLines = 5,
                         maxLines = 5,
                         modifier = Modifier
-                            .padding(10.dp,0.dp)
+                            .padding(10.dp, 0.dp)
                             .width(300.dp)
                     )
                     Text(
@@ -84,22 +88,54 @@ fun AnswerBlock(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.width(100.dp),
                     )
-                    var answer by remember{ mutableStateOf(SolutionState.EMPTY) }
+                    val answer = currentAnswers[ task ]
                     IconButton(
                         onClick = {
-                            answer = if( answer != SolutionState.CORRECT ) SolutionState.CORRECT else SolutionState.EMPTY
-                            modifyAnswer(task, answer)
+                            //answer = if( answer != SolutionState.CORRECT ) SolutionState.CORRECT else SolutionState.EMPTY
+                            modifyAnswer(task, if( answer != SolutionState.CORRECT ) SolutionState.CORRECT else SolutionState.EMPTY)
                         },
                     ){
-                        Icon( if(answer == SolutionState.CORRECT) Icons.Filled.CheckBox else Icons.Filled.Check, contentDescription = "", tint = Color.Green ) //TODO: szebb ikonok
+                        if( answer == SolutionState.CORRECT ) {
+                            Icon(
+                                Icons.Filled.Check,
+                                contentDescription = "",
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .background(color = Color.Green, shape = RoundedCornerShape(iconSize / 2))
+                                    .size(iconSize)
+                            )
+                        } else {
+                            Icon(
+                                Icons.Filled.Check,
+                                contentDescription = "",
+                                tint = Color.Green,
+                                modifier = Modifier.size(iconSize)
+                            )
+                        }
                     }
                     IconButton(
                         onClick = {
-                            answer = if( answer != SolutionState.INCORRECT ) SolutionState.INCORRECT else SolutionState.EMPTY
-                            modifyAnswer(task, answer)
+                            //answer = if( answer != SolutionState.INCORRECT ) SolutionState.INCORRECT else SolutionState.EMPTY
+                            modifyAnswer(task, if( answer != SolutionState.INCORRECT ) SolutionState.INCORRECT else SolutionState.EMPTY)
                         },
                     ){
-                        Icon( if(answer == SolutionState.INCORRECT) Icons.Filled.Cancel else Icons.Filled.Close, contentDescription = "", tint = Color.Red ) //TODO: szebb ikonok
+                        if( answer == SolutionState.INCORRECT ) {
+                            Icon(
+                                Icons.Filled.Close,
+                                contentDescription = "",
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .background(color = Color.Red, shape = RoundedCornerShape(iconSize / 2))
+                                    .size(iconSize),
+                            )
+                        } else {
+                            Icon(
+                                Icons.Filled.Close,
+                                contentDescription = "",
+                                tint = Color.Red ,
+                                modifier = Modifier.size(iconSize),
+                            )
+                        }
                     }
                 }
             }
