@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ui.screens.*
-import kotlin.system.exitProcess
+//import kotlin.system.exitProcess
 
 @Composable
 fun NavGraph(
@@ -35,7 +35,7 @@ fun NavGraph(
             MainMenu(
                 onSetUp = { navController.navigate(Screen.SetUpMenu.route) },
                 onCompetition = { navController.navigate(Screen.OngoingCompetition.route) },
-                onExit = { exitProcess(0) },
+                onExit = { /*exitProcess(0)*/ },
             )
         }
         composable(Screen.OngoingCompetition.route) {
