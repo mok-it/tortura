@@ -1,9 +1,14 @@
 package mok.it.tortura.ui
 
 import androidx.compose.ui.graphics.Color
+import kotlinx.serialization.Serializable
+import mok.it.tortura.util.ColorAsStringSerializer
 
+@Serializable
 data class CategoryColors(
+    @Serializable(with = ColorAsStringSerializer::class)
     val textColor: Color,
+    @Serializable(with = ColorAsStringSerializer::class)
     val backgroundColor: Color,
     ){
 

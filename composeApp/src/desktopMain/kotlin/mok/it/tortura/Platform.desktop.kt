@@ -6,3 +6,7 @@ import io.github.vinceglb.filekit.writeString
 actual suspend fun saveStringToFile(file: PlatformFile, string: String) {
     file.writeString(string)
 }
+
+actual fun GoodNightGoodBye() {
+    System.exit(0)
+}
