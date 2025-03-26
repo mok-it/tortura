@@ -6,8 +6,6 @@ data class Competition(
     val answers: Map<Team, Answer> = teamAssignment.teams.associateWith { Answer(problemSet) }
 ) {
 
-    fun getTeamCurrentBlock(team: Team) = answers[team]!!.getCurrentBlock()
-
     fun answerTask(team: Team, task: Task, newAnswer: SolutionState) : Competition {
         return modifyTeam( team, answers[team]!!.answerTask( task, newAnswer ) )
     }

@@ -3,13 +3,19 @@ package mok.it.tortura.feature.onGoingCompetition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,13 +40,32 @@ fun OngoingCompetition(
         return counter
     }
 
-    var tabIndex by remember { mutableStateOf(0) }
+    val searchText by remember { viewModel.searchText }
+    val searchError by remember { viewModel.searchError }
+
+    val tabIndex by remember { viewModel.tabIndex }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Verseny") },
-                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } }
+                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
+                actions = {
+                    TextField(
+                        value = searchText,
+                        onValueChange = { newValue ->
+                            viewModel.onEvent( OnGoingCompetitionEvent.SearchTextChange(newValue) )
+                        },
+                        leadingIcon = { Icon( Icons.Filled.Search, contentDescription = null ) },
+                        placeholder = { Text("Keresés") },
+                        singleLine = true,
+                        isError = searchError,
+                        keyboardActions = KeyboardActions(onSearch = {
+                            viewModel.onEvent(OnGoingCompetitionEvent.SearchForStudent)
+                        }),
+                        keyboardOptions = KeyboardOptions( imeAction = ImeAction.Search),
+                    )
+                }
             )
         }
     ){ innerPadding ->
@@ -128,10 +153,14 @@ fun OngoingCompetition(
                     teams.forEachIndexed{ index, _->
                         Tab(
                             selected = tabIndex == teamsInPreviousCompetitions(competition) + index,
-                            onClick = { tabIndex = teamsInPreviousCompetitions(competition) + index },
-                            text= {
+                            onClick = {
+                                viewModel.onEvent(
+                                    OnGoingCompetitionEvent.ChangeTabIndex(teamsInPreviousCompetitions(competition) + index)
+                                )
+                            },
+                            text = {
                                 Text(
-                                    text = "${ (competitions.indexOf(competition) + 1) * 100 + index }",
+                                    text = "${(competitions.indexOf(competition) + 1) * 100 + index}",
                                     color = competition.teamAssignment.colorSchema.textColor,
                                 )
                             },

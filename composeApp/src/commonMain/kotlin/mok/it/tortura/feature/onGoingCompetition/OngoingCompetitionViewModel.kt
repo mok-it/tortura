@@ -66,6 +66,11 @@ class OngoingCompetitionViewModel : ViewModel() {
 
     val competitions = mutableStateOf(_competitions)
 
+    val tabIndex = mutableStateOf(0)
+
+    val searchText = mutableStateOf("")
+    val searchError = mutableStateOf(false)
+
 
     fun onEvent(event: OnGoingCompetitionEvent) {
         when (event) {
@@ -77,6 +82,18 @@ class OngoingCompetitionViewModel : ViewModel() {
             }
             is OnGoingCompetitionEvent.NextBlock -> {
                 modifyCompetition( event.competition, event.competition.nextBlock(event.team) )
+            }
+            is OnGoingCompetitionEvent.SearchForStudent -> {
+                searchError.value = true
+                TODO()
+            }
+            is OnGoingCompetitionEvent.SearchTextChange -> {
+                searchText.value = event.newText
+                searchError.value = false
+            }
+
+            is OnGoingCompetitionEvent.ChangeTabIndex -> {
+                tabIndex.value = event.index
             }
         }
     }
@@ -93,4 +110,7 @@ sealed class OnGoingCompetitionEvent {
     data class ModifyAnswer(val competition: Competition, val team: Team, val task: Task, val newAnswer: SolutionState) : OnGoingCompetitionEvent()
     data class RestartBlock(val competition: Competition, val team: Team) : OnGoingCompetitionEvent()
     data class NextBlock(val competition: Competition, val team: Team) : OnGoingCompetitionEvent()
+    data class SearchTextChange( val newText: String ) : OnGoingCompetitionEvent()
+    data object SearchForStudent : OnGoingCompetitionEvent()
+    data class ChangeTabIndex(val index: Int) : OnGoingCompetitionEvent()
 }
