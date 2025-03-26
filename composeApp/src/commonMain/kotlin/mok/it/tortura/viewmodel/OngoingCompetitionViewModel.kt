@@ -3,6 +3,7 @@ package viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import model.*
+import mok.it.tortura.model.Competition
 import ui.CategoryColors
 
 class OngoingCompetitionViewModel : ViewModel() {
@@ -59,7 +60,10 @@ class OngoingCompetitionViewModel : ViewModel() {
 
     private val polarTeamAssignment = TeamAssignment( "Jeges", teams, CategoryColors.JEGES )
 
-    private val _competitions = listOf(Competition(teamAssignment, problemSet),Competition(polarTeamAssignment, polarProblemSet))
+    private val _competitions = listOf(
+        Competition(teamAssignment, problemSet),
+        Competition(polarTeamAssignment, polarProblemSet)
+    )
 
     val competitions = mutableStateOf(_competitions)
 
@@ -67,17 +71,27 @@ class OngoingCompetitionViewModel : ViewModel() {
     fun onEvent(event: OnGoingCompetitionEvent) {
         when (event) {
             is OnGoingCompetitionEvent.ModifyAnswer -> {
-                val newCompetition = event.competition.answerTask( event.team, event.task, event.newAnswer )
-                val newCompetitionIdx = competitions.value.indexOf(event.competition)
-                val newCompetitions = competitions.value.filter { it != event.competition }.toMutableList()
-                newCompetitions.add(newCompetitionIdx, newCompetition)
-                competitions.value = newCompetitions
+                modifyCompetition( event.competition, event.competition.answerTask( event.team, event.task, event.newAnswer ) )
+            }
+            is OnGoingCompetitionEvent.RestartBlock -> {
+                modifyCompetition( event.competition, event.competition.restartCurrentBlock(event.team) )
+            }
+            is OnGoingCompetitionEvent.NextBlock -> {
+                modifyCompetition( event.competition, event.competition.nextBlock(event.team) )
             }
         }
+    }
 
+    private fun modifyCompetition(competition: Competition, newValue: Competition) {
+        val newCompetitionIdx = competitions.value.indexOf(competition)
+        val newCompetitions = competitions.value.filter { it != competition }.toMutableList()
+        newCompetitions.add(newCompetitionIdx, newValue)
+        competitions.value = newCompetitions
     }
 }
 
 sealed class OnGoingCompetitionEvent {
     data class ModifyAnswer(val competition: Competition, val team: Team, val task: Task, val newAnswer: SolutionState) : OnGoingCompetitionEvent()
+    data class RestartBlock(val competition: Competition, val team: Team) : OnGoingCompetitionEvent()
+    data class NextBlock(val competition: Competition, val team: Team) : OnGoingCompetitionEvent()
 }

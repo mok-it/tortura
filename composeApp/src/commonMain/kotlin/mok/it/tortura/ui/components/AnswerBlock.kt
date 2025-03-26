@@ -20,19 +20,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import model.Block
 import model.BlockAnswer
 import model.SolutionState
 import model.Task
 
 @Composable
 fun AnswerBlock(
-    block: Block,
     teamName: String,
     answers: BlockAnswer,
     indexOffset: Int = 0,
     modifyAnswer: (task: Task, newAnswer: SolutionState ) -> Unit,
-    onCheckSolutions: () -> Unit,
+    onRestartBlock: () -> Unit,
+    onNextBlock: () -> Unit,
     textColor: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
     modifier: Modifier = Modifier,
@@ -41,6 +40,8 @@ fun AnswerBlock(
     val iconSize = 30.dp
 
     val currentAnswers = answers.answerHistory.last()
+
+    val block = answers.block
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -91,7 +92,6 @@ fun AnswerBlock(
                     val answer = currentAnswers[ task ]
                     IconButton(
                         onClick = {
-                            //answer = if( answer != SolutionState.CORRECT ) SolutionState.CORRECT else SolutionState.EMPTY
                             modifyAnswer(task, if( answer != SolutionState.CORRECT ) SolutionState.CORRECT else SolutionState.EMPTY)
                         },
                     ){
@@ -115,7 +115,6 @@ fun AnswerBlock(
                     }
                     IconButton(
                         onClick = {
-                            //answer = if( answer != SolutionState.INCORRECT ) SolutionState.INCORRECT else SolutionState.EMPTY
                             modifyAnswer(task, if( answer != SolutionState.INCORRECT ) SolutionState.INCORRECT else SolutionState.EMPTY)
                         },
                     ){
@@ -144,15 +143,27 @@ fun AnswerBlock(
 
         item {
             Spacer(modifier = Modifier.height(25.dp))
-            Button(
-                onClick = { onCheckSolutions() },
-//                modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.End),
-                colors = buttonColors( backgroundColor = backgroundColor )
-            ){
-                Text(
-                    text= "Ellenőrzés",
-                    color= textColor,
-                )
+            Row {
+                Button(
+                    onClick = onRestartBlock,
+                    enabled = answers.restartEnabled(),
+                    colors = buttonColors( backgroundColor = backgroundColor ),
+                ){
+                    Text(
+                        text= "Blokk újrakezdése",
+                        color= textColor,
+                    )
+                }
+
+                Button(
+                    onClick = onNextBlock,
+                    enabled = answers.goNextEnabled(),
+                ){
+                    Text(
+                        text = "Következő blokk",
+                        color= textColor,
+                    )
+                }
             }
         }
 

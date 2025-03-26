@@ -18,4 +18,18 @@ data class BlockAnswer( val block: Block, val answerHistory: List<Map<Task, Solu
         newAnswerHistory.add( currentAnswers )
         return this.copy(answerHistory = newAnswerHistory)
     }
+
+    fun restartEnabled() : Boolean = correctCount() != block.tasks.size
+
+    fun goNextEnabled() : Boolean = correctCount() >= block.minCorrectToProgress
+
+    private fun correctCount() : Int{
+        var count = 0
+        for( answer in answerHistory.last() ){
+            if( answer.value == SolutionState.CORRECT ){
+                count++
+            }
+        }
+        return count
+    }
 }
