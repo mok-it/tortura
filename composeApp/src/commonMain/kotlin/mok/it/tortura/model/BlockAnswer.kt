@@ -1,5 +1,7 @@
 package model
 
+import kotlin.math.pow
+
 data class BlockAnswer( val block: Block, val answerHistory: List<Map<Task, SolutionState>> = listOf() ) {
 
     fun addBlockAttempt() : BlockAnswer{
@@ -23,7 +25,7 @@ data class BlockAnswer( val block: Block, val answerHistory: List<Map<Task, Solu
 
     fun goNextEnabled() : Boolean = correctCount() >= block.minCorrectToProgress
 
-    private fun correctCount() : Int{
+    fun correctCount() : Int{
         var count = 0
         for( answer in answerHistory.last() ){
             if( answer.value == SolutionState.CORRECT ){
@@ -31,5 +33,25 @@ data class BlockAnswer( val block: Block, val answerHistory: List<Map<Task, Solu
             }
         }
         return count
+    }
+
+    fun points( base: Double ): Double {
+        var sum = 0.0
+        for( task in block.tasks ){
+            if( answerHistory.last()[task] == SolutionState.CORRECT ){
+                sum += base / 2.0.pow( lastCorrect( task) )
+            }
+        }
+        return sum
+    }
+
+    private fun lastCorrect( task: Task ) : Int {
+        var result = -1
+        for( i in answerHistory.indices ){
+            if( answerHistory[i][task] == SolutionState.CORRECT && result == -1 ) {
+                result = i
+            }
+        }
+        return result
     }
 }

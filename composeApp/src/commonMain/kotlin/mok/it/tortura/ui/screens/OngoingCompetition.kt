@@ -59,12 +59,27 @@ fun OngoingCompetition(
                 teams.forEachIndexed { index, team ->
                     if( tabIndex == teamsInPreviousCompetitions(competition) + index ) {
                         if( competition.answers[team]!!.finished ){
-                            Text(
-                                text = "Végeztek",
-                                fontSize = 50.sp,
-                                color = competition.teamAssignment.colorSchema.textColor,
-                                modifier = Modifier.background( color = competition.teamAssignment.colorSchema.backgroundColor, shape = RoundedCornerShape(4.dp) )
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.SpaceEvenly,
+                                modifier = Modifier.fillMaxHeight().weight(1f)
+                            ) {
+                                Text(
+                                    text = "Végeztek",
+                                    fontSize = 50.sp,
+                                    color = competition.teamAssignment.colorSchema.textColor,
+                                    modifier = Modifier.background( color = competition.teamAssignment.colorSchema.backgroundColor, shape = RoundedCornerShape(4.dp) )
                                 )
+
+                                Text(
+                                    text = "Pontok: ${competition.answers[team]!!.points()}",
+                                    fontSize = 40.sp,
+                                    color = competition.teamAssignment.colorSchema.textColor,
+                                    modifier = Modifier.background( color = competition.teamAssignment.colorSchema.backgroundColor, shape = RoundedCornerShape(4.dp) )
+                                )
+                            }
+
+
                         } else {
 
                             AnswerBlock(
