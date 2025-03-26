@@ -23,7 +23,9 @@ class CreateTeamAssignmentViewModel : ViewModel() {
         when (event) {
             is CreateTeamAssignmentEvent.AddTeam -> {
                 teamAssignment.value =
-                    teamAssignment.value.copy(teams = teamAssignment.value.teams + Team(mutableListOf()))
+                    teamAssignment.value.copy(
+                        teams = teamAssignment.value.teams + Team(mutableListOf( Student(), Student(), Student(), Student() ))
+                    )
             }
 
             is CreateTeamAssignmentEvent.AddStudent -> {
@@ -39,27 +41,44 @@ class CreateTeamAssignmentViewModel : ViewModel() {
             }
 
             is CreateTeamAssignmentEvent.DeleteTeam -> {
-                teamAssignment.value =
-                    teamAssignment.value.copy(teams = teamAssignment.value.teams - event.team)
+                modifyTeams( teamAssignment.value.teams - event.team )
             }
 
             is CreateTeamAssignmentEvent.DeleteMember -> {
-                val newTeam =
-                    event.team.copy(students = event.team.students.filter { it != event.student }.toMutableList())
-                teamAssignment.value =
-                    teamAssignment.value.copy(teams = teamAssignment.value.teams.filter { it != event.team } + newTeam)
+                modifyTeam( event.team, event.team.copy( students = event.team.students - event.student ) )
             }
 
             is CreateTeamAssignmentEvent.ChangeStudentName -> {
-                val newStudent = event.student.copy(name = event.name)
-                val newTeam =
-                    event.team.copy(students = (event.team.students.filter { it != event.student } + newStudent)
-                        .toMutableList())
-                teamAssignment.value = teamAssignment.value.copy(
-                    teams = teamAssignment.value.teams.filter { it != event.team } + newTeam
-                )
+                modifyStudent( event.team, event.student, event.student.copy( name = event.student.name ) )
+            }
+
+            is CreateTeamAssignmentEvent.ChangeStudentGroup -> {
+                modifyStudent( event.team, event.student, event.student.copy( group = event.group ) )
+            }
+
+            is CreateTeamAssignmentEvent.ChangeStudentKlass -> {
+                modifyStudent( event.team, event.student, event.student.copy( klass = event.klass ) )
             }
         }
+    }
+
+    private fun modifyTeams( newTeams: List<Team> ) {
+        teamAssignment.value = teamAssignment.value.copy( teams = newTeams )
+    }
+
+    private fun modifyTeam( team: Team, newValue: Team ) {
+        val teamIndex = teamAssignment.value.teams.indexOf(team)
+        val newTeams = teamAssignment.value.teams.filter { it != team }.toMutableList()
+        newTeams.add(teamIndex, newValue)
+        modifyTeams( newTeams )
+    }
+
+    private fun modifyStudent( team: Team, student: Student, newValue: Student ){
+        val studentIndex = team.students.indexOf(student)
+        val newStudents = team.students.filter { it != student }.toMutableList()
+        newStudents.add(studentIndex, newValue)
+        val newTeam = team.copy( students = newStudents )
+        modifyTeam(team, newTeam)
     }
 }
 
@@ -69,5 +88,6 @@ sealed class CreateTeamAssignmentEvent {
     data class DeleteTeam(val team: Team) : CreateTeamAssignmentEvent()
     data class DeleteMember(val team: Team, val student: Student) : CreateTeamAssignmentEvent()
     data class ChangeStudentName(val team: Team, val student: Student, val name: String) : CreateTeamAssignmentEvent()
-    //TODO: change other properties of student
+    data class ChangeStudentGroup( val team: Team, val student: Student, val group: String ) : CreateTeamAssignmentEvent()
+    data class ChangeStudentKlass( val team: Team, val student: Student, val klass: String ) : CreateTeamAssignmentEvent()
 }

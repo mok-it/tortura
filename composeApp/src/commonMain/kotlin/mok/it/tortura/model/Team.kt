@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Team(
-    val students: MutableList<Student>,
+    val students: List<Student>,
     private val id: Int = nextId(),
 ) {
     companion object IdCounter {
