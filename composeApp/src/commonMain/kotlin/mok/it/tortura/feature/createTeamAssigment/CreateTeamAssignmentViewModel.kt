@@ -1,10 +1,10 @@
-package viewmodel
+package mok.it.tortura.feature.createTeamAssigment
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import model.Student
-import model.Team
-import model.TeamAssignment
+import mok.it.tortura.model.Student
+import mok.it.tortura.model.Team
+import mok.it.tortura.model.TeamAssignment
 
 class CreateTeamAssignmentViewModel : ViewModel() {
     val teamAssignment =

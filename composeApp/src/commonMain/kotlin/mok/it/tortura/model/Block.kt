@@ -1,4 +1,4 @@
-package model
+package mok.it.tortura.model
 
 data class Block(
     val tasks: List<Task>,

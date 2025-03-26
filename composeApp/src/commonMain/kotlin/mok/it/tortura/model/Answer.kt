@@ -1,4 +1,4 @@
-package model
+package mok.it.tortura.model
 
 data class Answer(
     val problemSet: ProblemSet,
@@ -9,7 +9,7 @@ data class Answer(
 
     fun getCurrentBlock() = problemSet.blocks[blockIdx]
 
-    fun answerTask( task: Task, newAnswer: SolutionState ): Answer{
+    fun answerTask(task: Task, newAnswer: SolutionState): Answer {
         val newBlockAnswer = answerHistory.last().changeAnswer(task, newAnswer)
         val newList = answerHistory.toMutableList()
         newList.removeLast()
@@ -17,7 +17,7 @@ data class Answer(
         return this.copy(answerHistory = newList)
     }
 
-    fun restartCurrentBlock() : Answer{
+    fun restartCurrentBlock() : Answer {
         val newBlockAnswer = answerHistory.last().addBlockAttempt()
         val newList = answerHistory.toMutableList()
         newList.removeLast()
@@ -25,7 +25,7 @@ data class Answer(
         return this.copy(answerHistory = newList)
     }
 
-    fun nextBlock() : Answer{
+    fun nextBlock() : Answer {
         if( blockIdx == problemSet.blocks.size - 1 ){
             return this.copy(finished = true)
         }
@@ -47,7 +47,6 @@ data class Answer(
         return sum
     }
 
-    //TODO: should be in a different class
 
 //    fun calculatePoints(): Double {
 //        var points = 0.0
@@ -76,7 +75,5 @@ data class Answer(
 //        }
 //        return points
 //    }
-
-
 
 }

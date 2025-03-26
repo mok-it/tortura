@@ -1,10 +1,10 @@
-package viewmodel
+package mok.it.tortura.feature.createProblemSet
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import model.Block
-import model.ProblemSet
-import model.Task
+import mok.it.tortura.model.Block
+import mok.it.tortura.model.ProblemSet
+import mok.it.tortura.model.Task
 
 class CreateTaskViewModel : ViewModel() {
     val problemSet = mutableStateOf<ProblemSet>(ProblemSet("", listOf()))

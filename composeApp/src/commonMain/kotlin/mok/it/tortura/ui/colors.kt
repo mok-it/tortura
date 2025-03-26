@@ -1,4 +1,4 @@
-package ui
+package mok.it.tortura.ui
 
 import androidx.compose.ui.graphics.Color
 

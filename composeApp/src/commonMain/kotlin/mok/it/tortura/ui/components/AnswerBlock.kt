@@ -1,4 +1,4 @@
-package ui.components
+package mok.it.tortura.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,16 +20,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import model.BlockAnswer
-import model.SolutionState
-import model.Task
+import mok.it.tortura.model.BlockAnswer
+import mok.it.tortura.model.SolutionState
+import mok.it.tortura.model.Task
 
 @Composable
 fun AnswerBlock(
     teamName: String,
     answers: BlockAnswer,
     indexOffset: Int = 0,
-    modifyAnswer: (task: Task, newAnswer: SolutionState ) -> Unit,
+    modifyAnswer: (task: Task, newAnswer: SolutionState) -> Unit,
     onRestartBlock: () -> Unit,
     onNextBlock: () -> Unit,
     textColor: Color = Color.Unspecified,

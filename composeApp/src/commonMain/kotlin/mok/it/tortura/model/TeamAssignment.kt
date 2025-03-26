@@ -1,6 +1,6 @@
-package model
+package mok.it.tortura.model
 
-import ui.CategoryColors
+import mok.it.tortura.ui.CategoryColors
 
 data class TeamAssignment(
     val category: String,

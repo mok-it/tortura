@@ -1,7 +1,5 @@
 package mok.it.tortura.model
 
-import model.*
-
 data class Competition(
     val teamAssignment: TeamAssignment,
     val problemSet: ProblemSet,

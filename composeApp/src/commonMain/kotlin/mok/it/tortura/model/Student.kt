@@ -1,4 +1,4 @@
-package model
+package mok.it.tortura.model
 
 data class Student(
     val name: String,

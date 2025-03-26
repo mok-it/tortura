@@ -1,12 +1,15 @@
-package navigation
+package mok.it.tortura.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ui.screens.*
-//import kotlin.system.exitProcess
+import mok.it.tortura.feature.MainMenu
+import mok.it.tortura.feature.SetUpMenu
+import mok.it.tortura.feature.createProblemSet.CreateProblemSet
+import mok.it.tortura.feature.createTeamAssigment.CreateTeamAssignment
+import mok.it.tortura.feature.onGoingCompetition.OngoingCompetition
 
 @Composable
 fun NavGraph(

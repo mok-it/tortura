@@ -1,4 +1,4 @@
-package model
+package mok.it.tortura.model
 
 data class Team(
     val students: MutableList<Student>,

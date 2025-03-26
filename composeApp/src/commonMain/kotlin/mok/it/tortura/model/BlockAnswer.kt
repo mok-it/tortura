@@ -1,10 +1,10 @@
-package model
+package mok.it.tortura.model
 
 import kotlin.math.pow
 
-data class BlockAnswer( val block: Block, val answerHistory: List<Map<Task, SolutionState>> = listOf() ) {
+data class BlockAnswer(val block: Block, val answerHistory: List<Map<Task, SolutionState>> = listOf() ) {
 
-    fun addBlockAttempt() : BlockAnswer{
+    fun addBlockAttempt() : BlockAnswer {
         val newMap =  HashMap<Task, SolutionState>()
         for( task in block.tasks ){
             newMap[task] = SolutionState.EMPTY
@@ -12,7 +12,7 @@ data class BlockAnswer( val block: Block, val answerHistory: List<Map<Task, Solu
         return this.copy( answerHistory = answerHistory.plus(newMap) )
     }
 
-    fun changeAnswer( task: Task, newAnswer: SolutionState ) : BlockAnswer {
+    fun changeAnswer(task: Task, newAnswer: SolutionState) : BlockAnswer {
         val currentAnswers = answerHistory.last().toMutableMap()
         currentAnswers[task] = newAnswer
         val newAnswerHistory = answerHistory.toMutableList()
@@ -28,7 +28,7 @@ data class BlockAnswer( val block: Block, val answerHistory: List<Map<Task, Solu
     fun correctCount() : Int{
         var count = 0
         for( answer in answerHistory.last() ){
-            if( answer.value == SolutionState.CORRECT ){
+            if( answer.value == SolutionState.CORRECT){
                 count++
             }
         }
@@ -38,14 +38,14 @@ data class BlockAnswer( val block: Block, val answerHistory: List<Map<Task, Solu
     fun points( base: Double ): Double {
         var sum = 0.0
         for( task in block.tasks ){
-            if( answerHistory.last()[task] == SolutionState.CORRECT ){
+            if( answerHistory.last()[task] == SolutionState.CORRECT){
                 sum += base / 2.0.pow( lastCorrect( task) )
             }
         }
         return sum
     }
 
-    private fun lastCorrect( task: Task ) : Int {
+    private fun lastCorrect( task: Task) : Int {
         var result = -1
         for( i in answerHistory.indices ){
             if( answerHistory[i][task] == SolutionState.CORRECT && result == -1 ) {

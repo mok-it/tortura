@@ -1,4 +1,4 @@
-package ui.screens
+package mok.it.tortura.feature.onGoingCompetition
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,9 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mok.it.tortura.model.Competition
-import ui.components.AnswerBlock
-import viewmodel.OnGoingCompetitionEvent
-import viewmodel.OngoingCompetitionViewModel
+import mok.it.tortura.ui.components.AnswerBlock
 
 @Composable
 fun OngoingCompetition(

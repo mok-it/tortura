@@ -1,4 +1,4 @@
-package ui.screens
+package mok.it.tortura.feature.createTeamAssigment
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
@@ -19,9 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import ui.components.StudentCard
-import viewmodel.CreateTeamAssignmentEvent
-import viewmodel.CreateTeamAssignmentViewModel
+import mok.it.tortura.ui.components.StudentCard
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

@@ -1,4 +1,4 @@
-package ui.components
+package mok.it.tortura.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +12,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import model.Student
+import mok.it.tortura.model.Student
 
 @Composable
 fun StudentCard(s: Student, onDeleteStudent: () -> Unit) {

@@ -1,4 +1,4 @@
-package ui.components
+package mok.it.tortura.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,7 +11,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import model.Task
+import mok.it.tortura.model.Task
 
 @Composable
 fun TaskCard(

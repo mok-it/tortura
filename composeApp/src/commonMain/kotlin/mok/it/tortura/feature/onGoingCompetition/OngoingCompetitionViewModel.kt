@@ -1,10 +1,9 @@
-package viewmodel
+package mok.it.tortura.feature.onGoingCompetition
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import model.*
-import mok.it.tortura.model.Competition
-import ui.CategoryColors
+import mok.it.tortura.model.*
+import mok.it.tortura.ui.CategoryColors
 
 class OngoingCompetitionViewModel : ViewModel() {
 

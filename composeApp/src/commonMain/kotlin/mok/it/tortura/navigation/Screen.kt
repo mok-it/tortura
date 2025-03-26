@@ -1,4 +1,4 @@
-package navigation
+package mok.it.tortura.navigation
 
 sealed class Screen(val route: String) {
     object CreateTeams : Screen("create_teams")

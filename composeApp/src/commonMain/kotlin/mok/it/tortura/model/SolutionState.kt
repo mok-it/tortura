@@ -1,4 +1,4 @@
-package model
+package mok.it.tortura.model
 
 enum class SolutionState {
     CORRECT,

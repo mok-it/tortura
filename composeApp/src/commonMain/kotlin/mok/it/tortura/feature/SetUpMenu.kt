@@ -1,4 +1,4 @@
-package ui.screens
+package mok.it.tortura.feature
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
