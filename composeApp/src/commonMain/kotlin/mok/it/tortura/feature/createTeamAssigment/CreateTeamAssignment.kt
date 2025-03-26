@@ -38,7 +38,7 @@ fun CreateTeamAssignment(
     val launcher = rememberFileSaverLauncher { file ->
         if (file != null) {
             scope.launch {
-                saveStringToFile(file, Json.encodeToString(viewModel.teamAssignment.value))
+                saveStringToFile(file, Json.encodeToString(teamAssignment))
             }
         }
     }
