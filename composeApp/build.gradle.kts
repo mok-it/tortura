@@ -72,6 +72,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.dialogs.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -119,6 +121,10 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "mok.it.tortura"
             packageVersion = "1.0.0"
+
+            linux {
+                modules("jdk.security.auth") //needed to access file system
+            }
         }
     }
 }

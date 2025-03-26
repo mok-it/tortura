@@ -10,7 +10,7 @@ class CreateTeamAssignmentViewModel : ViewModel() {
     val teamAssignment =
         mutableStateOf(
             TeamAssignment(
-                "Lorem",
+                "JEGES",
                 listOf(
                     Team(mutableListOf(Student("Ádám"), Student("Béla"), Student("Cecil"))),
                     Team(mutableListOf(Student("Dénes"), Student("Ezékiel"), Student("Ferenc"))),
@@ -24,7 +24,6 @@ class CreateTeamAssignmentViewModel : ViewModel() {
             is CreateTeamAssignmentEvent.AddTeam -> {
                 teamAssignment.value =
                     teamAssignment.value.copy(teams = teamAssignment.value.teams + Team(mutableListOf()))
-                println("Benne vagyunk az onEventbe jól ${teamAssignment.value.teams.size} ")
             }
 
             is CreateTeamAssignmentEvent.AddStudent -> {
