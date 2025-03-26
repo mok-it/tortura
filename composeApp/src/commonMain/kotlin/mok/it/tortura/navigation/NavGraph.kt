@@ -21,7 +21,7 @@ fun NavGraph(
     ) {
         composable(Screen.CreateTeams.route) {
             CreateTeamAssignment(
-                onNext = { navController.navigate(Screen.CreateTasks.route) },
+                onBack = { navController.navigate(Screen.MainMenu.route) },
             )
         }
         composable(Screen.CreateTasks.route) {

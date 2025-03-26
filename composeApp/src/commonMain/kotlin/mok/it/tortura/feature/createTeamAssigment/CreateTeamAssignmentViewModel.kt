@@ -22,30 +22,19 @@ class CreateTeamAssignmentViewModel : ViewModel() {
     fun onEvent(event: CreateTeamAssignmentEvent) {
         when (event) {
             is CreateTeamAssignmentEvent.AddTeam -> {
-                teamAssignment.value =
-                    teamAssignment.value.copy(
-                        teams = teamAssignment.value.teams + Team(mutableListOf( Student(), Student(), Student(), Student() ))
-                    )
+                modifyAllTeams( teamAssignment.value.teams + Team( List(4){ Student() } ) )
             }
 
             is CreateTeamAssignmentEvent.AddStudent -> {
-                val teamIndex = teamAssignment.value.teams.indexOf(event.team)
-                val newTeam = event.team.copy(
-                    students = (event.team.students + Student("", "", "")).toMutableList()
-                )
-                val newTeams = teamAssignment.value.teams.filter { it != event.team }.toMutableList()
-                newTeams.add(teamIndex, newTeam)
-                teamAssignment.value = teamAssignment.value.copy(
-                    teams = newTeams
-                )
+                modifySingleTeam( event.team, event.team.copy(students = event.team.students  + Student()) )
             }
 
             is CreateTeamAssignmentEvent.DeleteTeam -> {
-                modifyTeams( teamAssignment.value.teams - event.team )
+                modifyAllTeams( teamAssignment.value.teams - event.team )
             }
 
             is CreateTeamAssignmentEvent.DeleteMember -> {
-                modifyTeam( event.team, event.team.copy( students = event.team.students - event.student ) )
+                modifySingleTeam( event.team, event.team.copy( students = event.team.students - event.student ) )
             }
 
             is CreateTeamAssignmentEvent.ChangeStudentName -> {
@@ -62,15 +51,15 @@ class CreateTeamAssignmentViewModel : ViewModel() {
         }
     }
 
-    private fun modifyTeams( newTeams: List<Team> ) {
-        teamAssignment.value = teamAssignment.value.copy( teams = newTeams )
+    private fun modifyAllTeams(newValue: List<Team> ) {
+        teamAssignment.value = teamAssignment.value.copy( teams = newValue )
     }
 
-    private fun modifyTeam( team: Team, newValue: Team ) {
+    private fun modifySingleTeam(team: Team, newValue: Team ) {
         val teamIndex = teamAssignment.value.teams.indexOf(team)
         val newTeams = teamAssignment.value.teams.filter { it != team }.toMutableList()
         newTeams.add(teamIndex, newValue)
-        modifyTeams( newTeams )
+        modifyAllTeams( newTeams )
     }
 
     private fun modifyStudent( team: Team, student: Student, newValue: Student ){
@@ -78,7 +67,7 @@ class CreateTeamAssignmentViewModel : ViewModel() {
         val newStudents = team.students.filter { it != student }.toMutableList()
         newStudents.add(studentIndex, newValue)
         val newTeam = team.copy( students = newStudents )
-        modifyTeam(team, newTeam)
+        modifySingleTeam(team, newTeam)
     }
 }
 

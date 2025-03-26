@@ -29,7 +29,7 @@ import mok.it.tortura.ui.components.StudentCard
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CreateTeamAssignment(
-    onNext: () -> Unit,
+    onBack: () -> Unit,
 ) {
     val viewModel = viewModel { CreateTeamAssignmentViewModel() }
     val teamAssignment by remember { viewModel.teamAssignment }
@@ -98,11 +98,6 @@ fun CreateTeamAssignment(
                                 Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
                                 Text("Csapat hozzáadása")
                             }
-                        }
-                    }
-                    item {
-                        Button(onClick = onNext) {
-                            Text("Tovább")
                         }
                     }
                 }
