@@ -1,5 +1,8 @@
 package mok.it.tortura.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Block(
     val tasks: List<Task>,
     val minCorrectToProgress: Int,

@@ -1,5 +1,8 @@
 package mok.it.tortura.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Team(
     val students: MutableList<Student>,
     private val id: Int = nextId(),
