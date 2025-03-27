@@ -7,6 +7,6 @@ actual suspend fun saveStringToFile(file: PlatformFile, string: String) {
     file.writeString(string)
 }
 
-actual fun GoodNightGoodBye() {
+actual fun goodNightGoodBye() {
     System.exit(0)
 }

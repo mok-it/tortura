@@ -29,7 +29,7 @@ import mok.it.tortura.ui.components.TaskCard
 @Composable
 fun CreateProblemSet(
 ) {
-    val viewModel: CreateTaskViewModel = viewModel { CreateTaskViewModel() }
+    val viewModel: CreateProblemSetViewModel = viewModel { CreateProblemSetViewModel() }
     val problemSet by remember { viewModel.problemSet }
 
     val scope = rememberCoroutineScope()

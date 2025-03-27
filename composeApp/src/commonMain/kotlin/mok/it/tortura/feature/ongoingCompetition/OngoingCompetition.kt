@@ -1,4 +1,4 @@
-package mok.it.tortura.feature.onGoingCompetition
+package mok.it.tortura.feature.ongoingCompetition
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

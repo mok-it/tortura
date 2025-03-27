@@ -10,3 +10,7 @@ actual fun getPlatform(): Platform = WasmPlatform()
 actual suspend fun saveStringToFile(file: PlatformFile, string: String) {
     throw RuntimeException()
 }
+
+actual fun goodNightGoodBye(){
+    js( "alert(\"BOHÓC\")" )
+}

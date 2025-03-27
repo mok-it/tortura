@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Block(
-    val tasks: List<Task>,
-    val minCorrectToProgress: Int,
+    val tasks: List<Task> = listOf(),
+    val minCorrectToProgress: Int = 0,
     val id: Int = nextId()
 ) {
     companion object IdCounter {

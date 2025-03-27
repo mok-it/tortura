@@ -5,12 +5,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import mok.it.tortura.GoodNightGoodBye
+import mok.it.tortura.goodNightGoodBye
 import mok.it.tortura.feature.MainMenu
 import mok.it.tortura.feature.SetUpMenu
 import mok.it.tortura.feature.createProblemSet.CreateProblemSet
 import mok.it.tortura.feature.createTeamAssigment.CreateTeamAssignment
-import mok.it.tortura.feature.onGoingCompetition.OngoingCompetition
+import mok.it.tortura.feature.ongoingCompetition.OngoingCompetition
 
 @Composable
 fun NavGraph(
@@ -39,7 +39,7 @@ fun NavGraph(
             MainMenu(
                 onSetUp = { navController.navigate(Screen.SetUpMenu.route) },
                 onCompetition = { navController.navigate(Screen.OngoingCompetition.route) },
-                onExit = { GoodNightGoodBye() },
+                onExit = { goodNightGoodBye() },
             )
         }
         composable(Screen.OngoingCompetition.route) {

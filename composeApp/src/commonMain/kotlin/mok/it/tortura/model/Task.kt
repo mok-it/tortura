@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Task(
     val text: String = "",
-    val solution: String,
+    val solution: String = "",
     private val id: Int = nextId()
 ) {
     companion object IdCounter {
