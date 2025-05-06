@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mok.it.tortura.model.Competition
 import mok.it.tortura.ui.components.AnswerBlock
+import mok.it.tortura.ui.components.CustomizableSearchBar
+import mok.it.tortura.ui.components.SimpleSearchBar
 
 @Composable
 fun OngoingCompetition(
@@ -51,20 +53,13 @@ fun OngoingCompetition(
                 title = { Text("Verseny") },
                 navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
                 actions = {
-                    TextField(
-                        value = searchText,
-                        onValueChange = { newValue ->
-                            viewModel.onEvent( OnGoingCompetitionEvent.SearchTextChange(newValue) )
-                        },
-                        leadingIcon = { Icon( Icons.Filled.Search, contentDescription = null ) },
-                        placeholder = { Text("Keresés") },
-                        singleLine = true,
-                        isError = searchError,
-                        keyboardActions = KeyboardActions(onSearch = {
-                            viewModel.onEvent(OnGoingCompetitionEvent.SearchForStudent)
-                        }),
-                        keyboardOptions = KeyboardOptions( imeAction = ImeAction.Search),
-                    )
+//                    CustomizableSearchBar(
+//                        query = searchText,
+//                        onQueryChange = { viewModel.onEvent(OnGoingCompetitionEvent.SearchTextChange( it ) ) },
+//                        onSearch = {  },
+//                        searchResults = viewModel.getAllStudentsList(),
+//                        onResultClick = { viewModel.onEvent(OnGoingCompetitionEvent.SearchForStudent(it)) },
+//                    )
                 }
             )
         }
@@ -107,7 +102,7 @@ fun OngoingCompetition(
 
                             AnswerBlock(
                                 teamName = "${(competitions.indexOf(competition) + 1) * 100 + index}",
-                                answers = competition.answers[team]!!.answerHistory.last(),
+                                answers = competition.answers[team]!!.currentBlockAnswer,
                                 indexOffset = 0,
                                 modifyAnswer = { task, newAnswer ->
                                     viewModel.onEvent(
@@ -135,6 +130,24 @@ fun OngoingCompetition(
                                         )
                                     )
                                 },
+                                onNavigateForwards = {
+                                    viewModel.onEvent(
+                                        OnGoingCompetitionEvent.NavigateForwards(
+                                            competition,
+                                            team
+                                        )
+                                    )
+                                },
+                                onNavigateBackWards = {
+                                    viewModel.onEvent(
+                                        OnGoingCompetitionEvent.NavigateBackwards(
+                                            competition,
+                                            team
+                                        )
+                                    )
+                                },
+                                navigateBackWardsEnabled = competition.answers[team]!!.canNavigateBackward,
+                                navigateForwardsEnabled = competition.answers[team]!!.canNavigateForward,
                                 textColor = competition.teamAssignment.colorSchema.textColor,
                                 backgroundColor = competition.teamAssignment.colorSchema.backgroundColor,
                                 modifier = Modifier.weight(1f)
@@ -143,6 +156,7 @@ fun OngoingCompetition(
                     }
                 }
             }
+
             ScrollableTabRow(
                 selectedTabIndex = tabIndex,
                 backgroundColor = Color.Transparent,

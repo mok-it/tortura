@@ -4,28 +4,51 @@ import kotlinx.serialization.Serializable
 import kotlin.math.pow
 
 @Serializable
-data class BlockAnswer(val block: Block, val answerHistory: List<Map<Task, SolutionState>> = listOf()) {
+data class BlockAnswer(
+    val block: Block,
+    val answerHistory: List<Map<Task, SolutionState>> = listOf(),
+    private val currentAnswersIndex: Int = -1,
+) {
+
+    val currentAnswers
+        get() = answerHistory[currentAnswersIndex]
 
     fun addBlockAttempt(): BlockAnswer {
         val newMap = HashMap<Task, SolutionState>()
         for (task in block.tasks) {
             newMap[task] = SolutionState.EMPTY
         }
-        return this.copy(answerHistory = answerHistory.plus(newMap))
+        return this.copy(answerHistory = answerHistory.plus(newMap), currentAnswersIndex = currentAnswersIndex + 1)
     }
 
     fun changeAnswer(task: Task, newAnswer: SolutionState): BlockAnswer {
-        val currentAnswers = answerHistory.last().toMutableMap()
-        currentAnswers[task] = newAnswer
+        val newCurrentAnswers = currentAnswers.toMutableMap()
+        newCurrentAnswers[task] = newAnswer
         val newAnswerHistory = answerHistory.toMutableList()
-        newAnswerHistory.removeLast()
-        newAnswerHistory.add(currentAnswers)
+        newAnswerHistory.removeAt(currentAnswersIndex)
+        newAnswerHistory.add(currentAnswersIndex,newCurrentAnswers)
         return this.copy(answerHistory = newAnswerHistory)
     }
 
-    fun restartEnabled(): Boolean = correctCount() != block.tasks.size
+    val restartEnabled
+        get() = correctCount() != block.tasks.size
 
-    fun goNextEnabled(): Boolean = correctCount() >= block.minCorrectToProgress
+    val goNextEnabled
+        get() = correctCount() >= block.minCorrectToProgress
+
+    val canNavigateBackwards
+        get() = currentAnswersIndex > 0
+
+    val canNavigateForwards
+        get() = currentAnswersIndex < answerHistory.size - 1
+
+    fun navigateBackwards(): BlockAnswer {
+        return this.copy(currentAnswersIndex = currentAnswersIndex - 1)
+    }
+
+    fun navigateForwards(): BlockAnswer {
+        return this.copy(currentAnswersIndex = currentAnswersIndex + 1)
+    }
 
     fun correctCount(): Int {
         var count = 0

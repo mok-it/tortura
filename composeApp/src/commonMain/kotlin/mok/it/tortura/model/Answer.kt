@@ -6,17 +6,22 @@ import kotlinx.serialization.Serializable
 data class Answer(
     val problemSet: ProblemSet,
     val answerHistory: List<BlockAnswer> = listOf(BlockAnswer(problemSet.blocks.first()).addBlockAttempt()),
+    private val currentBlockAnswerIndex: Int = 0,
     val blockIdx: Int = 0,
     val finished: Boolean = false
 ) {
 
-    fun getCurrentBlock() = problemSet.blocks[blockIdx]
+    val currentBlock
+        get() = problemSet.blocks[blockIdx]
+
+    val currentBlockAnswer: BlockAnswer
+        get() = answerHistory[currentBlockAnswerIndex]
 
     fun answerTask(task: Task, newAnswer: SolutionState): Answer {
-        val newBlockAnswer = answerHistory.last().changeAnswer(task, newAnswer)
+        val newBlockAnswer = currentBlockAnswer.changeAnswer(task, newAnswer)
         val newList = answerHistory.toMutableList()
-        newList.removeLast()
-        newList.add(newBlockAnswer)
+        newList.removeAt(currentBlockAnswerIndex)
+        newList.add(currentBlockAnswerIndex,newBlockAnswer)
         return this.copy(answerHistory = newList)
     }
 
@@ -25,7 +30,7 @@ data class Answer(
         val newList = answerHistory.toMutableList()
         newList.removeLast()
         newList.add(newBlockAnswer)
-        return this.copy(answerHistory = newList)
+        return this.copy(answerHistory = newList )
     }
 
     fun nextBlock(): Answer {
@@ -34,7 +39,35 @@ data class Answer(
         }
         val newAnswerHistory = answerHistory.toMutableList()
         newAnswerHistory.add(BlockAnswer(problemSet.blocks[blockIdx + 1]).addBlockAttempt())
-        return this.copy(answerHistory = newAnswerHistory, blockIdx = blockIdx + 1)
+        return this.copy(answerHistory = newAnswerHistory, blockIdx = blockIdx + 1, currentBlockAnswerIndex = currentBlockAnswerIndex + 1)
+    }
+
+    val canNavigateBackward
+        get() = currentBlockAnswer.canNavigateBackwards || currentBlockAnswerIndex > 0
+
+    val canNavigateForward
+        get() = currentBlockAnswer.canNavigateForwards || currentBlockAnswerIndex < answerHistory.size - 1
+
+    fun navigateBackwards(): Answer {
+        if( currentBlockAnswer.canNavigateBackwards ) {
+            val newAnswerHistory = answerHistory.toMutableList()
+            val newCurrentBlockAnswer = currentBlockAnswer.navigateBackwards()
+            newAnswerHistory.removeAt(currentBlockAnswerIndex)
+            newAnswerHistory.add(currentBlockAnswerIndex, newCurrentBlockAnswer)
+            return this.copy(answerHistory = newAnswerHistory)
+        }
+        return this.copy( currentBlockAnswerIndex = currentBlockAnswerIndex - 1 )
+    }
+
+    fun navigateForwards(): Answer {
+        if( currentBlockAnswer.canNavigateForwards ) {
+            val newAnswerHistory = answerHistory.toMutableList()
+            val newCurrentBlockAnswer = currentBlockAnswer.navigateForwards()
+            newAnswerHistory.removeAt(currentBlockAnswerIndex)
+            newAnswerHistory.add(currentBlockAnswerIndex, newCurrentBlockAnswer)
+            return this.copy(answerHistory = newAnswerHistory)
+        }
+        return this.copy(currentBlockAnswerIndex = currentBlockAnswerIndex + 1)
     }
 
     fun points(): Double {

@@ -11,8 +11,13 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.Forward
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Forward
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +37,10 @@ fun AnswerBlock(
     modifyAnswer: (task: Task, newAnswer: SolutionState) -> Unit,
     onRestartBlock: () -> Unit,
     onNextBlock: () -> Unit,
+    onNavigateBackWards: () -> Unit,
+    onNavigateForwards: () -> Unit,
+    navigateBackWardsEnabled: Boolean,
+    navigateForwardsEnabled: Boolean,
     textColor: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
     modifier: Modifier = Modifier,
@@ -39,7 +48,7 @@ fun AnswerBlock(
 
     val iconSize = 30.dp
 
-    val currentAnswers = answers.answerHistory.last()
+    val currentAnswers = answers.currentAnswers
 
     val block = answers.block
 
@@ -144,9 +153,20 @@ fun AnswerBlock(
         item {
             Spacer(modifier = Modifier.height(25.dp))
             Row {
+
+                IconButton(
+                    onClick = onNavigateBackWards,
+                    enabled = navigateBackWardsEnabled,
+                ){
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        null
+                    )
+                }
+
                 Button(
                     onClick = onRestartBlock,
-                    enabled = answers.restartEnabled(),
+                    enabled = answers.restartEnabled,
                     colors = buttonColors( backgroundColor = backgroundColor ),
                 ){
                     Text(
@@ -157,12 +177,19 @@ fun AnswerBlock(
 
                 Button(
                     onClick = onNextBlock,
-                    enabled = answers.goNextEnabled(),
+                    enabled = answers.goNextEnabled,
                 ){
                     Text(
                         text = "Következő blokk",
                         color= textColor,
                     )
+                }
+
+                IconButton(
+                    onClick = onNavigateForwards,
+                    enabled = navigateForwardsEnabled,
+                ){
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "", )
                 }
             }
         }

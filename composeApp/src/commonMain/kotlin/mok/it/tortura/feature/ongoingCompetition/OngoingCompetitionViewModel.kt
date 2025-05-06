@@ -84,18 +84,46 @@ class OngoingCompetitionViewModel : ViewModel() {
                 modifyCompetition( event.competition, event.competition.nextBlock(event.team) )
             }
             is OnGoingCompetitionEvent.SearchForStudent -> {
-                searchError.value = true
-                TODO()
+                var counter = 0
+                for( competition in competitions.value ) {
+                    for ( team in competition.teamAssignment.teams ){
+                        for( student in team.students ){
+                            if( student.name == event.searchText ){
+                                tabIndex.value = counter
+                                return
+                            }
+                        }
+                    }
+                    counter++
+                }
             }
             is OnGoingCompetitionEvent.SearchTextChange -> {
                 searchText.value = event.newText
-                searchError.value = false
             }
 
             is OnGoingCompetitionEvent.ChangeTabIndex -> {
                 tabIndex.value = event.index
             }
+
+            is OnGoingCompetitionEvent.NavigateBackwards -> {
+                modifyCompetition( event.competition, event.competition.navigateBackwards( event.team ) )
+            }
+            is OnGoingCompetitionEvent.NavigateForwards -> {
+                modifyCompetition( event.competition, event.competition.navigateForwards( event.team ) )
+            }
         }
+    }
+
+    fun getAllStudentsList() : List<String>{
+        val studentList = mutableListOf<String>()
+        for( competition in competitions.value ){
+            for( team in competition.teamAssignment.teams ){
+                for( student in team.students ){
+                    studentList.add( student.name )
+                }
+            }
+        }
+        return studentList.sorted()
     }
 
     private fun modifyCompetition(competition: Competition, newValue: Competition) {
@@ -111,6 +139,8 @@ sealed class OnGoingCompetitionEvent {
     data class RestartBlock(val competition: Competition, val team: Team) : OnGoingCompetitionEvent()
     data class NextBlock(val competition: Competition, val team: Team) : OnGoingCompetitionEvent()
     data class SearchTextChange( val newText: String ) : OnGoingCompetitionEvent()
-    data object SearchForStudent : OnGoingCompetitionEvent()
+    data class SearchForStudent( val searchText: String ) : OnGoingCompetitionEvent()
     data class ChangeTabIndex(val index: Int) : OnGoingCompetitionEvent()
+    data class NavigateForwards( val competition: Competition, val team: Team ) : OnGoingCompetitionEvent()
+    data class NavigateBackwards( val competition: Competition, val team: Team ) : OnGoingCompetitionEvent()
 }

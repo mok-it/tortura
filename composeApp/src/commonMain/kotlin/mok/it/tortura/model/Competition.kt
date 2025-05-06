@@ -26,4 +26,12 @@ data class Competition(
         newAnswers[team] = newAnswer
         return this.copy(answers = newAnswers)
     }
+
+    fun navigateBackwards(team: Team): Competition {
+        return modifyTeam( team, answers[team]!!.navigateBackwards() )
+    }
+
+    fun navigateForwards(team: Team): Competition {
+        return modifyTeam( team, answers[team]!!.navigateForwards() )
+    }
 }

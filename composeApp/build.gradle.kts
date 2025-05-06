@@ -74,6 +74,8 @@ kotlin {
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
+
+            implementation( compose.material3 )
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
