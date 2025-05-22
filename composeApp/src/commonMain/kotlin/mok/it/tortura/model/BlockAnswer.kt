@@ -50,6 +50,11 @@ data class BlockAnswer(
         return this.copy(currentAnswersIndex = currentAnswersIndex + 1)
     }
 
+    fun deleteLastTry(): BlockAnswer{
+        val newAnswerHistory = answerHistory.subList( 0, answerHistory.size - 1 )
+        return this.copy(answerHistory = newAnswerHistory, currentAnswersIndex = newAnswerHistory.size - 1)
+    }
+
     fun correctCount(): Int {
         var count = 0
         for (answer in answerHistory.last()) {

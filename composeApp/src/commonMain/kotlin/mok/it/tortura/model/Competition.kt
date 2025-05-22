@@ -34,4 +34,8 @@ data class Competition(
     fun navigateForwards(team: Team): Competition {
         return modifyTeam( team, answers[team]!!.navigateForwards() )
     }
+
+    fun deleteLastTry(team: Team): Competition {
+        return modifyTeam( team, answers[team]!!.deleteLastTry() )
+    }
 }

@@ -13,11 +13,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.Forward
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Forward
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +37,7 @@ fun AnswerBlock(
     onNextBlock: () -> Unit,
     onNavigateBackWards: () -> Unit,
     onNavigateForwards: () -> Unit,
+    onDeleteLastTry: () -> Unit,
     navigateBackWardsEnabled: Boolean,
     navigateForwardsEnabled: Boolean,
     textColor: Color = Color.Unspecified,
@@ -153,6 +152,16 @@ fun AnswerBlock(
         item {
             Spacer(modifier = Modifier.height(25.dp))
             Row {
+
+                IconButton(
+                    onClick = onDeleteLastTry,
+                    enabled = navigateBackWardsEnabled,
+                ){
+                    Icon(
+                        Icons.Filled.DeleteForever,
+                        contentDescription = null,
+                        )
+                }
 
                 IconButton(
                     onClick = onNavigateBackWards,

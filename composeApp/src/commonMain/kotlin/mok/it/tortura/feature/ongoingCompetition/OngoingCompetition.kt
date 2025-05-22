@@ -3,26 +3,22 @@ package mok.it.tortura.feature.ongoingCompetition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mok.it.tortura.model.Competition
 import mok.it.tortura.ui.components.AnswerBlock
-import mok.it.tortura.ui.components.CustomizableSearchBar
-import mok.it.tortura.ui.components.SimpleSearchBar
 
 @Composable
 fun OngoingCompetition(
@@ -33,17 +29,14 @@ fun OngoingCompetition(
 
     val competitions by remember { viewModel.competitions }
 
-    fun teamsInPreviousCompetitions(actCompetition: Competition): Int{
+    fun teamsInPreviousCompetitions(actCompetition: Competition): Int {
         var counter = 0
-        for( competition in competitions ) {
-            if( competition == actCompetition ) return counter
+        for (competition in competitions) {
+            if (competition == actCompetition) return counter
             counter += competition.teamAssignment.teams.size
         }
         return counter
     }
-
-    val searchText by remember { viewModel.searchText }
-    val searchError by remember { viewModel.searchError }
 
     val tabIndex by remember { viewModel.tabIndex }
 
@@ -51,7 +44,14 @@ fun OngoingCompetition(
         topBar = {
             TopAppBar(
                 title = { Text("Verseny") },
-                navigationIcon = { IconButton(onClick = onBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back") } },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                },
                 actions = {
 //                    CustomizableSearchBar(
 //                        query = searchText,
@@ -63,7 +63,7 @@ fun OngoingCompetition(
                 }
             )
         }
-    ){ innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -72,11 +72,11 @@ fun OngoingCompetition(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            for( competition in competitions ) {
+            for (competition in competitions) {
                 val teams = competition.teamAssignment.teams
                 teams.forEachIndexed { index, team ->
-                    if( tabIndex == teamsInPreviousCompetitions(competition) + index ) {
-                        if( competition.answers[team]!!.finished ){
+                    if (tabIndex == teamsInPreviousCompetitions(competition) + index) {
+                        if (competition.answers[team]!!.finished) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.SpaceEvenly,
@@ -86,19 +86,27 @@ fun OngoingCompetition(
                                     text = "Végeztek",
                                     fontSize = 50.sp,
                                     color = competition.teamAssignment.colorSchema.textColor,
-                                    modifier = Modifier.background( color = competition.teamAssignment.colorSchema.backgroundColor, shape = RoundedCornerShape(4.dp) )
+                                    modifier = Modifier.background(
+                                        color = competition.teamAssignment.colorSchema.backgroundColor,
+                                        shape = RoundedCornerShape(4.dp)
+                                    )
                                 )
 
                                 Text(
                                     text = "Pontok: ${competition.answers[team]!!.points()}",
                                     fontSize = 40.sp,
                                     color = competition.teamAssignment.colorSchema.textColor,
-                                    modifier = Modifier.background( color = competition.teamAssignment.colorSchema.backgroundColor, shape = RoundedCornerShape(4.dp) )
+                                    modifier = Modifier.background(
+                                        color = competition.teamAssignment.colorSchema.backgroundColor,
+                                        shape = RoundedCornerShape(4.dp)
+                                    )
                                 )
                             }
 
 
                         } else {
+
+                            val showConfirmDialog = remember { mutableStateOf(false) }
 
                             AnswerBlock(
                                 teamName = "${(competitions.indexOf(competition) + 1) * 100 + index}",
@@ -146,12 +154,48 @@ fun OngoingCompetition(
                                         )
                                     )
                                 },
+                                onDeleteLastTry = {
+                                    showConfirmDialog.value = true
+                                },
                                 navigateBackWardsEnabled = competition.answers[team]!!.canNavigateBackward,
                                 navigateForwardsEnabled = competition.answers[team]!!.canNavigateForward,
                                 textColor = competition.teamAssignment.colorSchema.textColor,
                                 backgroundColor = competition.teamAssignment.colorSchema.backgroundColor,
                                 modifier = Modifier.weight(1f)
                             )
+
+                            if (showConfirmDialog.value) {
+                                AlertDialog(
+                                    title = { Text("Próbálkozás törlése") },
+                                    text = { Text("Egész biztos törölni akarod?\nUtána már nem fogom visszaimádkozni sehogy...") },
+                                    onDismissRequest = {
+                                        showConfirmDialog.value = false
+                                    },
+                                    confirmButton = {
+                                        Button(
+                                            onClick = {
+                                                viewModel.onEvent(
+                                                    OnGoingCompetitionEvent.DeleteLastTry(competition, team)
+                                                )
+                                                showConfirmDialog.value = false
+                                            },
+                                            colors = ButtonDefaults.buttonColors( backgroundColor = Color.Red )
+                                        ) {
+                                            Row {
+                                                Icon(Icons.Filled.DeleteForever, null)
+                                                Text("Biztos")
+                                            }
+                                        }
+                                    },
+                                    dismissButton = {
+                                        Button(onClick = {
+                                            showConfirmDialog.value = false
+                                        }) {
+                                            Text("Hupsz, mégse")
+                                        }
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -162,9 +206,9 @@ fun OngoingCompetition(
                 backgroundColor = Color.Transparent,
                 modifier = Modifier
             ) {
-                for( competition in competitions ){
+                for (competition in competitions) {
                     val teams = competition.teamAssignment.teams
-                    teams.forEachIndexed{ index, _->
+                    teams.forEachIndexed { index, _ ->
                         Tab(
                             selected = tabIndex == teamsInPreviousCompetitions(competition) + index,
                             onClick = {

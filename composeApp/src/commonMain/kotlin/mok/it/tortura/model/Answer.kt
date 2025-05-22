@@ -70,6 +70,18 @@ data class Answer(
         return this.copy(currentBlockAnswerIndex = currentBlockAnswerIndex + 1)
     }
 
+    fun deleteLastTry(): Answer{
+        if( answerHistory.last().canNavigateBackwards ){
+            val newLast = answerHistory.last().deleteLastTry()
+            val newAnswerHistory= answerHistory.toMutableList()
+            newAnswerHistory.removeLast()
+            newAnswerHistory.add(newLast)
+            return this.copy(answerHistory = newAnswerHistory)
+        }
+        val newAnswerHistory = answerHistory.subList(0, answerHistory.size - 1)
+        return this.copy(answerHistory = newAnswerHistory, currentBlockAnswerIndex = newAnswerHistory.size - 1)
+    }
+
     fun points(): Double {
         var sum = 0.0
 

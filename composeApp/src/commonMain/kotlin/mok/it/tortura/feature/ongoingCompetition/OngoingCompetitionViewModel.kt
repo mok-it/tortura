@@ -69,8 +69,6 @@ class OngoingCompetitionViewModel : ViewModel() {
     val tabIndex = mutableStateOf(0)
 
     val searchText = mutableStateOf("")
-    val searchError = mutableStateOf(false)
-
 
     fun onEvent(event: OnGoingCompetitionEvent) {
         when (event) {
@@ -111,6 +109,10 @@ class OngoingCompetitionViewModel : ViewModel() {
             is OnGoingCompetitionEvent.NavigateForwards -> {
                 modifyCompetition( event.competition, event.competition.navigateForwards( event.team ) )
             }
+
+            is OnGoingCompetitionEvent.DeleteLastTry -> {
+                modifyCompetition( event.competition, event.competition.deleteLastTry( event.team ) )
+            }
         }
     }
 
@@ -143,4 +145,5 @@ sealed class OnGoingCompetitionEvent {
     data class ChangeTabIndex(val index: Int) : OnGoingCompetitionEvent()
     data class NavigateForwards( val competition: Competition, val team: Team ) : OnGoingCompetitionEvent()
     data class NavigateBackwards( val competition: Competition, val team: Team ) : OnGoingCompetitionEvent()
+    data class DeleteLastTry( val competition: Competition, val team: Team ) : OnGoingCompetitionEvent()
 }
