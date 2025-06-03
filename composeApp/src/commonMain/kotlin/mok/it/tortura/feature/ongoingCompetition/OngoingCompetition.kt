@@ -111,7 +111,7 @@ fun OngoingCompetition(
                             AnswerBlock(
                                 teamName = "${(competitions.indexOf(competition) + 1) * 100 + index}",
                                 answers = competition.answers[team]!!.currentBlockAnswer,
-                                indexOffset = competition.answers[team]!!.previousTaskNumber,
+                                indexOffset = competition.problemSet.previousTaskNumber( competition.answers[team]!!.currentBlockAnswer.block ),
                                 modifyAnswer = { task, newAnswer ->
                                     viewModel.onEvent(
                                         OnGoingCompetitionEvent.ModifyAnswer(

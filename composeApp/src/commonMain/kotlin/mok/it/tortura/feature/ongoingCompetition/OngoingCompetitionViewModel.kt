@@ -33,7 +33,7 @@ class OngoingCompetitionViewModel : ViewModel() {
 
     private val polarBlock = Block( block.tasks.map { task: Task -> Task( "JEGES ${task.text}", task.solution ) }, 2 )
 
-    private val problemSet = ProblemSet("Teszt", listOf(block, block, block))
+    private val problemSet = ProblemSet("Teszt", listOf(block, block.copy( id = 2), block.copy( id = 3)))
 
     private val polarProblemSet = ProblemSet("JEGES", listOf(polarBlock, polarBlock))
 

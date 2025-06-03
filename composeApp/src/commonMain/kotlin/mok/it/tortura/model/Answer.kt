@@ -17,14 +17,6 @@ data class Answer(
     val currentBlockAnswer: BlockAnswer
         get() = answerHistory[currentBlockAnswerIndex]
 
-    val previousTaskNumber : Int
-        get() {
-            var sum = 0
-            for( i in 0 ..< blockIdx ){
-                sum += problemSet.blocks[ i ].tasks.size
-            }
-            return sum
-        }
 
     fun answerTask(task: Task, newAnswer: SolutionState): Answer {
         val newBlockAnswer = currentBlockAnswer.changeAnswer(task, newAnswer)
@@ -91,7 +83,7 @@ data class Answer(
             return this.copy(answerHistory = newAnswerHistory)
         }
         val newAnswerHistory = answerHistory.subList(0, answerHistory.size - 1)
-        return this.copy(answerHistory = newAnswerHistory, currentBlockAnswerIndex = newAnswerHistory.size - 1)
+        return this.copy(answerHistory = newAnswerHistory, currentBlockAnswerIndex = newAnswerHistory.size - 1, blockIdx = blockIdx - 1)
     }
 
     fun points(): Double {
