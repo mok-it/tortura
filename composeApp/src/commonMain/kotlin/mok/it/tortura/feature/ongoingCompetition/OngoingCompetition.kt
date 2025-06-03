@@ -101,6 +101,10 @@ fun OngoingCompetition(
                                         shape = RoundedCornerShape(4.dp)
                                     )
                                 )
+
+                                Text(
+                                    text = "Kezdés: ${competition.startTime}\nVége: ${competition.answers[team]!!.lastAnswerTime}"
+                                )
                             }
 
 

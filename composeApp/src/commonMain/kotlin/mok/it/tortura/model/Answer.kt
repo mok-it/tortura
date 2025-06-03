@@ -1,5 +1,7 @@
 package mok.it.tortura.model
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -8,7 +10,8 @@ data class Answer(
     val answerHistory: List<BlockAnswer> = listOf(BlockAnswer(problemSet.blocks.first()).addBlockAttempt()),
     private val currentBlockAnswerIndex: Int = 0,
     val blockIdx: Int = 0,
-    val finished: Boolean = false
+    val finished: Boolean = false,
+    val lastAnswerTime: Instant = Clock.System.now(),
 ) {
 
     val currentBlock
@@ -23,7 +26,7 @@ data class Answer(
         val newList = answerHistory.toMutableList()
         newList.removeAt(currentBlockAnswerIndex)
         newList.add(currentBlockAnswerIndex,newBlockAnswer)
-        return this.copy(answerHistory = newList)
+        return this.copy(answerHistory = newList, lastAnswerTime = Clock.System.now())
     }
 
     fun restartCurrentBlock(): Answer {
@@ -98,34 +101,5 @@ data class Answer(
 
         return sum
     }
-
-
-//    fun calculatePoints(): Double {
-//        var points = 0.0
-//
-//        var base = 32
-//        var baseIncrement = 0
-//
-//        for (block in competition.blocks) {
-//            base += baseIncrement
-//            baseIncrement = 0
-//            for (task in block.tasks) {
-//                val answers = answerHistory[task] ?: continue
-//                var lastCorrect = -1
-//                for ((i, answer) in answers.withIndex()) {
-//                    if (answer != task.solution) {
-//                        lastCorrect = -1
-//                    } else if (lastCorrect == -1) {
-//                        lastCorrect = i
-//                    }
-//                }
-//                if (lastCorrect != -1) {
-//                    points += base / 2.0.pow(lastCorrect)
-//                    baseIncrement += 8
-//                }
-//            }
-//        }
-//        return points
-//    }
 
 }
