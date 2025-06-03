@@ -111,7 +111,7 @@ fun OngoingCompetition(
                             AnswerBlock(
                                 teamName = "${(competitions.indexOf(competition) + 1) * 100 + index}",
                                 answers = competition.answers[team]!!.currentBlockAnswer,
-                                indexOffset = 0,
+                                indexOffset = competition.answers[team]!!.previousTaskNumber,
                                 modifyAnswer = { task, newAnswer ->
                                     viewModel.onEvent(
                                         OnGoingCompetitionEvent.ModifyAnswer(
@@ -159,6 +159,7 @@ fun OngoingCompetition(
                                 },
                                 navigateBackWardsEnabled = competition.answers[team]!!.canNavigateBackward,
                                 navigateForwardsEnabled = competition.answers[team]!!.canNavigateForward,
+                                deleteLastTryEnabled = competition.answers[team]!!.canDeleteLastTry,
                                 textColor = competition.teamAssignment.colorSchema.textColor,
                                 backgroundColor = competition.teamAssignment.colorSchema.backgroundColor,
                                 modifier = Modifier.weight(1f)

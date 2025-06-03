@@ -17,6 +17,15 @@ data class Answer(
     val currentBlockAnswer: BlockAnswer
         get() = answerHistory[currentBlockAnswerIndex]
 
+    val previousTaskNumber : Int
+        get() {
+            var sum = 0
+            for( i in 0 ..< blockIdx ){
+                sum += problemSet.blocks[ i ].tasks.size
+            }
+            return sum
+        }
+
     fun answerTask(task: Task, newAnswer: SolutionState): Answer {
         val newBlockAnswer = currentBlockAnswer.changeAnswer(task, newAnswer)
         val newList = answerHistory.toMutableList()
@@ -47,6 +56,9 @@ data class Answer(
 
     val canNavigateForward
         get() = currentBlockAnswer.canNavigateForwards || currentBlockAnswerIndex < answerHistory.size - 1
+
+    val canDeleteLastTry
+        get() = currentBlockAnswer.canDeleteLastTry || (currentBlockAnswerIndex == answerHistory.size - 1 && canNavigateBackward )
 
     fun navigateBackwards(): Answer {
         if( currentBlockAnswer.canNavigateBackwards ) {

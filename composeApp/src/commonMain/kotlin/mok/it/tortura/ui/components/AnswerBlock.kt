@@ -32,14 +32,15 @@ fun AnswerBlock(
     teamName: String,
     answers: BlockAnswer,
     indexOffset: Int = 0,
-    modifyAnswer: (task: Task, newAnswer: SolutionState) -> Unit,
-    onRestartBlock: () -> Unit,
-    onNextBlock: () -> Unit,
-    onNavigateBackWards: () -> Unit,
-    onNavigateForwards: () -> Unit,
-    onDeleteLastTry: () -> Unit,
-    navigateBackWardsEnabled: Boolean,
-    navigateForwardsEnabled: Boolean,
+    modifyAnswer: (task: Task, newAnswer: SolutionState) -> Unit = { _, _ -> },
+    onRestartBlock: () -> Unit = {},
+    onNextBlock: () -> Unit = {},
+    onNavigateBackWards: () -> Unit = {},
+    onNavigateForwards: () -> Unit = {},
+    onDeleteLastTry: () -> Unit = {},
+    navigateBackWardsEnabled: Boolean = false,
+    navigateForwardsEnabled: Boolean = false,
+    deleteLastTryEnabled: Boolean = false,
     textColor: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
     modifier: Modifier = Modifier,
@@ -155,7 +156,7 @@ fun AnswerBlock(
 
                 IconButton(
                     onClick = onDeleteLastTry,
-                    enabled = navigateBackWardsEnabled,
+                    enabled = deleteLastTryEnabled,
                 ){
                     Icon(
                         Icons.Filled.DeleteForever,
