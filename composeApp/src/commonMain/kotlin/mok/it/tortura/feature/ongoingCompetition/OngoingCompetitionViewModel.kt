@@ -2,11 +2,16 @@ package mok.it.tortura.feature.ongoingCompetition
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import io.github.vinceglb.filekit.PlatformFile
+import kotlinx.coroutines.launch
 import mok.it.tortura.CompetitionDb
 import mok.it.tortura.model.Competition
 import mok.it.tortura.model.CompetitionTeam
 import mok.it.tortura.model.SolutionState
 import mok.it.tortura.model.Task
+import mok.it.tortura.saveStringToFile
+import mok.it.tortura.util.mapJsonFormat
 
 class OngoingCompetitionViewModel : ViewModel() {
 
@@ -60,6 +65,15 @@ class OngoingCompetitionViewModel : ViewModel() {
             is OnGoingCompetitionEvent.DeleteLastTry -> {
                 modifyCompetition( event.competition, event.competition.deleteLastTry( event.team ) )
             }
+
+            is OnGoingCompetitionEvent.SaveToFile -> {
+                viewModelScope.launch {
+                    saveStringToFile(
+                        event.file,
+                        mapJsonFormat.encodeToString( competitions.value )
+                    )
+                }
+            }
         }
     }
 
@@ -94,4 +108,5 @@ sealed class OnGoingCompetitionEvent {
     data class NavigateForwards( val competition: Competition, val team: CompetitionTeam ) : OnGoingCompetitionEvent()
     data class NavigateBackwards( val competition: Competition, val team: CompetitionTeam ) : OnGoingCompetitionEvent()
     data class DeleteLastTry( val competition: Competition, val team: CompetitionTeam ) : OnGoingCompetitionEvent()
+    data class SaveToFile( val file: PlatformFile ) : OnGoingCompetitionEvent()
 }

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import mok.it.tortura.model.Competition
 import mok.it.tortura.ui.components.AnswerBlock
 
@@ -28,6 +29,14 @@ fun OngoingCompetition(
     val viewModel = viewModel { OngoingCompetitionViewModel() }
 
     val competitions by remember { viewModel.competitions }
+
+    val save = rememberFileSaverLauncher { file ->
+        if (file != null) {
+            viewModel.onEvent(
+                OnGoingCompetitionEvent.SaveToFile(file)
+            )
+        }
+    }
 
     fun teamsInPreviousCompetitions(actCompetition: Competition): Int {
         var counter = 0
@@ -53,6 +62,12 @@ fun OngoingCompetition(
                     }
                 },
                 actions = {
+                    Button(
+                        onClick = { save.launch(suggestedName = "tortura", extension = "ttr") }
+                    ){
+                        Text("Export")
+                    }
+
 //                    CustomizableSearchBar(
 //                        query = searchText,
 //                        onQueryChange = { viewModel.onEvent(OnGoingCompetitionEvent.SearchTextChange( it ) ) },

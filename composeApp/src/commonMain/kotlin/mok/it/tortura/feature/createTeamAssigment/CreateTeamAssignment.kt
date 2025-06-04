@@ -59,8 +59,10 @@ fun CreateTeamAssignment(
                 }
             )
         }
-    ) {
-        Row {
+    ) { paddingValues ->
+        Row(
+            modifier = Modifier.padding(paddingValues)
+        ) {
             Surface {
                 Column {
 

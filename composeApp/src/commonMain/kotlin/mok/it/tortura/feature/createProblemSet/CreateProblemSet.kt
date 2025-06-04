@@ -54,9 +54,10 @@ fun CreateProblemSet(
                 }
             )
         }
-    ) {
-
-        Column {
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier.padding(paddingValues)
+        ) {
             LazyColumn(modifier = Modifier.weight(1f)) {
                 for (block in problemSet.blocks) {
                     stickyHeader {
