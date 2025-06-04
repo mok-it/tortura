@@ -10,6 +10,7 @@ import mok.it.tortura.feature.SetUpMenu
 import mok.it.tortura.feature.createProblemSet.CreateProblemSet
 import mok.it.tortura.feature.createTeamAssigment.CreateTeamAssignment
 import mok.it.tortura.feature.ongoingCompetition.OngoingCompetition
+import mok.it.tortura.feature.startCompetition.StartCompetiton
 import mok.it.tortura.goodNightGoodBye
 
 @Composable
@@ -40,12 +41,17 @@ fun NavGraph(
         composable(Screen.MainMenu.route) {
             MainMenu(
                 onSetUp = { navController.navigate(Screen.SetUpMenu.route) },
-                onCompetition = { navController.navigate(Screen.OngoingCompetition.route) },
+                onCompetition = { navController.navigate(Screen.CreateCompetitionFromFile.route) },
                 onExit = { goodNightGoodBye() },
             )
         }
         composable(Screen.OngoingCompetition.route) {
             OngoingCompetition(
+                onBack = { navController.navigate(Screen.MainMenu.route) },
+            )
+        }
+        composable(Screen.CreateCompetitionFromFile.route) {
+            StartCompetiton(
                 onBack = { navController.navigate(Screen.MainMenu.route) },
             )
         }

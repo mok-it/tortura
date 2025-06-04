@@ -62,6 +62,7 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(libs.androidx.navigation.compose)
+            implementation(libs.kotlinx.coroutines.core)
             implementation(compose.materialIconsExtended)
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -75,7 +76,7 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs.compose)
 
-            implementation( compose.material3 )
+            implementation(compose.material3)
 
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotbase)
