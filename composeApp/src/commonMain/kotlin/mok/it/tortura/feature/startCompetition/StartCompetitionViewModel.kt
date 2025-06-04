@@ -35,11 +35,17 @@ class StartCompetitionViewModel : ViewModel() {
 
             is StartCompetitionEvent.SelectTeamAssignment -> {
                 viewModelScope.launch {
-                    val newData = event.data.changeTeamAssignmentFile(event.file)
-                    val index = rows.value.indexOf(event.data)
-                    val newRow = rows.value.filter { it != event.data }.toMutableList()
-                    newRow.add(index, newData)
-                    rows.value = newRow
+                    try {
+                        val newData = event.data.changeTeamAssignmentFile(event.file)
+                        val index = rows.value.indexOf(event.data)
+                        val newRow = rows.value.filter { it != event.data }.toMutableList()
+                        newRow.add(index, newData)
+                        rows.value = newRow
+                    } catch (_: SerializationException) {
+                        popup.value = StartCompetitionPopupType.PARSE_ERROR
+                    } catch (_: IllegalArgumentException) {
+                        popup.value = StartCompetitionPopupType.TYPE_ERROR
+                    }
                 }
             }
 
@@ -51,9 +57,9 @@ class StartCompetitionViewModel : ViewModel() {
                         val newRow = rows.value.filter { it != event.data }.toMutableList()
                         newRow.add(index, newData)
                         rows.value = newRow
-                    } catch (e: SerializationException) {
+                    } catch (_: SerializationException) {
                         popup.value = StartCompetitionPopupType.PARSE_ERROR
-                    } catch (e: IllegalArgumentException) {
+                    } catch (_: IllegalArgumentException) {
                         popup.value = StartCompetitionPopupType.TYPE_ERROR
                     }
                 }

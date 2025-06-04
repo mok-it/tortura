@@ -91,7 +91,7 @@ fun StartCompetiton(
                 Button(
                     enabled = viewModel.canSave,
                     onClick = {
-                        viewModel.onEvent(StartCompetitionViewModel.StartCompetitionEvent.SaveToDatabase  )
+                        viewModel.onEvent(StartCompetitionViewModel.StartCompetitionEvent.SaveToDatabase)
                         onStart()
                     }
                 ) {
@@ -156,8 +156,8 @@ fun GenericErrorPopup(
     onDismiss: () -> Unit
 ) {
     AlertDialog(
-        title = { Text("asdf") },
-        text = { Text("bsdf") },
+        title = { Text(title) },
+        text = { Text(text) },
         onDismissRequest = onDismiss,
         confirmButton = {
             Button(
