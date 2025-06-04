@@ -7,16 +7,16 @@ import mok.it.tortura.util.toJson
 
 object CompetitionDb {
 
-    private const val DATABASE_NAME = "tortura_db"
+    private const val DATABASE_NAME = "torturadb"
     private const val COLLECTION_NAME = "competitions"
 
-    val database = Database( DATABASE_NAME )
+    val database = Database(DATABASE_NAME)
 
     val collection
-        get() = database.createCollection( COLLECTION_NAME )
+        get() = database.createCollection(COLLECTION_NAME)
 
-    private fun saveCompetition(competition: Competition) {
-        val document = MutableDocument( competition.id, competition.toJson() )
+    fun saveCompetition(competition: Competition) {
+        val document = MutableDocument(competition.id, competition.toJson())
         collection.save(document)
     }
 
@@ -45,7 +45,7 @@ object CompetitionDb {
     }
 
     private fun clearDatabase() {
-        database.deleteCollection( COLLECTION_NAME )
+        database.deleteCollection(COLLECTION_NAME)
     }
 
     fun overwriteDatabase(competitions: List<Competition>) {
