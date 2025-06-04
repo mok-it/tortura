@@ -73,10 +73,10 @@ fun OngoingCompetition(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             for (competition in competitions) {
-                val teams = competition.teamAssignment.teams
-                teams.forEachIndexed { index, team ->
+                val competitionTeams = competition.answers
+                competitionTeams.forEachIndexed { index, competitionTeam ->
                     if (tabIndex == teamsInPreviousCompetitions(competition) + index) {
-                        if (competition.answers[team]!!.finished) {
+                        if (competitionTeam.answer.finished) {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.SpaceEvenly,
@@ -93,7 +93,7 @@ fun OngoingCompetition(
                                 )
 
                                 Text(
-                                    text = "Pontok: ${competition.answers[team]!!.points()}",
+                                    text = "Pontok: ${competitionTeam.answer.points()}",
                                     fontSize = 40.sp,
                                     color = competition.teamAssignment.colorSchema.textColor,
                                     modifier = Modifier.background(
@@ -103,7 +103,7 @@ fun OngoingCompetition(
                                 )
 
                                 Text(
-                                    text = "Kezdés: ${competition.startTime}\nVége: ${competition.answers[team]!!.lastAnswerTime}"
+                                    text = "Kezdés: ${competition.startTime}\nVége: ${competitionTeam.answer.lastAnswerTime}"
                                 )
                             }
 
@@ -114,13 +114,13 @@ fun OngoingCompetition(
 
                             AnswerBlock(
                                 teamName = "${(competitions.indexOf(competition) + 1) * 100 + index}",
-                                answers = competition.answers[team]!!.currentBlockAnswer,
-                                indexOffset = competition.problemSet.previousTaskNumber( competition.answers[team]!!.currentBlockAnswer.block ),
+                                answers = competitionTeam.answer.currentBlockAnswer,
+                                indexOffset = competition.problemSet.previousTaskNumber( competitionTeam.answer.currentBlockAnswer.block ),
                                 modifyAnswer = { task, newAnswer ->
                                     viewModel.onEvent(
                                         OnGoingCompetitionEvent.ModifyAnswer(
                                             competition,
-                                            team,
+                                            competitionTeam,
                                             task,
                                             newAnswer
                                         )
@@ -130,7 +130,7 @@ fun OngoingCompetition(
                                     viewModel.onEvent(
                                         OnGoingCompetitionEvent.RestartBlock(
                                             competition,
-                                            team
+                                            competitionTeam
                                         )
                                     )
                                 },
@@ -138,7 +138,7 @@ fun OngoingCompetition(
                                     viewModel.onEvent(
                                         OnGoingCompetitionEvent.NextBlock(
                                             competition,
-                                            team
+                                            competitionTeam
                                         )
                                     )
                                 },
@@ -146,7 +146,7 @@ fun OngoingCompetition(
                                     viewModel.onEvent(
                                         OnGoingCompetitionEvent.NavigateForwards(
                                             competition,
-                                            team
+                                            competitionTeam
                                         )
                                     )
                                 },
@@ -154,16 +154,16 @@ fun OngoingCompetition(
                                     viewModel.onEvent(
                                         OnGoingCompetitionEvent.NavigateBackwards(
                                             competition,
-                                            team
+                                            competitionTeam
                                         )
                                     )
                                 },
                                 onDeleteLastTry = {
                                     showConfirmDialog.value = true
                                 },
-                                navigateBackWardsEnabled = competition.answers[team]!!.canNavigateBackward,
-                                navigateForwardsEnabled = competition.answers[team]!!.canNavigateForward,
-                                deleteLastTryEnabled = competition.answers[team]!!.canDeleteLastTry,
+                                navigateBackWardsEnabled = competitionTeam.answer.canNavigateBackward,
+                                navigateForwardsEnabled = competitionTeam.answer.canNavigateForward,
+                                deleteLastTryEnabled = competitionTeam.answer.canDeleteLastTry,
                                 textColor = competition.teamAssignment.colorSchema.textColor,
                                 backgroundColor = competition.teamAssignment.colorSchema.backgroundColor,
                                 modifier = Modifier.weight(1f)
@@ -180,7 +180,7 @@ fun OngoingCompetition(
                                         Button(
                                             onClick = {
                                                 viewModel.onEvent(
-                                                    OnGoingCompetitionEvent.DeleteLastTry(competition, team)
+                                                    OnGoingCompetitionEvent.DeleteLastTry(competition, competitionTeam)
                                                 )
                                                 showConfirmDialog.value = false
                                             },

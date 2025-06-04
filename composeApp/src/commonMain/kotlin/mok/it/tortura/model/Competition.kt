@@ -9,37 +9,41 @@ import kotlinx.serialization.Serializable
 data class Competition(
     val teamAssignment: TeamAssignment,
     val problemSet: ProblemSet,
-    val answers: Map<Team, Answer> = teamAssignment.teams.associateWith { Answer(problemSet) },
+    val answers: List<CompetitionTeam> = teamAssignment.teams.map { team -> CompetitionTeam( team, Answer(problemSet)) },
     val startTime: Instant = Clock.System.now(),
+    val id: String? = null,
 ) {
 
-    fun answerTask(team: Team, task: Task, newAnswer: SolutionState) : Competition {
-        return modifyTeam( team, answers[team]!!.answerTask( task, newAnswer ) )
-    }
-
-    fun restartCurrentBlock(team: Team): Competition {
-        return modifyTeam(team, answers[team]!!.restartCurrentBlock())
-    }
-
-    fun nextBlock(team: Team): Competition {
-        return modifyTeam(team, answers[team]!!.nextBlock())
-    }
-
-    private fun modifyTeam(team: Team, newAnswer: Answer): Competition {
-        val newAnswers = answers.toMutableMap()
-        newAnswers[team] = newAnswer
+    private fun modifyTeam(competitionTeam: CompetitionTeam, newAnswer: Answer): Competition {
+        val newAnswers = answers.toMutableList()
+        val index = answers.indexOf(competitionTeam)
+        val newCompetitionTeam = competitionTeam.copy( answer = newAnswer )
+        newAnswers.removeAt(index)
+        newAnswers.add(index, newCompetitionTeam)
         return this.copy(answers = newAnswers)
     }
 
-    fun navigateBackwards(team: Team): Competition {
-        return modifyTeam( team, answers[team]!!.navigateBackwards() )
+    fun answerTask(competitionTeam: CompetitionTeam, task: Task, newAnswer: SolutionState) : Competition {
+        return modifyTeam( competitionTeam, competitionTeam.answer.answerTask( task, newAnswer ) )
     }
 
-    fun navigateForwards(team: Team): Competition {
-        return modifyTeam( team, answers[team]!!.navigateForwards() )
+    fun restartCurrentBlock(competitionTeam: CompetitionTeam): Competition {
+        return modifyTeam(competitionTeam, competitionTeam.answer.restartCurrentBlock())
     }
 
-    fun deleteLastTry(team: Team): Competition {
-        return modifyTeam( team, answers[team]!!.deleteLastTry() )
+    fun nextBlock(competitionTeam: CompetitionTeam): Competition {
+        return modifyTeam(competitionTeam, competitionTeam.answer.nextBlock())
+    }
+
+    fun navigateBackwards(competitionTeam: CompetitionTeam): Competition {
+        return modifyTeam( competitionTeam, competitionTeam.answer.navigateBackwards() )
+    }
+
+    fun navigateForwards(competitionTeam: CompetitionTeam): Competition {
+        return modifyTeam( competitionTeam, competitionTeam.answer.navigateForwards() )
+    }
+
+    fun deleteLastTry(competitionTeam: CompetitionTeam): Competition {
+        return modifyTeam( competitionTeam, competitionTeam.answer.deleteLastTry() )
     }
 }

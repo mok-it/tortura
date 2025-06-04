@@ -78,7 +78,7 @@ data class Answer(
     }
 
     fun deleteLastTry(): Answer{
-        if( answerHistory.last().canNavigateBackwards ){
+        if( answerHistory.last().canDeleteLastTry ){
             val newLast = answerHistory.last().deleteLastTry()
             val newAnswerHistory= answerHistory.toMutableList()
             newAnswerHistory.removeLast()

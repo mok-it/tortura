@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Person
@@ -44,66 +45,82 @@ fun CreateTeamAssignment(
     }
     val lazyListState = rememberLazyListState()
 
-    Row {
-        Surface {
-            Column {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Create Team Assignment") },
+                navigationIcon = {
+                    IconButton(onClick = { onBack() }) {
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
+                    }
+                }
+            )
+        }
+    ) {
+        Row {
+            Surface {
+                Column {
 
-                LazyColumn(
-                    state = lazyListState,
-                    modifier = Modifier.weight(1f)
-                ) {
-                    for (team in teamAssignment.teams) {
-                        stickyHeader {
-                            Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Text(
-                                        "${teamAssignment.teams.indexOf(team) + 1}. csapat",
-                                        modifier = Modifier.padding(end = 8.dp)
-                                    )
-                                    IconButton(onClick = {
-                                        viewModel.onEvent(CreateTeamAssignmentEvent.DeleteTeam(team))
-                                    }, modifier = Modifier.size(40.dp)) {
-                                        Icon(Icons.Filled.Delete, "Csapat törlése")
+                    LazyColumn(
+                        state = lazyListState,
+                        modifier = Modifier.weight(1f)
+                    ) {
+                        for (team in teamAssignment.teams) {
+                            stickyHeader {
+                                Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(
+                                            "${teamAssignment.teams.indexOf(team) + 1}. csapat",
+                                            modifier = Modifier.padding(end = 8.dp)
+                                        )
+                                        IconButton(onClick = {
+                                            viewModel.onEvent(CreateTeamAssignmentEvent.DeleteTeam(team))
+                                        }, modifier = Modifier.size(40.dp)) {
+                                            Icon(Icons.Filled.Delete, "Csapat törlése")
+                                        }
                                     }
                                 }
                             }
-                        }
 
-                        items(team.students) { student ->
-                            StudentCard(student) {
-                                viewModel.onEvent(CreateTeamAssignmentEvent.DeleteMember(team, student))
+                            items(team.students) { student ->
+                                StudentCard(student) {
+                                    viewModel.onEvent(CreateTeamAssignmentEvent.DeleteMember(team, student))
+                                }
                             }
-                        }
 
+                            item {
+                                Button(
+                                    onClick = {
+                                        viewModel.onEvent(CreateTeamAssignmentEvent.AddStudent(team))
+                                    },
+                                ) {
+                                    Row {
+                                        Icon(Icons.Default.Person, "")
+                                        Text("Csapattag hozzáadása")
+                                    }
+                                }
+                            }
+
+                        }
                         item {
-                            Button(
-                                onClick = {
-                                    viewModel.onEvent(CreateTeamAssignmentEvent.AddStudent(team))
-                                },
-                            ) {
+                            Button(shape = CircleShape, onClick = {
+                                println("Új csapat ${teamAssignment.teams.size}")
+                                viewModel.onEvent(CreateTeamAssignmentEvent.AddTeam)
+                            }) {
                                 Row {
-                                    Icon(Icons.Default.Person, "")
-                                    Text("Csapattag hozzáadása")
+                                    Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
+                                    Text("Csapat hozzáadása")
                                 }
                             }
                         }
-
                     }
-                    item {
-                        Button(shape = CircleShape, onClick = {
-                            println("Új csapat ${teamAssignment.teams.size}")
-                            viewModel.onEvent(CreateTeamAssignmentEvent.AddTeam)
-                        }) {
-                            Row {
-                                Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
-                                Text("Csapat hozzáadása")
-                            }
-                        }
-                    }
+                    Button(
+                        onClick = { launcher.launch("output", "txt") }
+                    ) { Text(text = "Mentés") }
                 }
-                Button(
-                    onClick = { launcher.launch("output", "txt") }
-                ) { Text(text = "Mentés") }
             }
         }
     }

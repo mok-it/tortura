@@ -5,12 +5,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import mok.it.tortura.goodNightGoodBye
 import mok.it.tortura.feature.MainMenu
 import mok.it.tortura.feature.SetUpMenu
 import mok.it.tortura.feature.createProblemSet.CreateProblemSet
 import mok.it.tortura.feature.createTeamAssigment.CreateTeamAssignment
 import mok.it.tortura.feature.ongoingCompetition.OngoingCompetition
+import mok.it.tortura.goodNightGoodBye
 
 @Composable
 fun NavGraph(
@@ -22,17 +22,19 @@ fun NavGraph(
     ) {
         composable(Screen.CreateTeams.route) {
             CreateTeamAssignment(
-                onBack = { navController.navigate(Screen.MainMenu.route) },
+                onBack = { navController.popBackStack() },
             )
         }
         composable(Screen.CreateTasks.route) {
-            CreateProblemSet()
+            CreateProblemSet(
+                onBack = { navController.popBackStack() },
+            )
         }
         composable(Screen.SetUpMenu.route) {
             SetUpMenu(
                 onCompetitionCreation = { navController.navigate(Screen.CreateTasks.route) },
                 onTeamCreation = { navController.navigate(Screen.CreateTeams.route) },
-                onBack = { navController.navigate(Screen.MainMenu.route) }
+                onBack = { navController.popBackStack() },
             )
         }
         composable(Screen.MainMenu.route) {

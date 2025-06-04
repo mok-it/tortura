@@ -5,17 +5,17 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults.buttonColors
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults.buttonColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,6 +68,7 @@ fun AnswerBlock(
             )
             Spacer(Modifier.height(20.dp))
         }
+
 
         for( i in 0..<block.tasks.size ) {
 
@@ -130,7 +131,7 @@ fun AnswerBlock(
                         if( answer == SolutionState.INCORRECT ) {
                             Icon(
                                 Icons.Filled.Close,
-                                contentDescription = "",
+                                contentDescription = null,
                                 tint = Color.White,
                                 modifier = Modifier
                                     .background(color = Color.Red, shape = RoundedCornerShape(iconSize / 2))
@@ -152,7 +153,9 @@ fun AnswerBlock(
 
         item {
             Spacer(modifier = Modifier.height(25.dp))
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.SpaceAround,
+            ) {
 
                 IconButton(
                     onClick = onDeleteLastTry,
@@ -177,17 +180,22 @@ fun AnswerBlock(
                 Button(
                     onClick = onRestartBlock,
                     enabled = answers.restartEnabled,
-                    colors = buttonColors( backgroundColor = backgroundColor ),
+                    colors = buttonColors(
+                        containerColor = backgroundColor,
+                        contentColor = textColor,
+                    ),
+                    modifier = Modifier.padding(5.dp)
                 ){
                     Text(
                         text= "Blokk újrakezdése",
-                        color= textColor,
                     )
                 }
 
                 Button(
                     onClick = onNextBlock,
                     enabled = answers.goNextEnabled,
+                    colors = buttonColors(containerColor = backgroundColor ),
+                    modifier = Modifier.padding(5.dp)
                 ){
                     Text(
                         text = "Következő blokk",
@@ -199,7 +207,7 @@ fun AnswerBlock(
                     onClick = onNavigateForwards,
                     enabled = navigateForwardsEnabled,
                 ){
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "", )
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "" )
                 }
             }
         }

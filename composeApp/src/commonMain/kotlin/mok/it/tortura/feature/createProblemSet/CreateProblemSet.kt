@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
@@ -28,6 +29,7 @@ import mok.it.tortura.ui.components.TaskCard
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CreateProblemSet(
+    onBack: () -> Unit,
 ) {
     val viewModel: CreateProblemSetViewModel = viewModel { CreateProblemSetViewModel() }
     val problemSet by remember { viewModel.problemSet }
@@ -41,75 +43,89 @@ fun CreateProblemSet(
         }
     }
 
-    Column {
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            for (block in problemSet.blocks) {
-                stickyHeader {
-                    Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text(
-                                "${problemSet.blocks.indexOf(block) + 1}. blokk",
-                                modifier = Modifier.padding(end = 8.dp)
-                            )
-                            IconButton(onClick = {
-                                viewModel.onEvent(CompetitionEditEvent.DeleteBlock(block))
-                            }, modifier = Modifier.size(40.dp)) {
-                                Icon(Icons.Filled.Delete, "Blokk törlése")
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {Text("Create problem Set")},
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) {
+
+        Column {
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                for (block in problemSet.blocks) {
+                    stickyHeader {
+                        Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    "${problemSet.blocks.indexOf(block) + 1}. blokk",
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                                IconButton(onClick = {
+                                    viewModel.onEvent(CompetitionEditEvent.DeleteBlock(block))
+                                }, modifier = Modifier.size(40.dp)) {
+                                    Icon(Icons.Filled.Delete, "Blokk törlése")
+                                }
+                            }
+
+                        }
+                    }
+                    items(block.tasks) {
+                        TaskCard(
+                            task = it,
+                            onChangeText = { text ->
+                                viewModel.onEvent(
+                                    CompetitionEditEvent.ChangeTaskText(
+                                        block,
+                                        it,
+                                        text
+                                    )
+                                )
+                            },
+                            onChangeSolution = { text ->
+                                viewModel.onEvent(
+                                    CompetitionEditEvent.ChangeTaskSolution(
+                                        block,
+                                        it,
+                                        text
+                                    )
+                                )
+                            },
+                            onDeleteTask = { viewModel.onEvent(CompetitionEditEvent.DeleteTask(it, block)) }
+                        )
+                    }
+                    item {
+                        Button(
+                            onClick = {
+                                viewModel.onEvent(CompetitionEditEvent.AddTask(block))
+                            },
+                        ) {
+                            Row {
+                                Icon(Icons.Default.Menu, "")
+                                Text("Feladat hozzáadása")
                             }
                         }
-
                     }
                 }
-                items(block.tasks) {
-                    TaskCard(
-                        task = it,
-                        onChangeText = { text ->
-                            viewModel.onEvent(
-                                CompetitionEditEvent.ChangeTaskText(
-                                    block,
-                                    it,
-                                    text
-                                )
-                            )
-                        },
-                        onChangeSolution = { text ->
-                            viewModel.onEvent(
-                                CompetitionEditEvent.ChangeTaskSolution(
-                                    block,
-                                    it,
-                                    text
-                                )
-                            )
-                        },
-                        onDeleteTask = { viewModel.onEvent(CompetitionEditEvent.DeleteTask(it, block)) }
-                    )
-                }
                 item {
-                    Button(
-                        onClick = {
-                            viewModel.onEvent(CompetitionEditEvent.AddTask(block))
-                        },
-                    ) {
+                    Button(shape = CircleShape, onClick = {
+                        viewModel.onEvent(CompetitionEditEvent.AddBlock)
+                    }) {
                         Row {
-                            Icon(Icons.Default.Menu, "")
-                            Text("Feladat hozzáadása")
+                            Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
+                            Text("Blokk hozzáadása")
                         }
                     }
                 }
             }
-            item {
-                Button(shape = CircleShape, onClick = {
-                    viewModel.onEvent(CompetitionEditEvent.AddBlock)
-                }) {
-                    Row {
-                        Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
-                        Text("Blokk hozzáadása")
-                    }
-                }
-            }
+            Button(
+                onClick = { launcher.launch("output", "txt") }
+            ) { Text(text = "Mentés") }
         }
-        Button(
-            onClick = { launcher.launch("output", "txt") }
-        ) { Text(text = "Mentés") }
     }
 }
