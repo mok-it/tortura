@@ -15,7 +15,7 @@ object CompetitionDb {
     val collection
         get() = database.createCollection( COLLECTION_NAME )
 
-    private fun saveCompetition(competition: Competition) {
+    fun saveCompetition(competition: Competition) {
         val document = MutableDocument( competition.id, competition.toJson() )
         collection.save(document)
     }

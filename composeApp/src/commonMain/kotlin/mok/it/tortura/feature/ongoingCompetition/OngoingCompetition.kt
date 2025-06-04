@@ -3,10 +3,10 @@ package mok.it.tortura.feature.ongoingCompetition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +21,7 @@ import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import mok.it.tortura.model.Competition
 import mok.it.tortura.ui.components.AnswerBlock
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OngoingCompetition(
     onBack: () -> Unit,
@@ -199,7 +200,7 @@ fun OngoingCompetition(
                                                 )
                                                 showConfirmDialog.value = false
                                             },
-                                            colors = ButtonDefaults.buttonColors( backgroundColor = Color.Red )
+                                            colors = ButtonDefaults.buttonColors( containerColor = Color.Red )
                                         ) {
                                             Row {
                                                 Icon(Icons.Filled.DeleteForever, null)
@@ -223,7 +224,7 @@ fun OngoingCompetition(
 
             ScrollableTabRow(
                 selectedTabIndex = tabIndex,
-                backgroundColor = Color.Transparent,
+                containerColor = Color.Transparent,
                 modifier = Modifier
             ) {
                 for (competition in competitions) {
