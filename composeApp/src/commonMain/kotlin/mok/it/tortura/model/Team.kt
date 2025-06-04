@@ -1,10 +1,12 @@
 package mok.it.tortura.model
 
+import kotlinx.serialization.Required
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Team(
     val students: List<Student>,
+    @Required
     private val id: Int = nextId(),
 ) {
     companion object IdCounter {

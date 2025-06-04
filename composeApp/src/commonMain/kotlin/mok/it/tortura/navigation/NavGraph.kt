@@ -53,6 +53,7 @@ fun NavGraph(
         composable(Screen.CreateCompetitionFromFile.route) {
             StartCompetiton(
                 onBack = { navController.navigate(Screen.MainMenu.route) },
+                onStart = { navController.navigate(Screen.OngoingCompetition.route) },
             )
         }
     }

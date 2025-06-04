@@ -7,6 +7,7 @@ import io.github.vinceglb.filekit.PlatformFile
 import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import mok.it.tortura.CompetitionDb
 import mok.it.tortura.model.Competition
 import mok.it.tortura.saveStringToFile
 
@@ -72,6 +73,17 @@ class StartCompetitionViewModel : ViewModel() {
                     }
                 }
             }
+
+            is StartCompetitionEvent.SaveToDatabase -> {
+                if (null in rows.value.map { it.problemSet } || null in rows.value.map { it.teamAssignment }) {
+                    popup.value = StartCompetitionPopupType.SAVE_ERROR
+                } else {
+                    CompetitionDb.clearDatabase()
+                    rows.value.forEach {
+                        CompetitionDb.saveCompetition(Competition(it.teamAssignment!!, it.problemSet!!))
+                    }
+                }
+            }
         }
     }
 
@@ -83,6 +95,7 @@ class StartCompetitionViewModel : ViewModel() {
 
         data class SelectProblemSet(val data: CompetitionDataFromFile, val file: PlatformFile) : StartCompetitionEvent()
         data class SaveToFile(val file: PlatformFile) : StartCompetitionEvent()
+        data object SaveToDatabase : StartCompetitionEvent()
     }
 
     enum class StartCompetitionPopupType {

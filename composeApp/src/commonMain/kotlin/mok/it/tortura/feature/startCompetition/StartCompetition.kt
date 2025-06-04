@@ -20,7 +20,8 @@ import io.github.vinceglb.filekit.name
 
 @Composable
 fun StartCompetiton(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onStart: () -> Unit,
 ) {
     val viewModel = viewModel { StartCompetitionViewModel() }
     val rows by remember { viewModel.rows }
@@ -90,10 +91,11 @@ fun StartCompetiton(
                 Button(
                     enabled = viewModel.canSave,
                     onClick = {
-                        save.launch("Tortura", "ttr")
+                        viewModel.onEvent(StartCompetitionViewModel.StartCompetitionEvent.SaveToDatabase  )
+                        onStart()
                     }
                 ) {
-                    Text("Mentés és indítás")
+                    Text("Indítás")
                 }
             }
         }

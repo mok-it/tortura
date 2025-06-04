@@ -1,11 +1,13 @@
 package mok.it.tortura.model
 
+import kotlinx.serialization.Required
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Task(
     val text: String = "",
     val solution: String = "",
+    @Required
     private val id: Int = nextId()
 ) {
     companion object IdCounter {

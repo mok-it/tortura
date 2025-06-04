@@ -1,12 +1,14 @@
 package mok.it.tortura.model
 
+import kotlinx.serialization.Required
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Block(
     val tasks: List<Task> = listOf(),
     val minCorrectToProgress: Int = 0,
-    val id: Int = nextId()
+    @Required
+    private val id: Int = nextId()
 ) {
     companion object IdCounter {
         private var id = 0

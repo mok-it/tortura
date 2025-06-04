@@ -36,6 +36,8 @@ object CompetitionDb {
             results.forEach {
                 val competition = mapJsonFormat.decodeFromString<Competition>(it.toJSON())
 
+                println(competition)
+
                 competitions.add(competition)
             }
         }
