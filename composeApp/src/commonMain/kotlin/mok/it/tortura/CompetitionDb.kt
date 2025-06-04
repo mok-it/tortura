@@ -15,7 +15,7 @@ object CompetitionDb {
     val collection
         get() = database.createCollection( COLLECTION_NAME )
 
-    fun saveCompetition(competition: Competition) {
+    private fun saveCompetition(competition: Competition) {
         val document = MutableDocument( competition.id, competition.toJson() )
         collection.save(document)
     }
@@ -44,7 +44,12 @@ object CompetitionDb {
         return competitions
     }
 
-    fun clearDatabase() {
+    private fun clearDatabase() {
         database.deleteCollection( COLLECTION_NAME )
+    }
+
+    fun overwriteDatabase(competitions: List<Competition>) {
+        clearDatabase()
+        competitions.forEach { saveCompetition(it) }
     }
 }

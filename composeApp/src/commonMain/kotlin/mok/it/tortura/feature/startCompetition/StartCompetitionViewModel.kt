@@ -84,10 +84,11 @@ class StartCompetitionViewModel : ViewModel() {
                 if (null in rows.value.map { it.problemSet } || null in rows.value.map { it.teamAssignment }) {
                     popup.value = StartCompetitionPopupType.SAVE_ERROR
                 } else {
-                    CompetitionDb.clearDatabase()
-                    rows.value.forEach {
-                        CompetitionDb.saveCompetition(Competition(it.teamAssignment!!, it.problemSet!!))
-                    }
+                    CompetitionDb.overwriteDatabase(
+                        rows.value.map {
+                            Competition(it.teamAssignment!!, it.problemSet!!)
+                        }
+                    )
                 }
             }
         }
