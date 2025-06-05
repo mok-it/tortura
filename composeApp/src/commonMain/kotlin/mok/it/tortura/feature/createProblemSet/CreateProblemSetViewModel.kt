@@ -17,7 +17,7 @@ class CreateProblemSetViewModel : ViewModel() {
     private fun modifySingleBlock(block: Block, newValue: Block) {
         val blockIndex = problemSet.value.blocks.indexOf(block)
         val newBlocks = problemSet.value.blocks.toMutableList()
-        newBlocks[blockIndex] = newValue
+        newBlocks[blockIndex] = newValue.copy( minCorrectToProgress = (newValue.tasks.size + 2) % 2 )
         modifyAllBlocks(newBlocks)
     }
 
