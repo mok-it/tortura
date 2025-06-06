@@ -1,5 +1,6 @@
 package mok.it.tortura.feature.ongoingCompetition
 
+import NavigateBackIcon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -56,10 +57,7 @@ fun OngoingCompetition(
                 title = { Text("Verseny") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                        NavigateBackIcon()
                     }
                 },
                 actions = {
@@ -118,9 +116,11 @@ fun OngoingCompetition(
                                     )
                                 )
 
-                                Text(
-                                    text = "Kezdés: ${competition.startTime}\nVége: ${competitionTeam.answer.lastAnswerTime}"
-                                )
+                                IconButton(
+                                    onClick = { viewModel.onEvent(OnGoingCompetitionEvent.NavigateBackwards( competition, competitionTeam ) ) }
+                                ){
+                                    NavigateBackIcon()
+                                }
                             }
 
 
@@ -130,8 +130,7 @@ fun OngoingCompetition(
 
                             AnswerBlock(
                                 teamName = "${(competitions.indexOf(competition) + 1) * 100 + index}",
-                                answers = competitionTeam.answer.currentBlockAnswer,
-                                indexOffset = competition.problemSet.previousTaskNumber( competitionTeam.answer.currentBlockAnswer.block ),
+                                answer = competitionTeam.answer,
                                 modifyAnswer = { task, newAnswer ->
                                     viewModel.onEvent(
                                         OnGoingCompetitionEvent.ModifyAnswer(
@@ -177,9 +176,6 @@ fun OngoingCompetition(
                                 onDeleteLastTry = {
                                     showConfirmDialog.value = true
                                 },
-                                navigateBackWardsEnabled = competitionTeam.answer.canNavigateBackward,
-                                navigateForwardsEnabled = competitionTeam.answer.canNavigateForward,
-                                deleteLastTryEnabled = competitionTeam.answer.canDeleteLastTry,
                                 textColor = competition.teamAssignment.colorSchema.textColor,
                                 backgroundColor = competition.teamAssignment.colorSchema.backgroundColor,
                                 modifier = Modifier.weight(1f)

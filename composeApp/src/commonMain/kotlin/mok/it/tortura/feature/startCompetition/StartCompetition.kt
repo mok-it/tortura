@@ -1,5 +1,6 @@
 package mok.it.tortura.feature.startCompetition
 
+import NavigateBackIcon
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,9 +38,7 @@ fun StartCompetiton(
             TopAppBar(
                 title = { Text("Új verseny indítása") },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Vissza")
-                    }
+                    NavigateBackIcon()
                 },
             )
         },

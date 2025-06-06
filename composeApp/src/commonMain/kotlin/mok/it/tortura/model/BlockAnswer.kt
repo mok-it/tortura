@@ -7,7 +7,7 @@ import kotlin.math.pow
 data class BlockAnswer(
     val block: Block,
     val answerHistory: List<Map<Task, SolutionState>> = listOf(),
-    private val currentAnswersIndex: Int = -1,
+    val currentAnswersIndex: Int = -1,
 ) {
 
     val currentAnswers
@@ -30,17 +30,30 @@ data class BlockAnswer(
         return this.copy(answerHistory = newAnswerHistory)
     }
 
+    val allTaskAnswered: Boolean
+        get() {
+            for( task in block.tasks ){
+                if( currentAnswers[ task ] == SolutionState.EMPTY){
+                    return false
+                }
+            }
+            return true
+        }
+
+    val lastIsSelected
+        get() = currentAnswersIndex == answerHistory.size - 1
+
     val restartEnabled
-        get() = correctCount() != block.tasks.size
+        get() = lastIsSelected && allTaskAnswered && correctCount() != block.tasks.size
 
     val goNextEnabled
-        get() = correctCount() >= block.minCorrectToProgress
+        get() = lastIsSelected && allTaskAnswered && correctCount() >= block.minCorrectToProgress
 
     val canNavigateBackwards
-        get() = currentAnswersIndex > 0
+        get() = (lastIsSelected || allTaskAnswered) && currentAnswersIndex > 0
 
     val canNavigateForwards
-        get() = currentAnswersIndex < answerHistory.size - 1
+        get() = allTaskAnswered && currentAnswersIndex < answerHistory.size - 1
 
     val canDeleteLastTry
         get() = currentAnswersIndex == answerHistory.size - 1 && canNavigateBackwards

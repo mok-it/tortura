@@ -1,5 +1,6 @@
 package mok.it.tortura.feature.createTeamAssigment
 
+import NavigateBackIcon
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -51,10 +52,7 @@ fun CreateTeamAssignment(
                 title = { Text("Create Team Assignment") },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                        NavigateBackIcon()
                     }
                 }
             )
@@ -109,7 +107,6 @@ fun CreateTeamAssignment(
                         }
                         item {
                             Button(shape = CircleShape, onClick = {
-                                println("Új csapat ${teamAssignment.teams.size}")
                                 viewModel.onEvent(CreateTeamAssignmentEvent.AddTeam)
                             }) {
                                 Row {

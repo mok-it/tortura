@@ -7,7 +7,7 @@ import mok.it.tortura.util.toJson
 
 object CompetitionDb {
 
-    private const val DATABASE_NAME = "torturadb"
+    private const val DATABASE_NAME = "tortura_db"
     private const val COLLECTION_NAME = "competitions"
 
     val database = Database(DATABASE_NAME)
@@ -36,13 +36,14 @@ object CompetitionDb {
             results.forEach {
                 val competition = mapJsonFormat.decodeFromString<Competition>(it.toJSON())
 
-                println(competition)
-
                 competitions.add(competition)
             }
         }
         return competitions
     }
+
+    val isEmpty
+        get() = getCompetitions().isEmpty()
 
     private fun clearDatabase() {
         database.deleteCollection(COLLECTION_NAME)

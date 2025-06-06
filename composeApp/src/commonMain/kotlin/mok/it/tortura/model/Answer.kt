@@ -8,14 +8,11 @@ import kotlinx.serialization.Serializable
 data class Answer(
     val problemSet: ProblemSet,
     val answerHistory: List<BlockAnswer> = listOf(BlockAnswer(problemSet.blocks.first()).addBlockAttempt()),
-    private val currentBlockAnswerIndex: Int = 0,
+    val currentBlockAnswerIndex: Int = 0,
     val blockIdx: Int = 0,
     val finished: Boolean = false,
     val lastAnswerTime: Instant = Clock.System.now(),
 ) {
-
-    val currentBlock
-        get() = problemSet.blocks[blockIdx]
 
     val currentBlockAnswer: BlockAnswer
         get() = answerHistory[currentBlockAnswerIndex]
@@ -46,16 +43,28 @@ data class Answer(
         return this.copy(answerHistory = newAnswerHistory, blockIdx = blockIdx + 1, currentBlockAnswerIndex = currentBlockAnswerIndex + 1)
     }
 
+    val lastIsSelected
+        get() = currentBlockAnswerIndex == answerHistory.size - 1
+
     val canNavigateBackward
-        get() = currentBlockAnswer.canNavigateBackwards || currentBlockAnswerIndex > 0
+        get() = (currentBlockAnswer.canNavigateBackwards || currentBlockAnswerIndex > 0) && ( lastIsSelected || currentBlockAnswer.allTaskAnswered )
 
     val canNavigateForward
-        get() = currentBlockAnswer.canNavigateForwards || currentBlockAnswerIndex < answerHistory.size - 1
+        get() =( currentBlockAnswer.canNavigateForwards || currentBlockAnswerIndex < answerHistory.size - 1) && currentBlockAnswer.allTaskAnswered
 
     val canDeleteLastTry
         get() = currentBlockAnswer.canDeleteLastTry || (currentBlockAnswerIndex == answerHistory.size - 1 && canNavigateBackward )
 
+    val restartEnabled
+        get() = lastIsSelected && currentBlockAnswer.restartEnabled
+
+    val goNextEnabled
+        get() = lastIsSelected && currentBlockAnswer.goNextEnabled
+
     fun navigateBackwards(): Answer {
+        if( finished ){
+            return this.copy( finished = false )
+        }
         if( currentBlockAnswer.canNavigateBackwards ) {
             val newAnswerHistory = answerHistory.toMutableList()
             val newCurrentBlockAnswer = currentBlockAnswer.navigateBackwards()

@@ -26,7 +26,6 @@ class StartCompetitionViewModel : ViewModel() {
         when (event) {
             is StartCompetitionEvent.AddRow -> {
                 rows.value = rows.value + CompetitionDataFromFile()
-                println("Size: " + rows.value.size)
             }
 
             is StartCompetitionEvent.RemoveRow -> {

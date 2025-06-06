@@ -1,12 +1,11 @@
 package mok.it.tortura.feature.StartNavigation
 
+import NavigateBackIcon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -15,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StartNavigation(
     newFromFile: (() -> Unit),
@@ -40,10 +40,7 @@ fun StartNavigation(
                 title = { Text("Verseny indítása") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                        NavigateBackIcon()
                     }
                 },
             )

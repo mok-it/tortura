@@ -1,5 +1,6 @@
 package mok.it.tortura.feature.createProblemSet
 
+import NavigateBackIcon
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -49,7 +50,7 @@ fun CreateProblemSet(
                 title = {Text("Create problem Set")},
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        NavigateBackIcon()
                     }
                 }
             )

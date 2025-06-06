@@ -1,5 +1,10 @@
 package mok.it.tortura.ui.components
 
+import CorrectIcon
+import DeleteIcon
+import IncorrectIcon
+import NavigateBackIcon
+import NavigateForwardIcon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -23,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import mok.it.tortura.model.Answer
 import mok.it.tortura.model.BlockAnswer
 import mok.it.tortura.model.SolutionState
 import mok.it.tortura.model.Task
@@ -30,17 +36,13 @@ import mok.it.tortura.model.Task
 @Composable
 fun AnswerBlock(
     teamName: String,
-    answers: BlockAnswer,
-    indexOffset: Int = 0,
+    answer: Answer,
     modifyAnswer: (task: Task, newAnswer: SolutionState) -> Unit = { _, _ -> },
     onRestartBlock: () -> Unit = {},
     onNextBlock: () -> Unit = {},
     onNavigateBackWards: () -> Unit = {},
     onNavigateForwards: () -> Unit = {},
     onDeleteLastTry: () -> Unit = {},
-    navigateBackWardsEnabled: Boolean = false,
-    navigateForwardsEnabled: Boolean = false,
-    deleteLastTryEnabled: Boolean = false,
     textColor: Color = Color.Unspecified,
     backgroundColor: Color = Color.Unspecified,
     modifier: Modifier = Modifier,
@@ -48,9 +50,11 @@ fun AnswerBlock(
 
     val iconSize = 30.dp
 
-    val currentAnswers = answers.currentAnswers
+    val currentAnswers = answer.currentBlockAnswer.currentAnswers
 
-    val block = answers.block
+    val block = answer.currentBlockAnswer.block
+
+    val indexOffset = answer.problemSet.previousTaskNumber( block )
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -65,6 +69,14 @@ fun AnswerBlock(
                 fontSize = 40.sp,
                 modifier = Modifier.background( color = backgroundColor, shape = RoundedCornerShape(4.dp) )
                     .padding(5.dp),
+            )
+            Spacer( Modifier.height(5.dp) )
+            Text(
+                text = "${answer.currentBlockAnswerIndex + 1}. block - ${answer.currentBlockAnswer.currentAnswersIndex + 1}. próbálkozás",
+                color = textColor,
+                fontSize = 20.sp,
+                modifier = Modifier.background( color = backgroundColor, shape = RoundedCornerShape( 2.dp) )
+                    .padding(3.dp),
             )
             Spacer(Modifier.height(20.dp))
         }
@@ -105,46 +117,20 @@ fun AnswerBlock(
                             modifyAnswer(task, if( answer != SolutionState.CORRECT ) SolutionState.CORRECT else SolutionState.EMPTY)
                         },
                     ){
-                        if( answer == SolutionState.CORRECT ) {
-                            Icon(
-                                Icons.Filled.Check,
-                                contentDescription = "",
-                                tint = Color.White,
-                                modifier = Modifier
-                                    .background(color = Color.Green, shape = RoundedCornerShape(iconSize / 2))
-                                    .size(iconSize)
-                            )
-                        } else {
-                            Icon(
-                                Icons.Filled.Check,
-                                contentDescription = "",
-                                tint = Color.Green,
-                                modifier = Modifier.size(iconSize)
-                            )
-                        }
+                        CorrectIcon(
+                            selected = answer == SolutionState.CORRECT,
+                            iconSize = iconSize,
+                        )
                     }
                     IconButton(
                         onClick = {
                             modifyAnswer(task, if( answer != SolutionState.INCORRECT ) SolutionState.INCORRECT else SolutionState.EMPTY)
                         },
                     ){
-                        if( answer == SolutionState.INCORRECT ) {
-                            Icon(
-                                Icons.Filled.Close,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier
-                                    .background(color = Color.Red, shape = RoundedCornerShape(iconSize / 2))
-                                    .size(iconSize),
-                            )
-                        } else {
-                            Icon(
-                                Icons.Filled.Close,
-                                contentDescription = "",
-                                tint = Color.Red ,
-                                modifier = Modifier.size(iconSize),
-                            )
-                        }
+                        IncorrectIcon(
+                            selected = answer == SolutionState.INCORRECT,
+                            iconSize = iconSize,
+                        )
                     }
                 }
             }
@@ -159,27 +145,21 @@ fun AnswerBlock(
 
                 IconButton(
                     onClick = onDeleteLastTry,
-                    enabled = deleteLastTryEnabled,
+                    enabled = answer.canDeleteLastTry,
                 ){
-                    Icon(
-                        Icons.Filled.DeleteForever,
-                        contentDescription = null,
-                        )
+                    DeleteIcon()
                 }
 
                 IconButton(
                     onClick = onNavigateBackWards,
-                    enabled = navigateBackWardsEnabled,
+                    enabled = answer.canNavigateBackward,
                 ){
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        null
-                    )
+                    NavigateBackIcon()
                 }
 
                 Button(
                     onClick = onRestartBlock,
-                    enabled = answers.restartEnabled,
+                    enabled = answer.restartEnabled,
                     colors = buttonColors(
                         containerColor = backgroundColor,
                         contentColor = textColor,
@@ -193,7 +173,7 @@ fun AnswerBlock(
 
                 Button(
                     onClick = onNextBlock,
-                    enabled = answers.goNextEnabled,
+                    enabled = answer.goNextEnabled,
                     colors = buttonColors(containerColor = backgroundColor ),
                     modifier = Modifier.padding(5.dp)
                 ){
@@ -205,9 +185,9 @@ fun AnswerBlock(
 
                 IconButton(
                     onClick = onNavigateForwards,
-                    enabled = navigateForwardsEnabled,
+                    enabled = answer.canNavigateForward,
                 ){
-                    Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = "" )
+                    NavigateForwardIcon()
                 }
             }
         }

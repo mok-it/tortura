@@ -1,5 +1,6 @@
 package mok.it.tortura.feature
 
+import NavigateBackIcon
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,10 +25,7 @@ fun SetUpMenu(
                 title = {Text("Előkókányolás")},
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back"
-                        )
+                        NavigateBackIcon()
                     }
                 }
             )
