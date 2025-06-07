@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -63,8 +62,13 @@ fun OngoingCompetition(
                 actions = {
                     Button(
                         onClick = { save.launch(suggestedName = "tortura", extension = "ttr") }
-                    ){
+                    ) {
                         Text("Export")
+                    }
+                    Button(
+                        onClick = { TODO() }
+                    ) {
+                        Text("Kiértékelés")
                     }
 
 //                    CustomizableSearchBar(
@@ -86,42 +90,25 @@ fun OngoingCompetition(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            for (competition in competitions) {
+            competitions.forEach { competition ->
                 val competitionTeams = competition.answers
                 competitionTeams.forEachIndexed { index, competitionTeam ->
                     if (tabIndex == teamsInPreviousCompetitions(competition) + index) {
                         if (competitionTeam.answer.finished) {
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.SpaceEvenly,
-                                modifier = Modifier.fillMaxHeight().weight(1f)
-                            ) {
-                                Text(
-                                    text = "Végeztek",
-                                    fontSize = 50.sp,
-                                    color = competition.teamAssignment.colorSchema.textColor,
-                                    modifier = Modifier.background(
-                                        color = competition.teamAssignment.colorSchema.backgroundColor,
-                                        shape = RoundedCornerShape(4.dp)
+                            FinishedContent(
+                                competition.teamAssignment.colorSchema.textColor,
+                                competition.teamAssignment.colorSchema.backgroundColor,
+                                competitionTeam.answer.points().toString(),
+                                {
+                                    viewModel.onEvent(
+                                        OnGoingCompetitionEvent.NavigateBackwards(
+                                            competition,
+                                            competitionTeam
+                                        )
                                     )
-                                )
-
-                                Text(
-                                    text = "Pontok: ${competitionTeam.answer.points()}",
-                                    fontSize = 40.sp,
-                                    color = competition.teamAssignment.colorSchema.textColor,
-                                    modifier = Modifier.background(
-                                        color = competition.teamAssignment.colorSchema.backgroundColor,
-                                        shape = RoundedCornerShape(4.dp)
-                                    )
-                                )
-
-                                IconButton(
-                                    onClick = { viewModel.onEvent(OnGoingCompetitionEvent.NavigateBackwards( competition, competitionTeam ) ) }
-                                ){
-                                    NavigateBackIcon()
-                                }
-                            }
+                                },
+                                Modifier.fillMaxHeight().weight(1f)
+                            )
 
 
                         } else {
@@ -129,6 +116,8 @@ fun OngoingCompetition(
                             val showConfirmDialog = remember { mutableStateOf(false) }
 
                             AnswerBlock(
+                                //TODO: itt jó lenne valahogy már a teamAssignmentben vagy a problemSet-ben
+                                // tárolni a korcsoportot, és  abból kihalászni a sorszám első számjegyét
                                 teamName = "${(competitions.indexOf(competition) + 1) * 100 + index}",
                                 answer = competitionTeam.answer,
                                 modifyAnswer = { task, newAnswer ->
@@ -196,7 +185,7 @@ fun OngoingCompetition(
                                                 )
                                                 showConfirmDialog.value = false
                                             },
-                                            colors = ButtonDefaults.buttonColors( containerColor = Color.Red )
+                                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                                         ) {
                                             Row {
                                                 Icon(Icons.Filled.DeleteForever, null)
@@ -244,6 +233,48 @@ fun OngoingCompetition(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun FinishedContent(
+    textColor: Color,
+    backgroundColor: Color,
+    points: String,
+    onNavigateBack: () -> Unit,
+    modifier: Modifier,
+) {
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceEvenly,
+        modifier = modifier
+    ) {
+        Text(
+            text = "Végeztek",
+            fontSize = 50.sp,
+            color = textColor,
+            modifier = Modifier.background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(4.dp)
+            )
+        )
+
+        Text(
+            text = "Pontok: $points",
+            fontSize = 40.sp,
+            color = textColor,
+            modifier = Modifier.background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(4.dp)
+            )
+        )
+
+        IconButton(
+            onClick = onNavigateBack
+        ) {
+            NavigateBackIcon()
         }
     }
 }
