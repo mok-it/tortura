@@ -56,7 +56,7 @@ data class BlockAnswer(
         get() = allTaskAnswered && currentAnswersIndex < answerHistory.size - 1
 
     val canDeleteLastTry
-        get() = currentAnswersIndex == answerHistory.size - 1 && canNavigateBackwards
+        get() = lastIsSelected && answerHistory.size > 1
 
     fun navigateBackwards(): BlockAnswer {
         return this.copy(currentAnswersIndex = currentAnswersIndex - 1)
