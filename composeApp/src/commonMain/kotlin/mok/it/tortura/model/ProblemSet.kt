@@ -20,4 +20,13 @@ data class ProblemSet(
         return sum
     }
 
+    val maxTasks: Int
+        get() {
+            var max = 0
+            for( block in blocks ){
+                max = if( block.tasks.size > max ) block.tasks.size else max
+            }
+            return max
+        }
+
 }

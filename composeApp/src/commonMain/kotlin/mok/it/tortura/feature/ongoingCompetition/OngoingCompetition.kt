@@ -3,7 +3,6 @@ package mok.it.tortura.feature.ongoingCompetition
 import NavigateBackIcon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material3.*
@@ -14,12 +13,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import mok.it.tortura.model.Competition
 import mok.it.tortura.ui.components.AnswerBlock
+import mok.it.tortura.ui.components.FinishedContent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -96,10 +94,11 @@ fun OngoingCompetition(
                     if (tabIndex == teamsInPreviousCompetitions(competition) + index) {
                         if (competitionTeam.answer.finished) {
                             FinishedContent(
-                                competition.teamAssignment.colorSchema.textColor,
-                                competition.teamAssignment.colorSchema.backgroundColor,
-                                competitionTeam.answer.points().toString(),
-                                {
+                                textColor = competition.teamAssignment.colorSchema.textColor,
+                                backgroundColor = competition.teamAssignment.colorSchema.backgroundColor,
+                                points = competitionTeam.answer.points().toString(),
+                                answer = competitionTeam.answer,
+                                onNavigateBack = {
                                     viewModel.onEvent(
                                         OnGoingCompetitionEvent.NavigateBackwards(
                                             competition,
@@ -107,7 +106,7 @@ fun OngoingCompetition(
                                         )
                                     )
                                 },
-                                Modifier.fillMaxHeight().weight(1f)
+                                modifier = Modifier.fillMaxSize().weight(1f)
                             )
 
 
@@ -237,44 +236,3 @@ fun OngoingCompetition(
     }
 }
 
-@Composable
-fun FinishedContent(
-    textColor: Color,
-    backgroundColor: Color,
-    points: String,
-    onNavigateBack: () -> Unit,
-    modifier: Modifier,
-) {
-
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = modifier
-    ) {
-        Text(
-            text = "Végeztek",
-            fontSize = 50.sp,
-            color = textColor,
-            modifier = Modifier.background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(4.dp)
-            )
-        )
-
-        Text(
-            text = "Pontok: $points",
-            fontSize = 40.sp,
-            color = textColor,
-            modifier = Modifier.background(
-                color = backgroundColor,
-                shape = RoundedCornerShape(4.dp)
-            )
-        )
-
-        IconButton(
-            onClick = onNavigateBack
-        ) {
-            NavigateBackIcon()
-        }
-    }
-}
