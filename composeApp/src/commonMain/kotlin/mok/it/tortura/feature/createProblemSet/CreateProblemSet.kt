@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
@@ -21,9 +20,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
+import mok.it.tortura.getPlatform
 import mok.it.tortura.saveStringToFile
 import mok.it.tortura.ui.components.TaskCard
 
@@ -44,6 +45,18 @@ fun CreateProblemSet(
         }
     }
 
+    val loadFromJsonLauncher = rememberFilePickerLauncher { file ->
+        if (file != null) {
+            viewModel.onEvent(CompetitionEditEvent.ImportProblemSetFromJson(file) )
+        }
+    }
+
+    val loadFromExcelLauncher = rememberFilePickerLauncher { file ->
+        if (file != null) {
+            viewModel.onEvent(CompetitionEditEvent.ImportProblemSetFromExcel(file))
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -51,6 +64,23 @@ fun CreateProblemSet(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         NavigateBackIcon()
+                    }
+                },
+                actions = {
+                    Button(
+                        onClick = {
+                            loadFromExcelLauncher.launch()
+                        },
+                        enabled = getPlatform().excelImportImplemented,
+                    ){
+                        Text("Import from Excel")
+                    }
+                    Button(
+                        onClick = {
+                            loadFromJsonLauncher.launch()
+                        }
+                    ){
+                        Text("Import")
                     }
                 }
             )

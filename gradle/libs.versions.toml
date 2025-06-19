@@ -20,6 +20,7 @@ kotlinx-serialization-json = "1.8.0"
 filekit = "0.10.0-beta01"
 kotlinx-datetime = "0.6.2"
 kotbase = "3.1.9-1.1.1"
+apache-poi = "5.4.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -43,6 +44,8 @@ filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs", version.ref =
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotbase = { group = "dev.kotbase", name = "couchbase-lite", version.ref = "kotbase" }
+apache-poi = { group = "org.apache.poi", name = "poi", version.ref = "apache-poi" }
+apache-poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "apache-poi" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

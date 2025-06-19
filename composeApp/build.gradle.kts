@@ -80,6 +80,9 @@ kotlin {
 
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotbase)
+
+            implementation( libs.apache.poi )
+            implementation(libs.apache.poi.ooxml)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

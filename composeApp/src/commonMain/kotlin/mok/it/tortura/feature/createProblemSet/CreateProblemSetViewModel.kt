@@ -2,6 +2,12 @@ package mok.it.tortura.feature.createProblemSet
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.readString
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import mok.it.tortura.loadProblemSetFromExcel
 import mok.it.tortura.model.Block
 import mok.it.tortura.model.ProblemSet
 import mok.it.tortura.model.Task
@@ -59,6 +65,25 @@ class CreateProblemSetViewModel : ViewModel() {
                 problemSet.value = problemSet.value.copy(name = event.name)
             }
 
+            is CompetitionEditEvent.ImportProblemSetFromJson -> {
+                viewModelScope.launch {
+                    try {
+                        val newProblemSet = Json.decodeFromString<ProblemSet>(event.file.readString())
+                        problemSet.value = newProblemSet
+                    } catch (e: Exception) {
+                        TODO()
+                    }
+                }
+
+            }
+
+            is CompetitionEditEvent.ImportProblemSetFromExcel -> {
+                val newProblemSet = loadProblemSetFromExcel(event.file)
+                if( newProblemSet != null ){
+                    problemSet.value = newProblemSet
+                }
+            }
+
         }
     }
 
@@ -72,4 +97,6 @@ sealed class CompetitionEditEvent {
     data class ChangeTaskText(val block: Block, val task: Task, val text: String) : CompetitionEditEvent()
     data class ChangeTaskSolution(val block: Block, val task: Task, val text: String) : CompetitionEditEvent()
     data class ChangeProblemSetName( val name: String ) : CompetitionEditEvent()
+    data class ImportProblemSetFromJson(val file: PlatformFile) : CompetitionEditEvent()
+    data class ImportProblemSetFromExcel(val file: PlatformFile) : CompetitionEditEvent()
 }
