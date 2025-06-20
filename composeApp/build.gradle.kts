@@ -82,12 +82,15 @@ kotlin {
             implementation(libs.kotbase)
             implementation(libs.appdirs)
 
-            implementation( libs.apache.poi )
+            implementation(libs.apache.poi)
             implementation(libs.apache.poi.ooxml)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+        }
+        linuxMain.dependencies {
+            implementation(libs.icu4j)
         }
     }
 }
