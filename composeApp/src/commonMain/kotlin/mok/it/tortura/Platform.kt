@@ -18,3 +18,5 @@ expect fun loadProblemSetFromExcel( file: PlatformFile ): ProblemSet?
 expect fun loadTeamAssignmentFromExcel( file: PlatformFile ): TeamAssignment?
 
 expect fun goodNightGoodBye()
+
+expect fun initCBL()

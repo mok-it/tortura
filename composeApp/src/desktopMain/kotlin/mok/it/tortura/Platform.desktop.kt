@@ -3,8 +3,11 @@ package mok.it.tortura
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.writeString
+import kotbase.CouchbaseLite
 import mok.it.tortura.model.*
+import mok.it.tortura.util.appDirs
 import org.apache.poi.ss.usermodel.WorkbookFactory
+import java.io.File
 import java.io.FileInputStream
 
 class JVMPlatform: Platform {
@@ -88,4 +91,8 @@ actual fun loadTeamAssignmentFromExcel(file: PlatformFile): TeamAssignment? {
     val teams = mutableListOf<Team>()
 
     TODO("Formátumot ki kell még találni")
+}
+
+actual fun initCBL(){
+    CouchbaseLite.init( false, File(appDirs.getUserDataDir()), File(appDirs.getUserCacheDir()) )
 }

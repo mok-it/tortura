@@ -128,8 +128,8 @@ compose.desktop {
         mainClass = "mok.it.tortura.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "mok.it.tortura"
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+            packageName = "Tortura"
             packageVersion = "1.0.0"
 
             linux {
