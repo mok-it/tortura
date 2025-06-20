@@ -7,7 +7,12 @@ import NavigateBackIcon
 import NavigateForwardIcon
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -46,12 +51,12 @@ fun AnswerBlock(
 
     val block = answer.currentBlockAnswer.block
 
-    val indexOffset = answer.problemSet.previousTaskNumber( block )
+    val indexOffset = answer.problemSet.previousTaskNumber(block)
 
     LazyColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-    ){
+    ) {
 
         item {
             Spacer(Modifier.height(20.dp))
@@ -59,74 +64,91 @@ fun AnswerBlock(
                 text = teamName,
                 color = textColor,
                 fontSize = 40.sp,
-                modifier = Modifier.background( color = backgroundColor, shape = RoundedCornerShape(4.dp) )
+                modifier = Modifier.background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(4.dp)
+                )
                     .padding(5.dp),
             )
-            Spacer( Modifier.height(5.dp) )
+            Spacer(Modifier.height(5.dp))
             Text(
                 text = "${answer.currentBlockAnswerIndex + 1}. block - ${answer.currentBlockAnswer.currentAnswersIndex + 1}. próbálkozás",
                 color = textColor,
                 fontSize = 20.sp,
-                modifier = Modifier.background( color = backgroundColor, shape = RoundedCornerShape( 2.dp) )
+                modifier = Modifier.background(
+                    color = backgroundColor,
+                    shape = RoundedCornerShape(2.dp)
+                )
                     .padding(3.dp),
             )
             Spacer(Modifier.height(20.dp))
         }
 
-
-        for( i in 0..<block.tasks.size ) {
+        for (i in 0..<block.tasks.size) {
 
             val task = block.tasks[i]
 
             item {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.border(1.dp, if(backgroundColor == Color.Unspecified) Color.Blue else backgroundColor),
+                    modifier = Modifier.border(
+                        1.dp,
+                        if (backgroundColor == Color.Unspecified) Color.Blue else backgroundColor
+                    ),
                 ) {
                     Text(
-                        text ="${indexOffset + block.tasks.indexOf(task) + 1}.",
+                        text = "${indexOffset + block.tasks.indexOf(task) + 1}.",
                         fontSize = 40.sp,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.width(100.dp),
+                        modifier = Modifier.fillMaxWidth(0.1f),
                     )
+
                     Text(
                         text = task.text,
                         minLines = 5,
                         maxLines = 5,
                         modifier = Modifier
                             .padding(10.dp, 0.dp)
-                            .width(300.dp)
+                            .fillMaxWidth(0.3f)
                     )
                     Text(
                         text = task.solution,
-                        fontSize = 40.sp,
+                        fontSize = 20.sp,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.width(100.dp),
+                        modifier = Modifier.MaxWidth(0.2f),
                     )
-                    val answer = currentAnswers[ task ]
+
+                    val solutionState = currentAnswers[task]
+
                     IconButton(
                         onClick = {
-                            modifyAnswer(task, if( answer != SolutionState.CORRECT ) SolutionState.CORRECT else SolutionState.EMPTY)
+                            modifyAnswer(
+                                task,
+                                if (solutionState != SolutionState.CORRECT) SolutionState.CORRECT else SolutionState.EMPTY
+                            )
                         },
-                    ){
+                    ) {
                         CorrectIcon(
-                            selected = answer == SolutionState.CORRECT,
+                            selected = solutionState == SolutionState.CORRECT,
                             iconSize = iconSize,
                         )
                     }
                     IconButton(
                         onClick = {
-                            modifyAnswer(task, if( answer != SolutionState.INCORRECT ) SolutionState.INCORRECT else SolutionState.EMPTY)
+                            modifyAnswer(
+                                task,
+                                if (solutionState != SolutionState.INCORRECT) SolutionState.INCORRECT else SolutionState.EMPTY
+                            )
                         },
-                    ){
+                    ) {
                         IncorrectIcon(
-                            selected = answer == SolutionState.INCORRECT,
+                            selected = solutionState == SolutionState.INCORRECT,
                             iconSize = iconSize,
                         )
                     }
+
                 }
             }
-
         }
 
         item {
@@ -138,14 +160,14 @@ fun AnswerBlock(
                 IconButton(
                     onClick = onDeleteLastTry,
                     enabled = answer.canDeleteLastTry,
-                ){
+                ) {
                     DeleteIcon()
                 }
 
                 IconButton(
                     onClick = onNavigateBackWards,
                     enabled = answer.canNavigateBackward,
-                ){
+                ) {
                     NavigateBackIcon()
                 }
 
@@ -157,28 +179,28 @@ fun AnswerBlock(
                         contentColor = textColor,
                     ),
                     modifier = Modifier.padding(5.dp)
-                ){
+                ) {
                     Text(
-                        text= "Blokk újrakezdése",
+                        text = "Blokk újrakezdése",
                     )
                 }
 
                 Button(
                     onClick = onNextBlock,
                     enabled = answer.goNextEnabled,
-                    colors = buttonColors(containerColor = backgroundColor ),
+                    colors = buttonColors(containerColor = backgroundColor),
                     modifier = Modifier.padding(5.dp)
-                ){
+                ) {
                     Text(
                         text = "Következő blokk",
-                        color= textColor,
+                        color = textColor,
                     )
                 }
 
                 IconButton(
                     onClick = onNavigateForwards,
                     enabled = answer.canNavigateForward,
-                ){
+                ) {
                     NavigateForwardIcon()
                 }
             }

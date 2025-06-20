@@ -1,6 +1,13 @@
 package mok.it.tortura
 
-import kotbase.*
+import kotbase.DataSource
+import kotbase.Database
+import kotbase.DatabaseConfigurationFactory
+import kotbase.Meta
+import kotbase.MutableDocument
+import kotbase.QueryBuilder
+import kotbase.SelectResult
+import kotbase.newConfig
 import mok.it.tortura.model.Competition
 import mok.it.tortura.util.appDirs
 import mok.it.tortura.util.mapJsonFormat
@@ -10,10 +17,6 @@ object CompetitionDb {
 
     private const val DATABASE_NAME = "tortura_db"
     private const val COLLECTION_NAME = "competitions"
-
-    init{
-        initCBL()
-    }
 
     val database = Database(
         DATABASE_NAME,
