@@ -53,7 +53,7 @@ data class Answer(
         get() =( currentBlockAnswer.canNavigateForwards || currentBlockAnswerIndex < answerHistory.size - 1) && currentBlockAnswer.allTaskAnswered
 
     val canDeleteLastTry
-        get() = lastIsSelected && (currentBlockAnswer.canDeleteLastTry || currentBlockAnswer.answerHistory.size == 1)
+        get() = lastIsSelected && (currentBlockAnswer.canDeleteLastTry || currentBlockAnswer.answerHistory.size == 1 && answerHistory.size > 1)
 
     val restartEnabled
         get() = lastIsSelected && currentBlockAnswer.restartEnabled
