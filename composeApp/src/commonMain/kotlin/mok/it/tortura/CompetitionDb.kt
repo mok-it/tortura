@@ -1,5 +1,6 @@
 package mok.it.tortura
 
+import ca.gosyer.appdirs.AppDirs
 import kotbase.*
 import mok.it.tortura.model.Competition
 import mok.it.tortura.util.mapJsonFormat
@@ -10,7 +11,17 @@ object CompetitionDb {
     private const val DATABASE_NAME = "tortura_db"
     private const val COLLECTION_NAME = "competitions"
 
-    val database = Database(DATABASE_NAME)
+    val appDirs = AppDirs {
+        appName = "tortura"
+        appAuthor = "mok.it"
+    }
+
+    val database = Database(
+        DATABASE_NAME,
+        DatabaseConfigurationFactory.newConfig( appDirs.getUserDataDir() )
+    )
+
+
 
     val collection
         get() = database.createCollection(COLLECTION_NAME)

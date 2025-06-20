@@ -54,7 +54,6 @@ class CreateProblemSetViewModel : ViewModel() {
                 modifyAllBlocks( problemSet.value.blocks.filter { it != event.block } )
             }
 
-
             is CreateProblemSetEvent.ChangeTaskText -> {
                 modifyTask( event.block, event.task, event.task.copy(text = event.text) )
             }

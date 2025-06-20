@@ -80,6 +80,7 @@ kotlin {
 
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotbase)
+            implementation(libs.appdirs)
 
             implementation( libs.apache.poi )
             implementation(libs.apache.poi.ooxml)

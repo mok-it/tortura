@@ -38,7 +38,11 @@ fun StartCompetiton(
             TopAppBar(
                 title = { Text("Új verseny indítása") },
                 navigationIcon = {
-                    NavigateBackIcon()
+                    IconButton(
+                        onClick = onBack,
+                    ) {
+                        NavigateBackIcon()
+                    }
                 },
                 actions = {
                     HelpButton(
