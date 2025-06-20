@@ -108,6 +108,7 @@ class StartCompetitionViewModel : ViewModel() {
         PARSE_ERROR,
         TYPE_ERROR,
         SAVE_ERROR,
+        HELP,
         NONE
     }
 }

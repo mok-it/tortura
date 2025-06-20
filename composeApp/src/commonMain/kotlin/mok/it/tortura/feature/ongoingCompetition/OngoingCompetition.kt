@@ -18,6 +18,7 @@ import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import mok.it.tortura.model.Competition
 import mok.it.tortura.ui.components.AnswerBlock
 import mok.it.tortura.ui.components.FinishedContent
+import mok.it.tortura.ui.components.HelpDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +48,13 @@ fun OngoingCompetition(
     }
 
     val tabIndex by remember { viewModel.tabIndex }
+
+    val helpDialogShown = remember { mutableStateOf(false) }
+    if (helpDialogShown.value) {
+        HelpDialog(
+            onDismiss = { helpDialogShown.value = false },
+        )
+    }
 
     Scaffold(
         topBar = {

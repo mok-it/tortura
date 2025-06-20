@@ -1,9 +1,11 @@
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
@@ -91,6 +93,17 @@ fun NavigateForwardIcon(
 ){
     Icon(
         Icons.AutoMirrored.Filled.ArrowForward,
+        contentDescription = null,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun HelpIcon(
+    modifier: Modifier = Modifier
+){
+    Icon(
+        Icons.AutoMirrored.Filled.Help,
         contentDescription = null,
         modifier = modifier
     )

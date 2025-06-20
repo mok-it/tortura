@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -17,6 +16,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.name
+import mok.it.tortura.ui.components.HelpButton
+import mok.it.tortura.ui.components.HelpDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +40,11 @@ fun StartCompetiton(
                 title = { Text("Új verseny indítása") },
                 navigationIcon = {
                     NavigateBackIcon()
+                },
+                actions = {
+                    HelpButton(
+                        onClick = { viewModel.popup.value = StartCompetitionViewModel.StartCompetitionPopupType.HELP },
+                    )
                 },
             )
         },
@@ -124,6 +130,10 @@ fun StartCompetiton(
             }
 
             StartCompetitionViewModel.StartCompetitionPopupType.SAVE_ERROR -> SaveErrorPopup {
+                viewModel.popup.value = StartCompetitionViewModel.StartCompetitionPopupType.NONE
+            }
+
+            StartCompetitionViewModel.StartCompetitionPopupType.HELP -> HelpDialog {
                 viewModel.popup.value = StartCompetitionViewModel.StartCompetitionPopupType.NONE
             }
 

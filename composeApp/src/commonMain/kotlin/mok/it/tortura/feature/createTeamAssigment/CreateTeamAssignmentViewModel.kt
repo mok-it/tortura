@@ -2,23 +2,18 @@ package mok.it.tortura.feature.createTeamAssigment
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import io.github.vinceglb.filekit.PlatformFile
+import io.github.vinceglb.filekit.readString
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import mok.it.tortura.model.Student
 import mok.it.tortura.model.Team
 import mok.it.tortura.model.TeamAssignment
 import mok.it.tortura.ui.CategoryColors
 
 class CreateTeamAssignmentViewModel : ViewModel() {
-    val teamAssignment =
-        mutableStateOf(
-            TeamAssignment(
-                "JEGES",
-                listOf(
-                    Team(mutableListOf(Student("Ádám"), Student("Béla"), Student("Cecil"))),
-                    Team(mutableListOf(Student("Dénes"), Student("Ezékiel"), Student("Ferenc"))),
-                    Team(mutableListOf(Student("Géza"), Student("Hilbert"), Student("Imre")))
-                )
-            )
-        )
+    val teamAssignment = mutableStateOf(TeamAssignment( "", listOf() ) )
 
     fun onEvent(event: CreateTeamAssignmentEvent) {
         when (event) {
@@ -39,7 +34,7 @@ class CreateTeamAssignmentViewModel : ViewModel() {
             }
 
             is CreateTeamAssignmentEvent.ChangeStudentName -> {
-                modifyStudent( event.team, event.student, event.student.copy( name = event.student.name ) )
+                modifyStudent( event.team, event.student, event.student.copy( name = event.name ) )
             }
 
             is CreateTeamAssignmentEvent.ChangeStudentGroup -> {
@@ -52,6 +47,17 @@ class CreateTeamAssignmentViewModel : ViewModel() {
 
             is CreateTeamAssignmentEvent.ChangeColors -> {
                 teamAssignment.value = teamAssignment.value.copy( colorSchema = event.colors )
+            }
+
+            is CreateTeamAssignmentEvent.LoadFromJson -> {
+                viewModelScope.launch {
+                    try {
+                        val newTeamAssignment = Json.decodeFromString<TeamAssignment>(event.file.readString())
+                        teamAssignment.value = newTeamAssignment
+                    } catch (e: Exception) {
+                        TODO()
+                    }
+                }
             }
         }
     }
@@ -85,4 +91,5 @@ sealed class CreateTeamAssignmentEvent {
     data class ChangeStudentGroup( val team: Team, val student: Student, val group: String ) : CreateTeamAssignmentEvent()
     data class ChangeStudentKlass( val team: Team, val student: Student, val klass: String ) : CreateTeamAssignmentEvent()
     data class ChangeColors( val colors: CategoryColors ) : CreateTeamAssignmentEvent()
+    data class LoadFromJson( val file: PlatformFile ) : CreateTeamAssignmentEvent()
 }

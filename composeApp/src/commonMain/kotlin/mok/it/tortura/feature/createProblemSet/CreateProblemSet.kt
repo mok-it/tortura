@@ -11,10 +11,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +23,8 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import mok.it.tortura.getPlatform
 import mok.it.tortura.saveStringToFile
+import mok.it.tortura.ui.components.HelpButton
+import mok.it.tortura.ui.components.HelpDialog
 import mok.it.tortura.ui.components.TaskCard
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -57,6 +56,14 @@ fun CreateProblemSet(
         }
     }
 
+    val helpDialogShown = remember { mutableStateOf(false) }
+
+    if( helpDialogShown.value ) {
+        HelpDialog(
+            onDismiss = { helpDialogShown.value = false }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -82,6 +89,10 @@ fun CreateProblemSet(
                     ){
                         Text("Import")
                     }
+
+                    HelpButton(
+                        onClick = { helpDialogShown.value = true },
+                    )
                 }
             )
         }

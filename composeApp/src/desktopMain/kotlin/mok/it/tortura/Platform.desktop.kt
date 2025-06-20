@@ -3,9 +3,7 @@ package mok.it.tortura
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.writeString
-import mok.it.tortura.model.Block
-import mok.it.tortura.model.ProblemSet
-import mok.it.tortura.model.Task
+import mok.it.tortura.model.*
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.FileInputStream
 
@@ -25,6 +23,13 @@ actual fun goodNightGoodBye() {
 }
 
 actual fun loadProblemSetFromExcel(file: PlatformFile): ProblemSet? {
+
+    data class ProblemSetExcelRow(
+        val number: Int,
+        val text: String,
+        val solution: String,
+    )
+
     try {
         val inputStream = FileInputStream(file.path)
         val workBook = WorkbookFactory.create(inputStream)
@@ -72,8 +77,15 @@ actual fun loadProblemSetFromExcel(file: PlatformFile): ProblemSet? {
     }
 }
 
-data class ProblemSetExcelRow(
-    val number: Int,
-    val text: String,
-    val solution: String,
-)
+
+
+actual fun loadTeamAssignmentFromExcel(file: PlatformFile): TeamAssignment? {
+    val inputStream = FileInputStream(file.path)
+    val workBook = WorkbookFactory.create(inputStream)
+
+    val sheet = workBook.getSheetAt(0)
+
+    val teams = mutableListOf<Team>()
+
+    TODO("Formátumot ki kell még találni")
+}
