@@ -10,11 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +34,7 @@ fun CreateProblemSet(
     val viewModel: CreateProblemSetViewModel = viewModel { CreateProblemSetViewModel() }
     val problemSet by remember { viewModel.problemSet }
     val popup by remember { viewModel.popup }
+    var menuExpanded by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val launcher = rememberFileSaverLauncher { file ->
@@ -48,7 +47,7 @@ fun CreateProblemSet(
 
     val loadFromJsonLauncher = rememberFilePickerLauncher { file ->
         if (file != null) {
-            viewModel.onEvent(CreateProblemSetEvent.ImportProblemSetFromJson(file) )
+            viewModel.onEvent(CreateProblemSetEvent.ImportProblemSetFromJson(file))
         }
     }
 
@@ -58,50 +57,67 @@ fun CreateProblemSet(
         }
     }
 
-    when( popup ){
+    when (popup) {
         CreateProblemSetPopupType.PARSE_ERROR -> {
-            ParseErrorPopup { viewModel.onEvent(CreateProblemSetEvent.DismissPopup ) }
+            ParseErrorPopup { viewModel.onEvent(CreateProblemSetEvent.DismissPopup) }
         }
+
         CreateProblemSetPopupType.TYPE_ERROR -> {
-            TypeErrorPopup { viewModel.onEvent(CreateProblemSetEvent.DismissPopup ) }
+            TypeErrorPopup { viewModel.onEvent(CreateProblemSetEvent.DismissPopup) }
         }
+
         CreateProblemSetPopupType.EXCEL_ERROR -> {
-            ExcelErrorPopup { viewModel.onEvent(CreateProblemSetEvent.DismissPopup ) }
+            ExcelErrorPopup { viewModel.onEvent(CreateProblemSetEvent.DismissPopup) }
         }
+
         CreateProblemSetPopupType.HELP -> {
-            HelpDialog { viewModel.onEvent(CreateProblemSetEvent.DismissPopup ) }
+            HelpDialog { viewModel.onEvent(CreateProblemSetEvent.DismissPopup) }
         }
-        CreateProblemSetPopupType.NONE -> { /* No popup should be shown */ }
+
+        CreateProblemSetPopupType.NONE -> { /* No popup should be shown */
+        }
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {Text("Create problem Set")},
+                title = { Text("Feladatsor létrehozása") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         NavigateBackIcon()
                     }
                 },
                 actions = {
-                    Button(
-                        onClick = {
-                            loadFromExcelLauncher.launch()
-                        },
-                        enabled = getPlatform().excelImportImplemented,
-                    ){
-                        Text("Import from Excel")
-                    }
-                    Button(
-                        onClick = {
-                            loadFromJsonLauncher.launch()
+
+                    Box(
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        IconButton(onClick = { menuExpanded = !menuExpanded }) {
+                            Icon(Icons.Default.MoreVert, contentDescription = "More options")
                         }
-                    ){
-                        Text("Import")
+                        DropdownMenu(
+                            expanded = menuExpanded,
+                            onDismissRequest = { menuExpanded = false }
+                        ) {
+                            DropdownMenuItem(
+                                text = { Text("Importálás Excelből") },
+                                enabled = getPlatform().excelImportImplemented,
+                                onClick = {
+                                    loadFromExcelLauncher.launch()
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Importálás szövegfájlból") },
+                                onClick = {
+                                    loadFromJsonLauncher.launch()
+                                }
+                            )
+                        }
                     }
 
                     HelpButton(
-                        onClick = { viewModel.onEvent(CreateProblemSetEvent.ShowHelp ) },
+                        onClick = { viewModel.onEvent(CreateProblemSetEvent.ShowHelp) },
                     )
                 }
             )
@@ -158,7 +174,7 @@ fun CreateProblemSet(
                                 viewModel.onEvent(CreateProblemSetEvent.AddTask(block))
                             },
                         ) {
-                            Row {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
                                 Icon(Icons.Default.Menu, "")
                                 Text("Feladat hozzáadása")
                             }
@@ -169,7 +185,7 @@ fun CreateProblemSet(
                     Button(shape = CircleShape, onClick = {
                         viewModel.onEvent(CreateProblemSetEvent.AddBlock)
                     }) {
-                        Row {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
                             Text("Blokk hozzáadása")
                         }

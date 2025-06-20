@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -18,11 +16,11 @@ fun SetUpMenu(
     onCompetitionCreation: () -> Unit = {},
     onTeamCreation: () -> Unit = {},
     onBack: () -> Unit = {}
-){
+) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {Text("Előkókányolás")},
+                title = { Text("Előkókányolás") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         NavigateBackIcon()

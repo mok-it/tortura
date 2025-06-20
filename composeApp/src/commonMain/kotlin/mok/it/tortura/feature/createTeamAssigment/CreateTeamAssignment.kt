@@ -49,27 +49,31 @@ fun CreateTeamAssignment(
 
     val loadFromJsonLauncher = rememberFilePickerLauncher { file ->
         if (file != null) {
-            viewModel.onEvent( CreateTeamAssignmentEvent.LoadFromJson(file) )
+            viewModel.onEvent(CreateTeamAssignmentEvent.LoadFromJson(file))
         }
     }
 
-    when( popup ){
+    when (popup) {
         CreateTeamAssignmentPopupType.PARSE_ERROR -> {
-            ParseErrorPopup { viewModel.onEvent(CreateTeamAssignmentEvent.DismissPopup ) }
+            ParseErrorPopup { viewModel.onEvent(CreateTeamAssignmentEvent.DismissPopup) }
         }
+
         CreateTeamAssignmentPopupType.TYPE_ERROR -> {
-            TypeErrorPopup { viewModel.onEvent(CreateTeamAssignmentEvent.DismissPopup ) }
+            TypeErrorPopup { viewModel.onEvent(CreateTeamAssignmentEvent.DismissPopup) }
         }
+
         CreateTeamAssignmentPopupType.HELP -> {
-            HelpDialog { viewModel.onEvent(CreateTeamAssignmentEvent.DismissPopup ) }
+            HelpDialog { viewModel.onEvent(CreateTeamAssignmentEvent.DismissPopup) }
         }
-        CreateTeamAssignmentPopupType.NONE -> { /* No popup should be shown */ }
+
+        CreateTeamAssignmentPopupType.NONE -> { /* No popup should be shown */
+        }
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Create Team Assignment") },
+                title = { Text("Csapatbeosztás létrehozása") },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
                         NavigateBackIcon()
@@ -80,7 +84,7 @@ fun CreateTeamAssignment(
                         onClick = {
                             loadFromJsonLauncher.launch()
                         }
-                    ){
+                    ) {
                         Text("Import")
                     }
 
@@ -122,13 +126,31 @@ fun CreateTeamAssignment(
                                 StudentCard(
                                     student,
                                     onChangeName = { newName ->
-                                        viewModel.onEvent(CreateTeamAssignmentEvent.ChangeStudentName(team, student, newName))
+                                        viewModel.onEvent(
+                                            CreateTeamAssignmentEvent.ChangeStudentName(
+                                                team,
+                                                student,
+                                                newName
+                                            )
+                                        )
                                     },
                                     onChangeGroup = { newGroup ->
-                                        viewModel.onEvent(CreateTeamAssignmentEvent.ChangeStudentGroup(team, student, newGroup))
+                                        viewModel.onEvent(
+                                            CreateTeamAssignmentEvent.ChangeStudentGroup(
+                                                team,
+                                                student,
+                                                newGroup
+                                            )
+                                        )
                                     },
                                     onChangeKlass = { newKlass ->
-                                        viewModel.onEvent(CreateTeamAssignmentEvent.ChangeStudentKlass(team, student, newKlass))
+                                        viewModel.onEvent(
+                                            CreateTeamAssignmentEvent.ChangeStudentKlass(
+                                                team,
+                                                student,
+                                                newKlass
+                                            )
+                                        )
                                     },
                                     onDeleteStudent = {
                                         viewModel.onEvent(CreateTeamAssignmentEvent.DeleteMember(team, student))
@@ -142,7 +164,7 @@ fun CreateTeamAssignment(
                                         viewModel.onEvent(CreateTeamAssignmentEvent.AddStudent(team))
                                     },
                                 ) {
-                                    Row {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
                                         Icon(Icons.Default.Person, "")
                                         Text("Csapattag hozzáadása")
                                     }
@@ -154,7 +176,7 @@ fun CreateTeamAssignment(
                             Button(shape = CircleShape, onClick = {
                                 viewModel.onEvent(CreateTeamAssignmentEvent.AddTeam)
                             }) {
-                                Row {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
                                     Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
                                     Text("Csapat hozzáadása")
                                 }

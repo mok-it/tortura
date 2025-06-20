@@ -11,23 +11,23 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun MainMenu(
-        onSetUp: (() -> Unit),
-        onCompetition: (()->Unit),
-        onExit: (()->Unit),
+    onSetUp: (() -> Unit),
+    onCompetition: (() -> Unit),
+    onExit: (() -> Unit),
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally,
-    ){
-        Button(onClick = onSetUp ) {
-            Text( text = "SetUp")
+    ) {
+        Button(onClick = onSetUp) {
+            Text(text = "Előkészítés")
         }
-        Button(onClick = onCompetition ) {
-            Text(text="Tortúra!!!")
+        Button(onClick = onCompetition) {
+            Text(text = "Tortúra!!!")
         }
-        Button(onClick = onExit ) {
-            Text(text="Jó éjszakát, szevasztok!")
+        Button(onClick = onExit) {
+            Text(text = "Jó éjszakát, szevasztok!")
         }
 
     }
