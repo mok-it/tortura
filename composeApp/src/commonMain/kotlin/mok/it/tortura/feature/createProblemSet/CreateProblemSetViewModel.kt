@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readString
 import kotlinx.coroutines.launch
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import mok.it.tortura.loadProblemSetFromExcel
 import mok.it.tortura.model.Block
@@ -14,6 +15,7 @@ import mok.it.tortura.model.Task
 
 class CreateProblemSetViewModel : ViewModel() {
     val problemSet = mutableStateOf(ProblemSet("", listOf()))
+    val popup = mutableStateOf(CreateProblemSetPopupType.NONE)
 
 
     private fun modifyAllBlocks( newValue: List<Block>) {
@@ -34,54 +36,66 @@ class CreateProblemSetViewModel : ViewModel() {
         modifySingleBlock( block, block.copy( tasks = newTasks ) )
     }
 
-    fun onEvent(event: CompetitionEditEvent) {
+    fun onEvent(event: CreateProblemSetEvent) {
         when (event) {
-            is CompetitionEditEvent.AddTask -> {
+            is CreateProblemSetEvent.AddTask -> {
                 modifySingleBlock( event.block, event.block.copy( tasks = event.block.tasks + Task() ) )
             }
 
-            is CompetitionEditEvent.AddBlock -> {
+            is CreateProblemSetEvent.AddBlock -> {
                 modifyAllBlocks( problemSet.value.blocks + Block() )
             }
 
-            is CompetitionEditEvent.DeleteTask -> {
+            is CreateProblemSetEvent.DeleteTask -> {
                 modifySingleBlock( event.block, event.block.copy( tasks = event.block.tasks.filter { it != event.task } ) )
             }
 
-            is CompetitionEditEvent.DeleteBlock -> {
+            is CreateProblemSetEvent.DeleteBlock -> {
                 modifyAllBlocks( problemSet.value.blocks.filter { it != event.block } )
             }
 
 
-            is CompetitionEditEvent.ChangeTaskText -> {
+            is CreateProblemSetEvent.ChangeTaskText -> {
                 modifyTask( event.block, event.task, event.task.copy(text = event.text) )
             }
 
-            is CompetitionEditEvent.ChangeTaskSolution -> {
+            is CreateProblemSetEvent.ChangeTaskSolution -> {
                 modifyTask( event.block, event.task, event.task.copy( solution = event.text ) )
             }
 
-            is CompetitionEditEvent.ChangeProblemSetName -> {
+            is CreateProblemSetEvent.ChangeProblemSetName -> {
                 problemSet.value = problemSet.value.copy(name = event.name)
             }
 
-            is CompetitionEditEvent.ImportProblemSetFromJson -> {
+            is CreateProblemSetEvent.ImportProblemSetFromJson -> {
                 viewModelScope.launch {
                     try {
                         val newProblemSet = Json.decodeFromString<ProblemSet>(event.file.readString())
                         problemSet.value = newProblemSet
-                    } catch (e: Exception) {
-                        TODO()
+                    } catch (_: SerializationException) {
+                        popup.value = CreateProblemSetPopupType.PARSE_ERROR
+                    } catch (_: IllegalArgumentException) {
+                        popup.value = CreateProblemSetPopupType.TYPE_ERROR
                     }
                 }
 
             }
 
-            is CompetitionEditEvent.ImportProblemSetFromExcel -> {
+            is CreateProblemSetEvent.ImportProblemSetFromExcel -> {
                 val newProblemSet = loadProblemSetFromExcel(event.file)
-                if( newProblemSet != null ){
+                if( newProblemSet == null ){
+                    popup.value = CreateProblemSetPopupType.EXCEL_ERROR
+                } else {
                     problemSet.value = newProblemSet
                 }
+            }
+
+            is CreateProblemSetEvent.DismissPopup -> {
+                popup.value = CreateProblemSetPopupType.NONE
+            }
+
+            is CreateProblemSetEvent.ShowHelp -> {
+                popup.value = CreateProblemSetPopupType.HELP
             }
 
         }
@@ -89,14 +103,24 @@ class CreateProblemSetViewModel : ViewModel() {
 
 }
 
-sealed class CompetitionEditEvent {
-    data object AddBlock : CompetitionEditEvent()
-    data class AddTask(val block: Block) : CompetitionEditEvent()
-    data class DeleteBlock(val block: Block) : CompetitionEditEvent()
-    data class DeleteTask(val task: Task, val block: Block) : CompetitionEditEvent()
-    data class ChangeTaskText(val block: Block, val task: Task, val text: String) : CompetitionEditEvent()
-    data class ChangeTaskSolution(val block: Block, val task: Task, val text: String) : CompetitionEditEvent()
-    data class ChangeProblemSetName( val name: String ) : CompetitionEditEvent()
-    data class ImportProblemSetFromJson(val file: PlatformFile) : CompetitionEditEvent()
-    data class ImportProblemSetFromExcel(val file: PlatformFile) : CompetitionEditEvent()
+sealed class CreateProblemSetEvent {
+    data object AddBlock : CreateProblemSetEvent()
+    data class AddTask(val block: Block) : CreateProblemSetEvent()
+    data class DeleteBlock(val block: Block) : CreateProblemSetEvent()
+    data class DeleteTask(val task: Task, val block: Block) : CreateProblemSetEvent()
+    data class ChangeTaskText(val block: Block, val task: Task, val text: String) : CreateProblemSetEvent()
+    data class ChangeTaskSolution(val block: Block, val task: Task, val text: String) : CreateProblemSetEvent()
+    data class ChangeProblemSetName( val name: String ) : CreateProblemSetEvent()
+    data class ImportProblemSetFromJson(val file: PlatformFile) : CreateProblemSetEvent()
+    data class ImportProblemSetFromExcel(val file: PlatformFile) : CreateProblemSetEvent()
+    data object DismissPopup : CreateProblemSetEvent()
+    data object ShowHelp : CreateProblemSetEvent()
+}
+
+enum class CreateProblemSetPopupType {
+    PARSE_ERROR,
+    TYPE_ERROR,
+    EXCEL_ERROR,
+    HELP,
+    NONE
 }

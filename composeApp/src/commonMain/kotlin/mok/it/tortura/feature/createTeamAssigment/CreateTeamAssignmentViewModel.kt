@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import io.github.vinceglb.filekit.PlatformFile
 import io.github.vinceglb.filekit.readString
 import kotlinx.coroutines.launch
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import mok.it.tortura.feature.startCompetition.StartCompetitionViewModel.StartCompetitionPopupType
 import mok.it.tortura.model.Student
 import mok.it.tortura.model.Team
 import mok.it.tortura.model.TeamAssignment
@@ -14,6 +16,7 @@ import mok.it.tortura.ui.CategoryColors
 
 class CreateTeamAssignmentViewModel : ViewModel() {
     val teamAssignment = mutableStateOf(TeamAssignment( "", listOf() ) )
+    val popup = mutableStateOf(CreateTeamAssignmentPopupType.NONE)
 
     fun onEvent(event: CreateTeamAssignmentEvent) {
         when (event) {
@@ -54,10 +57,20 @@ class CreateTeamAssignmentViewModel : ViewModel() {
                     try {
                         val newTeamAssignment = Json.decodeFromString<TeamAssignment>(event.file.readString())
                         teamAssignment.value = newTeamAssignment
-                    } catch (e: Exception) {
-                        TODO()
+                    } catch (_: SerializationException) {
+                        popup.value = CreateTeamAssignmentPopupType.PARSE_ERROR
+                    } catch (_: IllegalArgumentException) {
+                        popup.value = CreateTeamAssignmentPopupType.TYPE_ERROR
                     }
                 }
+            }
+
+            is CreateTeamAssignmentEvent.DismissPopup -> {
+                popup.value = CreateTeamAssignmentPopupType.NONE
+            }
+
+            is CreateTeamAssignmentEvent.ShowHelp -> {
+                popup.value = CreateTeamAssignmentPopupType.HELP
             }
         }
     }
@@ -92,4 +105,13 @@ sealed class CreateTeamAssignmentEvent {
     data class ChangeStudentKlass( val team: Team, val student: Student, val klass: String ) : CreateTeamAssignmentEvent()
     data class ChangeColors( val colors: CategoryColors ) : CreateTeamAssignmentEvent()
     data class LoadFromJson( val file: PlatformFile ) : CreateTeamAssignmentEvent()
+    data object DismissPopup : CreateTeamAssignmentEvent()
+    data object ShowHelp : CreateTeamAssignmentEvent()
+}
+
+enum class CreateTeamAssignmentPopupType {
+    PARSE_ERROR,
+    TYPE_ERROR,
+    HELP,
+    NONE
 }

@@ -11,7 +11,10 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,9 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import mok.it.tortura.getPlatform
 import mok.it.tortura.saveStringToFile
-import mok.it.tortura.ui.components.HelpButton
-import mok.it.tortura.ui.components.HelpDialog
-import mok.it.tortura.ui.components.TaskCard
+import mok.it.tortura.ui.components.*
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -34,6 +35,7 @@ fun CreateProblemSet(
 ) {
     val viewModel: CreateProblemSetViewModel = viewModel { CreateProblemSetViewModel() }
     val problemSet by remember { viewModel.problemSet }
+    val popup by remember { viewModel.popup }
 
     val scope = rememberCoroutineScope()
     val launcher = rememberFileSaverLauncher { file ->
@@ -46,22 +48,30 @@ fun CreateProblemSet(
 
     val loadFromJsonLauncher = rememberFilePickerLauncher { file ->
         if (file != null) {
-            viewModel.onEvent(CompetitionEditEvent.ImportProblemSetFromJson(file) )
+            viewModel.onEvent(CreateProblemSetEvent.ImportProblemSetFromJson(file) )
         }
     }
 
     val loadFromExcelLauncher = rememberFilePickerLauncher { file ->
         if (file != null) {
-            viewModel.onEvent(CompetitionEditEvent.ImportProblemSetFromExcel(file))
+            viewModel.onEvent(CreateProblemSetEvent.ImportProblemSetFromExcel(file))
         }
     }
 
-    val helpDialogShown = remember { mutableStateOf(false) }
-
-    if( helpDialogShown.value ) {
-        HelpDialog(
-            onDismiss = { helpDialogShown.value = false }
-        )
+    when( popup ){
+        CreateProblemSetPopupType.PARSE_ERROR -> {
+            ParseErrorPopup { viewModel.onEvent(CreateProblemSetEvent.DismissPopup ) }
+        }
+        CreateProblemSetPopupType.TYPE_ERROR -> {
+            TypeErrorPopup { viewModel.onEvent(CreateProblemSetEvent.DismissPopup ) }
+        }
+        CreateProblemSetPopupType.EXCEL_ERROR -> {
+            ExcelErrorPopup { viewModel.onEvent(CreateProblemSetEvent.DismissPopup ) }
+        }
+        CreateProblemSetPopupType.HELP -> {
+            HelpDialog { viewModel.onEvent(CreateProblemSetEvent.DismissPopup ) }
+        }
+        CreateProblemSetPopupType.NONE -> { /* No popup should be shown */ }
     }
 
     Scaffold(
@@ -91,7 +101,7 @@ fun CreateProblemSet(
                     }
 
                     HelpButton(
-                        onClick = { helpDialogShown.value = true },
+                        onClick = { viewModel.onEvent(CreateProblemSetEvent.ShowHelp ) },
                     )
                 }
             )
@@ -110,7 +120,7 @@ fun CreateProblemSet(
                                     modifier = Modifier.padding(end = 8.dp)
                                 )
                                 IconButton(onClick = {
-                                    viewModel.onEvent(CompetitionEditEvent.DeleteBlock(block))
+                                    viewModel.onEvent(CreateProblemSetEvent.DeleteBlock(block))
                                 }, modifier = Modifier.size(40.dp)) {
                                     Icon(Icons.Filled.Delete, "Blokk törlése")
                                 }
@@ -123,7 +133,7 @@ fun CreateProblemSet(
                             task = it,
                             onChangeText = { text ->
                                 viewModel.onEvent(
-                                    CompetitionEditEvent.ChangeTaskText(
+                                    CreateProblemSetEvent.ChangeTaskText(
                                         block,
                                         it,
                                         text
@@ -132,20 +142,20 @@ fun CreateProblemSet(
                             },
                             onChangeSolution = { text ->
                                 viewModel.onEvent(
-                                    CompetitionEditEvent.ChangeTaskSolution(
+                                    CreateProblemSetEvent.ChangeTaskSolution(
                                         block,
                                         it,
                                         text
                                     )
                                 )
                             },
-                            onDeleteTask = { viewModel.onEvent(CompetitionEditEvent.DeleteTask(it, block)) }
+                            onDeleteTask = { viewModel.onEvent(CreateProblemSetEvent.DeleteTask(it, block)) }
                         )
                     }
                     item {
                         Button(
                             onClick = {
-                                viewModel.onEvent(CompetitionEditEvent.AddTask(block))
+                                viewModel.onEvent(CreateProblemSetEvent.AddTask(block))
                             },
                         ) {
                             Row {
@@ -157,7 +167,7 @@ fun CreateProblemSet(
                 }
                 item {
                     Button(shape = CircleShape, onClick = {
-                        viewModel.onEvent(CompetitionEditEvent.AddBlock)
+                        viewModel.onEvent(CreateProblemSetEvent.AddBlock)
                     }) {
                         Row {
                             Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
