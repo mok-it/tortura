@@ -24,6 +24,7 @@ import mok.it.tortura.ui.components.HelpDialog
 @Composable
 fun OngoingCompetition(
     onBack: () -> Unit,
+    onEvaluate: () -> Unit,
 ) {
 
     val viewModel = viewModel { OngoingCompetitionViewModel() }
@@ -72,7 +73,7 @@ fun OngoingCompetition(
                         Text("Export")
                     }
                     Button(
-                        onClick = { TODO() }
+                        onClick = onEvaluate
                     ) {
                         Text("Kiértékelés")
                     }

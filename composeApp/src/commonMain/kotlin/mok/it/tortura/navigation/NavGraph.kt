@@ -10,6 +10,7 @@ import mok.it.tortura.feature.SetUpMenu
 import mok.it.tortura.feature.StartNavigation.StartNavigation
 import mok.it.tortura.feature.createProblemSet.CreateProblemSet
 import mok.it.tortura.feature.createTeamAssigment.CreateTeamAssignment
+import mok.it.tortura.feature.evaluation.Evaluation
 import mok.it.tortura.feature.ongoingCompetition.OngoingCompetition
 import mok.it.tortura.feature.startCompetition.StartCompetiton
 import mok.it.tortura.goodNightGoodBye
@@ -49,6 +50,12 @@ fun NavGraph(
         composable(Screen.OngoingCompetition.route) {
             OngoingCompetition(
                 onBack = { navController.navigate(Screen.MainMenu.route) },
+                onEvaluate = { navController.navigate(Screen.Evaluation.route) }
+            )
+        }
+        composable(Screen.Evaluation.route) {
+            Evaluation(
+                onBack = { navController.navigate(Screen.OngoingCompetition.route) }
             )
         }
         composable(Screen.StartNavigation.route) {
