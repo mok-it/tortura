@@ -88,6 +88,7 @@ fun Evaluation(
     ) { innerPadding ->
 
         val competition = competitions[tabIndex]
+        val maxTeamSize = competition.teamAssignment.teams.maxOfOrNull { it.students.size } ?: 4
         LazyVerticalGrid(
             GridCells.Fixed(6),
             contentPadding = PaddingValues(10.dp),
@@ -95,18 +96,20 @@ fun Evaluation(
             modifier = Modifier.fillMaxSize().padding(innerPadding)
         ) {
             item { Text("Azonosító") }
-            item { Text("1. csapattag") }
-            item { Text("2. csapattag") }
-            item { Text("3. csapattag") }
-            item { Text("4. csapattag") }
+            for (i in 1..maxTeamSize) {
+                item { Text("$i. csapattag") }
+            }
             item { Text("Pontszám") }
             competition.answers.forEach { answer ->
                 val team = answer.team
                 item { Text(competition.teamAssignment.teams.indexOf(team).toString()) }
-                for (i: Int in 0..3) {
+                for (i in 0..<maxTeamSize) {
                     val student = team.students.getOrNull(i)
                     item {
-                        Text((student?.name ?: "") + (student?.group ?: ""))
+                        if (student?.group == "")
+                            Text((student.name))
+                        else if (student != null) //student is not null, and group string is provided
+                            Text("${student.name} (${student.group})")
                     }
 
                 }
