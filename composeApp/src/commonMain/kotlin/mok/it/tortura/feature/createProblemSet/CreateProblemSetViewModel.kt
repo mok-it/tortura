@@ -18,48 +18,54 @@ class CreateProblemSetViewModel : ViewModel() {
     val popup = mutableStateOf(CreateProblemSetPopupType.NONE)
 
 
-    private fun modifyAllBlocks( newValue: List<Block>) {
+    private fun modifyAllBlocks(newValue: List<Block>) {
         problemSet.value = problemSet.value.copy(blocks = newValue)
     }
 
     private fun modifySingleBlock(block: Block, newValue: Block) {
         val blockIndex = problemSet.value.blocks.indexOf(block)
+        if (blockIndex == -1) {
+            return
+        }
         val newBlocks = problemSet.value.blocks.toMutableList()
-        newBlocks[blockIndex] = newValue.copy( minCorrectToProgress = (newValue.tasks.size + 2) / 2 )
+        newBlocks[blockIndex] = newValue.copy(minCorrectToProgress = (newValue.tasks.size + 2) / 2)
         modifyAllBlocks(newBlocks)
     }
 
     private fun modifyTask(block: Block, task: Task, newValue: Task) {
         val taskIndex = block.tasks.indexOf(task)
+        if (taskIndex == -1) {
+            return
+        }
         val newTasks = block.tasks.toMutableList()
         newTasks[taskIndex] = newValue
-        modifySingleBlock( block, block.copy( tasks = newTasks ) )
+        modifySingleBlock(block, block.copy(tasks = newTasks))
     }
 
     fun onEvent(event: CreateProblemSetEvent) {
         when (event) {
             is CreateProblemSetEvent.AddTask -> {
-                modifySingleBlock( event.block, event.block.copy( tasks = event.block.tasks + Task() ) )
+                modifySingleBlock(event.block, event.block.copy(tasks = event.block.tasks + Task()))
             }
 
             is CreateProblemSetEvent.AddBlock -> {
-                modifyAllBlocks( problemSet.value.blocks + Block() )
+                modifyAllBlocks(problemSet.value.blocks + Block())
             }
 
             is CreateProblemSetEvent.DeleteTask -> {
-                modifySingleBlock( event.block, event.block.copy( tasks = event.block.tasks.filter { it != event.task } ) )
+                modifySingleBlock(event.block, event.block.copy(tasks = event.block.tasks.filter { it != event.task }))
             }
 
             is CreateProblemSetEvent.DeleteBlock -> {
-                modifyAllBlocks( problemSet.value.blocks.filter { it != event.block } )
+                modifyAllBlocks(problemSet.value.blocks.filter { it != event.block })
             }
 
             is CreateProblemSetEvent.ChangeTaskText -> {
-                modifyTask( event.block, event.task, event.task.copy(text = event.text) )
+                modifyTask(event.block, event.task, event.task.copy(text = event.text))
             }
 
             is CreateProblemSetEvent.ChangeTaskSolution -> {
-                modifyTask( event.block, event.task, event.task.copy( solution = event.text ) )
+                modifyTask(event.block, event.task, event.task.copy(solution = event.text))
             }
 
             is CreateProblemSetEvent.ChangeProblemSetName -> {
@@ -82,7 +88,7 @@ class CreateProblemSetViewModel : ViewModel() {
 
             is CreateProblemSetEvent.ImportProblemSetFromExcel -> {
                 val newProblemSet = loadProblemSetFromExcel(event.file)
-                if( newProblemSet == null ){
+                if (newProblemSet == null) {
                     popup.value = CreateProblemSetPopupType.EXCEL_ERROR
                 } else {
                     problemSet.value = newProblemSet
@@ -109,7 +115,7 @@ sealed class CreateProblemSetEvent {
     data class DeleteTask(val task: Task, val block: Block) : CreateProblemSetEvent()
     data class ChangeTaskText(val block: Block, val task: Task, val text: String) : CreateProblemSetEvent()
     data class ChangeTaskSolution(val block: Block, val task: Task, val text: String) : CreateProblemSetEvent()
-    data class ChangeProblemSetName( val name: String ) : CreateProblemSetEvent()
+    data class ChangeProblemSetName(val name: String) : CreateProblemSetEvent()
     data class ImportProblemSetFromJson(val file: PlatformFile) : CreateProblemSetEvent()
     data class ImportProblemSetFromExcel(val file: PlatformFile) : CreateProblemSetEvent()
     data object DismissPopup : CreateProblemSetEvent()
