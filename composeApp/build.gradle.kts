@@ -128,12 +128,18 @@ compose.desktop {
         mainClass = "mok.it.tortura.MainKt"
 
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb, TargetFormat.Exe)
+            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Tortura"
             packageVersion = "1.0.0"
 
             linux {
                 modules("jdk.security.auth") //needed to access file system
+                iconFile.set(project.file("src/desktopMain/resources/icon.png"))
+            }
+
+            windows{
+                shortcut = true
+                iconFile.set(project.file("src/desktopMain/resources/icon.ico"))
             }
         }
     }
