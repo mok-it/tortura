@@ -12,27 +12,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StartNavigation(
-    newFromFile: (() -> Unit),
-    openCompetition: (() -> Unit),
-    onBack: (() -> Unit),
+    newFromFile: () -> Unit,
+    openCompetition: () -> Unit,
+    onImport: () -> Unit,
+    onBack: () -> Unit,
 ) {
     val viewModel = viewModel { StartNavigationViewModel() }
     val dialogState by remember { viewModel.dialogState }
-    val importSelector = rememberFilePickerLauncher { file ->
-        if (file != null) {
-            viewModel.onEvent(
-                StartNavigationViewModel.StartNavigationEvent.LoadFromFile(
-                    file,
-                    openCompetition
-                )
-            )
-        }
-    }
     Scaffold(
         topBar = {
 
@@ -84,9 +74,7 @@ fun StartNavigation(
                     },
                     onDiscard = {
                         viewModel.onEvent(StartNavigationViewModel.StartNavigationEvent.DismissDialog)
-
-                        importSelector.launch()
-
+                        onImport()
                     }
                 )
             }

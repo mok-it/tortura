@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.Help
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
@@ -104,6 +105,17 @@ fun HelpIcon(
 ){
     Icon(
         Icons.AutoMirrored.Filled.Help,
+        contentDescription = null,
+        modifier = modifier
+    )
+}
+
+@Composable
+fun AddIcon(
+    modifier: Modifier = Modifier
+){
+    Icon(
+        Icons.Filled.Add,
         contentDescription = null,
         modifier = modifier
     )

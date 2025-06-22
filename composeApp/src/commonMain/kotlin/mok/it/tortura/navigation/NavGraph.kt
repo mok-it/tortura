@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import mok.it.tortura.feature.MainMenu
 import mok.it.tortura.feature.SetUpMenu
 import mok.it.tortura.feature.StartNavigation.StartNavigation
+import mok.it.tortura.feature.continueCompetition.ContinueCompetition
 import mok.it.tortura.feature.createProblemSet.CreateProblemSet
 import mok.it.tortura.feature.createTeamAssigment.CreateTeamAssignment
 import mok.it.tortura.feature.evaluation.Evaluation
@@ -62,12 +63,19 @@ fun NavGraph(
             StartNavigation(
                 newFromFile = { navController.navigate(Screen.CreateCompetitionFromFile.route) },
                 openCompetition = { navController.navigate(Screen.OngoingCompetition.route) },
+                onImport = { navController.navigate(Screen.ContinueCompetition.route) },
                 onBack = { navController.navigate(Screen.MainMenu.route) },
             )
         }
         composable(Screen.CreateCompetitionFromFile.route) {
             StartCompetiton(
                 onBack = { navController.navigate(Screen.MainMenu.route) },
+                onStart = { navController.navigate(Screen.OngoingCompetition.route) },
+            )
+        }
+        composable(Screen.ContinueCompetition.route){
+            ContinueCompetition(
+                onBack = { navController.popBackStack() },
                 onStart = { navController.navigate(Screen.OngoingCompetition.route) },
             )
         }
