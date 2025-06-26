@@ -101,6 +101,20 @@ fun CreateTeamAssignment(
             Surface {
                 Column {
 
+                    Row{
+                        Text( "Sorszámok kezdete:" )
+
+                        TextField(
+                            value = teamAssignment.baseTeamId.toString(),
+                            onValueChange = { newBaseId ->
+                                viewModel.onEvent(
+                                    CreateTeamAssignmentEvent.ChangeBaseTeamId(newBaseId.toIntOrNull() ?: 100)
+                                )
+                            },
+                            singleLine = true
+                        )
+                    }
+
                     LazyColumn(
                         state = lazyListState,
                         modifier = Modifier.weight(1f)
@@ -110,7 +124,7 @@ fun CreateTeamAssignment(
                                 Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Text(
-                                            "${teamAssignment.teams.indexOf(team) + 1}. csapat",
+                                            "${teamAssignment.baseTeamId + teamAssignment.teams.indexOf(team)}",
                                             modifier = Modifier.padding(end = 8.dp)
                                         )
                                         IconButton(onClick = {

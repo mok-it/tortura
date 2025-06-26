@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Team(
     val students: List<Student>,
+    val name: String? = null,
     @Required
     private val id: Int = nextId(),
 ) {

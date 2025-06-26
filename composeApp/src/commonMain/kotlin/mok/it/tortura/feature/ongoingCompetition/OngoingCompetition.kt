@@ -124,9 +124,7 @@ fun OngoingCompetition(
                             val showConfirmDialog = remember { mutableStateOf(false) }
 
                             AnswerBlock(
-                                //TODO: itt jó lenne valahogy már a teamAssignmentben vagy a problemSet-ben
-                                // tárolni a korcsoportot, és  abból kihalászni a sorszám első számjegyét
-                                teamName = "${(competitions.indexOf(competition) + 1) * 100 + index}",
+                                teamName = competitionTeam.team.name ?: "${competition.teamAssignment.baseTeamId + index}",
                                 answer = competitionTeam.answer,
                                 modifyAnswer = { task, newAnswer ->
                                     viewModel.onEvent(
@@ -232,7 +230,7 @@ fun OngoingCompetition(
                             },
                             text = {
                                 Text(
-                                    text = "${(competitions.indexOf(competition) + 1) * 100 + index}",
+                                    text = "${competition.teamAssignment.baseTeamId + index}",
                                     color = competition.teamAssignment.colorSchema.textColor,
                                 )
                             },

@@ -71,6 +71,10 @@ class CreateTeamAssignmentViewModel : ViewModel() {
             is CreateTeamAssignmentEvent.ShowHelp -> {
                 popup.value = CreateTeamAssignmentPopupType.HELP
             }
+
+            is CreateTeamAssignmentEvent.ChangeBaseTeamId -> {
+                teamAssignment.value = teamAssignment.value.copy(baseTeamId = event.baseTeamId)
+            }
         }
     }
 
@@ -109,6 +113,7 @@ sealed class CreateTeamAssignmentEvent {
     data class ChangeStudentGroup(val team: Team, val student: Student, val group: String) : CreateTeamAssignmentEvent()
     data class ChangeStudentKlass(val team: Team, val student: Student, val klass: String) : CreateTeamAssignmentEvent()
     data class ChangeColors(val colors: CategoryColors) : CreateTeamAssignmentEvent()
+    data class ChangeBaseTeamId(val baseTeamId: Int) : CreateTeamAssignmentEvent()
     data class LoadFromJson(val file: PlatformFile) : CreateTeamAssignmentEvent()
     data object DismissPopup : CreateTeamAssignmentEvent()
     data object ShowHelp : CreateTeamAssignmentEvent()
