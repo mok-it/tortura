@@ -90,7 +90,7 @@ fun Evaluation(
         val competition = competitions[tabIndex]
         val maxTeamSize = competition.teamAssignment.teams.maxOfOrNull { it.students.size } ?: 4
         LazyVerticalGrid(
-            GridCells.Fixed(6),
+            GridCells.Fixed(maxTeamSize + 2),
             contentPadding = PaddingValues(10.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxSize().padding(innerPadding)
@@ -102,7 +102,12 @@ fun Evaluation(
             item { Text("Pontszám") }
             competition.answers.forEach { answer ->
                 val team = answer.team
-                item { Text(competition.teamAssignment.teams.indexOf(team).toString()) }
+                item {
+                    Text(
+                        (competition.teamAssignment.teams.indexOf(team) +
+                                ((competitions.indexOf(competition) + 1) * 100)).toString()
+                    )
+                }
                 for (i in 0..<maxTeamSize) {
                     val student = team.students.getOrNull(i)
                     item {
@@ -110,6 +115,9 @@ fun Evaluation(
                             Text((student.name))
                         else if (student != null) //student is not null, and group string is provided
                             Text("${student.name} (${student.group})")
+                        else {
+                            Text("--")
+                        }
                     }
 
                 }
