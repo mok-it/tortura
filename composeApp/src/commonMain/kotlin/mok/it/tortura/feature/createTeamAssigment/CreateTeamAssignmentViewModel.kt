@@ -13,10 +13,9 @@ import mok.it.tortura.loadTeamAssignmentFromExcel
 import mok.it.tortura.model.Student
 import mok.it.tortura.model.Team
 import mok.it.tortura.model.TeamAssignment
-import mok.it.tortura.ui.CategoryColors
 
 class CreateTeamAssignmentViewModel : ViewModel() {
-    val teamAssignment = mutableStateOf(TeamAssignment("", listOf()))
+    val teamAssignment = mutableStateOf(TeamAssignment( listOf()))
     val popup = mutableStateOf(CreateTeamAssignmentPopupType.NONE)
 
     fun onEvent(event: CreateTeamAssignmentEvent) {
@@ -47,10 +46,6 @@ class CreateTeamAssignmentViewModel : ViewModel() {
 
             is CreateTeamAssignmentEvent.ChangeStudentKlass -> {
                 modifyStudent(event.team, event.student, event.student.copy(klass = event.klass))
-            }
-
-            is CreateTeamAssignmentEvent.ChangeColors -> {
-                teamAssignment.value = teamAssignment.value.copy(colorSchema = event.colors)
             }
 
             is CreateTeamAssignmentEvent.LoadFromJson -> {
@@ -137,7 +132,6 @@ sealed class CreateTeamAssignmentEvent {
     data class ChangeStudentName(val team: Team, val student: Student, val name: String) : CreateTeamAssignmentEvent()
     data class ChangeStudentGroup(val team: Team, val student: Student, val group: String) : CreateTeamAssignmentEvent()
     data class ChangeStudentKlass(val team: Team, val student: Student, val klass: String) : CreateTeamAssignmentEvent()
-    data class ChangeColors(val colors: CategoryColors) : CreateTeamAssignmentEvent()
     data class ChangeBaseTeamId(val baseTeamId: Int) : CreateTeamAssignmentEvent()
     data class LoadFromJson(val file: PlatformFile) : CreateTeamAssignmentEvent()
     data class LoadFromCsv(val file: PlatformFile) : CreateTeamAssignmentEvent()

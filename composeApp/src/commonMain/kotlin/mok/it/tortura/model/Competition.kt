@@ -3,6 +3,7 @@ package mok.it.tortura.model
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
+import mok.it.tortura.ui.CategoryColors
 
 
 @Serializable
@@ -11,6 +12,8 @@ data class Competition(
     val problemSet: ProblemSet,
     val answers: List<CompetitionTeam> = teamAssignment.teams.map { team -> CompetitionTeam( team, Answer(problemSet)) },
     val startTime: Instant = Clock.System.now(),
+    val category: String = "",
+    val colors: CategoryColors = CategoryColors.UNDIFINED,
     val id: String? = null,
 ) {
 

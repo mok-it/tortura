@@ -14,7 +14,7 @@ import mok.it.tortura.model.ProblemSet
 import mok.it.tortura.model.Task
 
 class CreateProblemSetViewModel : ViewModel() {
-    val problemSet = mutableStateOf(ProblemSet("", listOf()))
+    val problemSet = mutableStateOf(ProblemSet( listOf()))
     val popup = mutableStateOf(CreateProblemSetPopupType.NONE)
 
 
@@ -68,10 +68,6 @@ class CreateProblemSetViewModel : ViewModel() {
                 modifyTask(event.block, event.task, event.task.copy(solution = event.text))
             }
 
-            is CreateProblemSetEvent.ChangeProblemSetName -> {
-                problemSet.value = problemSet.value.copy(name = event.name)
-            }
-
             is CreateProblemSetEvent.ImportProblemSetFromJson -> {
                 viewModelScope.launch {
                     try {
@@ -115,7 +111,6 @@ sealed class CreateProblemSetEvent {
     data class DeleteTask(val task: Task, val block: Block) : CreateProblemSetEvent()
     data class ChangeTaskText(val block: Block, val task: Task, val text: String) : CreateProblemSetEvent()
     data class ChangeTaskSolution(val block: Block, val task: Task, val text: String) : CreateProblemSetEvent()
-    data class ChangeProblemSetName(val name: String) : CreateProblemSetEvent()
     data class ImportProblemSetFromJson(val file: PlatformFile) : CreateProblemSetEvent()
     data class ImportProblemSetFromExcel(val file: PlatformFile) : CreateProblemSetEvent()
     data object DismissPopup : CreateProblemSetEvent()

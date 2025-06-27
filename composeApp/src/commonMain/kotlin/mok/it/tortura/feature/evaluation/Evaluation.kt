@@ -76,11 +76,11 @@ fun Evaluation(
                         },
                         text = {
                             Text(
-                                text = "${(competitions.indexOf(competition) + 1)}xx", //TODO: szebben is ki lehetne írni
-                                color = competition.teamAssignment.colorSchema.textColor
+                                text = competition.category,
+                                color = competition.colors.textColor
                             )
                         },
-                        modifier = Modifier.background(competition.teamAssignment.colorSchema.backgroundColor)
+                        modifier = Modifier.background(competition.colors.backgroundColor)
                     )
                 }
             }

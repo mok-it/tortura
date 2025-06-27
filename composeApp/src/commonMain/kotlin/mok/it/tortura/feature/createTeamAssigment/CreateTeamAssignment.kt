@@ -100,17 +100,17 @@ fun CreateTeamAssignment(
                 },
                 actions = {
 
-                    Box{
+                    Box {
                         IconButton(
                             onClick = { menuExpanded.value = !menuExpanded.value }
-                        ){
+                        ) {
                             Icon(Icons.Filled.MoreVert, null)
                         }
 
                         DropdownMenu(
                             expanded = menuExpanded.value,
                             onDismissRequest = { menuExpanded.value = false }
-                        ){
+                        ) {
                             DropdownMenuItem(
                                 text = { Text("Importálás CSV-ből") },
                                 onClick = {
@@ -142,112 +142,114 @@ fun CreateTeamAssignment(
             )
         }
     ) { paddingValues ->
-        Row(
-            modifier = Modifier.padding(paddingValues)
+        Surface(
+            modifier = Modifier.padding(paddingValues),
         ) {
-            Surface {
-                Column {
+            Column {
 
-                    Row{
-                        Text( "Sorszámok kezdete:" )
+                Row {
+                    Text("Sorszámok kezdete:")
 
-                        TextField(
-                            value = teamAssignment.baseTeamId.toString(),
-                            onValueChange = { newBaseId ->
-                                viewModel.onEvent(
-                                    CreateTeamAssignmentEvent.ChangeBaseTeamId(newBaseId.toIntOrNull() ?: 100)
-                                )
-                            },
-                            singleLine = true
-                        )
-                    }
-
-                    LazyColumn(
-                        state = lazyListState,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        for (team in teamAssignment.teams) {
-                            stickyHeader {
-                                Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(
-                                            text = team.name ?: "${teamAssignment.baseTeamId + teamAssignment.teams.indexOf(team)}",
-                                            modifier = Modifier.padding(end = 8.dp)
-                                        )
-                                        IconButton(onClick = {
-                                            viewModel.onEvent(CreateTeamAssignmentEvent.DeleteTeam(team))
-                                        }, modifier = Modifier.size(40.dp)) {
-                                            Icon(Icons.Filled.Delete, "Csapat törlése")
-                                        }
-                                    }
-                                }
-                            }
-
-                            items(team.students) { student ->
-                                StudentCard(
-                                    student,
-                                    onChangeName = { newName ->
-                                        viewModel.onEvent(
-                                            CreateTeamAssignmentEvent.ChangeStudentName(
-                                                team,
-                                                student,
-                                                newName
-                                            )
-                                        )
-                                    },
-                                    onChangeGroup = { newGroup ->
-                                        viewModel.onEvent(
-                                            CreateTeamAssignmentEvent.ChangeStudentGroup(
-                                                team,
-                                                student,
-                                                newGroup
-                                            )
-                                        )
-                                    },
-                                    onChangeKlass = { newKlass ->
-                                        viewModel.onEvent(
-                                            CreateTeamAssignmentEvent.ChangeStudentKlass(
-                                                team,
-                                                student,
-                                                newKlass
-                                            )
-                                        )
-                                    },
-                                    onDeleteStudent = {
-                                        viewModel.onEvent(CreateTeamAssignmentEvent.DeleteMember(team, student))
-                                    }
-                                )
-                            }
-
-                            item {
-                                Button(
-                                    onClick = {
-                                        viewModel.onEvent(CreateTeamAssignmentEvent.AddStudent(team))
-                                    },
-                                ) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Icon(Icons.Default.Person, "")
-                                        Text("Csapattag hozzáadása")
-                                    }
-                                }
-                            }
-
-                        }
-                        item {
-                            Button(shape = CircleShape, onClick = {
-                                viewModel.onEvent(CreateTeamAssignmentEvent.AddTeam)
-                            }) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
-                                    Text("Csapat hozzáadása")
-                                }
-                            }
-                        }
-                    }
-                    Button(
-                        onClick = { saveLauncher.launch("output", "txt") }
-                    ) { Text(text = "Mentés") }
+                    TextField(
+                        value = teamAssignment.baseTeamId.toString(),
+                        onValueChange = { newBaseId ->
+                            viewModel.onEvent(
+                                CreateTeamAssignmentEvent.ChangeBaseTeamId(newBaseId.toIntOrNull() ?: 100)
+                            )
+                        },
+                        singleLine = true
+                    )
                 }
+
+                LazyColumn(
+                    state = lazyListState,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    for (team in teamAssignment.teams) {
+                        stickyHeader {
+                            Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        text = team.name ?: "${
+                                            teamAssignment.baseTeamId + teamAssignment.teams.indexOf(
+                                                team
+                                            )
+                                        }",
+                                        modifier = Modifier.padding(end = 8.dp)
+                                    )
+                                    IconButton(onClick = {
+                                        viewModel.onEvent(CreateTeamAssignmentEvent.DeleteTeam(team))
+                                    }, modifier = Modifier.size(40.dp)) {
+                                        Icon(Icons.Filled.Delete, "Csapat törlése")
+                                    }
+                                }
+                            }
+                        }
+
+                        items(team.students) { student ->
+                            StudentCard(
+                                student,
+                                onChangeName = { newName ->
+                                    viewModel.onEvent(
+                                        CreateTeamAssignmentEvent.ChangeStudentName(
+                                            team,
+                                            student,
+                                            newName
+                                        )
+                                    )
+                                },
+                                onChangeGroup = { newGroup ->
+                                    viewModel.onEvent(
+                                        CreateTeamAssignmentEvent.ChangeStudentGroup(
+                                            team,
+                                            student,
+                                            newGroup
+                                        )
+                                    )
+                                },
+                                onChangeKlass = { newKlass ->
+                                    viewModel.onEvent(
+                                        CreateTeamAssignmentEvent.ChangeStudentKlass(
+                                            team,
+                                            student,
+                                            newKlass
+                                        )
+                                    )
+                                },
+                                onDeleteStudent = {
+                                    viewModel.onEvent(CreateTeamAssignmentEvent.DeleteMember(team, student))
+                                }
+                            )
+                        }
+
+                        item {
+                            Button(
+                                onClick = {
+                                    viewModel.onEvent(CreateTeamAssignmentEvent.AddStudent(team))
+                                },
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(Icons.Default.Person, "")
+                                    Text("Csapattag hozzáadása")
+                                }
+                            }
+                        }
+
+                    }
+                    item {
+                        Button(shape = CircleShape, onClick = {
+                            viewModel.onEvent(CreateTeamAssignmentEvent.AddTeam)
+                        }) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(Icons.Default.Add, "", modifier = Modifier.size(50.dp))
+                                Text("Csapat hozzáadása")
+                            }
+                        }
+                    }
+                }
+                Button(
+                    onClick = { saveLauncher.launch("output", "txt") }
+                ) { Text(text = "Mentés") }
             }
         }
     }

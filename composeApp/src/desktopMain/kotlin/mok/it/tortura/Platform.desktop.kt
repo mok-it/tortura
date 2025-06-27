@@ -73,7 +73,6 @@ actual fun loadProblemSetFromExcel(file: PlatformFile): ProblemSet? {
             used += i
         }
         return ProblemSet(
-            name = "Imported from Excel",
             blocks = blocks,
         )
     } catch (_: Exception) {
@@ -120,7 +119,6 @@ actual fun loadTeamAssignmentFromExcel(file: PlatformFile): TeamAssignment? {
     }
 
     return TeamAssignment(
-        category = "",
         teams = teams,
     )
 }
@@ -149,7 +147,6 @@ actual suspend fun loadTeamAssignmentFromCsv(file: PlatformFile): TeamAssignment
         )
     }
     return TeamAssignment(
-        category = "",
         teams = teams,
     )
 }

@@ -8,8 +8,6 @@ class EvaluationViewModel : ViewModel() {
     val competitions = mutableStateOf(CompetitionDb.getCompetitions())
     val tabIndex = mutableStateOf(0)
 
-    val x = competitions.value[0].problemSet.name
-
     fun onEvent(event: EvaluationEvent) {
         when (event) {
             is EvaluationEvent.SelectTabIndex ->

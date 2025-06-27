@@ -103,8 +103,8 @@ fun OngoingCompetition(
                     if (tabIndex == teamsInPreviousCompetitions(competition) + index) {
                         if (competitionTeam.answer.finished) {
                             FinishedContent(
-                                textColor = competition.teamAssignment.colorSchema.textColor,
-                                backgroundColor = competition.teamAssignment.colorSchema.backgroundColor,
+                                textColor = competition.colors.textColor,
+                                backgroundColor = competition.colors.backgroundColor,
                                 points = competitionTeam.answer.points().toString(),
                                 answer = competitionTeam.answer,
                                 onNavigateBack = {
@@ -171,8 +171,8 @@ fun OngoingCompetition(
                                 onDeleteLastTry = {
                                     showConfirmDialog.value = true
                                 },
-                                textColor = competition.teamAssignment.colorSchema.textColor,
-                                backgroundColor = competition.teamAssignment.colorSchema.backgroundColor,
+                                textColor = competition.colors.textColor,
+                                backgroundColor = competition.colors.backgroundColor,
                                 modifier = Modifier.weight(1f)
                             )
 
@@ -231,10 +231,10 @@ fun OngoingCompetition(
                             text = {
                                 Text(
                                     text = team.name ?: "${competition.teamAssignment.baseTeamId + index}",
-                                    color = competition.teamAssignment.colorSchema.textColor,
+                                    color = competition.colors.textColor,
                                 )
                             },
-                            modifier = Modifier.background(competition.teamAssignment.colorSchema.backgroundColor),
+                            modifier = Modifier.background(competition.colors.backgroundColor),
                         )
                     }
                 }
