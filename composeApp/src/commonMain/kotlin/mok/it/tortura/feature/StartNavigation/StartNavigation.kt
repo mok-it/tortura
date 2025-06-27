@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import mok.it.tortura.CompetitionDb
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +47,10 @@ fun StartNavigation(
             }) {
                 Text(text = "Új verseny fájlból")
             }
-            Button(onClick = openCompetition) {
+            Button(
+                onClick = openCompetition,
+                enabled = !CompetitionDb.isEmpty
+            ) {
                 Text(text = "Helyi verseny folytatása")
             }
             Button(onClick = {

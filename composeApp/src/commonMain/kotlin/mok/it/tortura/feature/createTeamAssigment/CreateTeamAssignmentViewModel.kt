@@ -8,6 +8,7 @@ import io.github.vinceglb.filekit.readString
 import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
+import mok.it.tortura.loadTeamAssignmentFromCsv
 import mok.it.tortura.model.Student
 import mok.it.tortura.model.Team
 import mok.it.tortura.model.TeamAssignment
@@ -75,6 +76,16 @@ class CreateTeamAssignmentViewModel : ViewModel() {
             is CreateTeamAssignmentEvent.ChangeBaseTeamId -> {
                 teamAssignment.value = teamAssignment.value.copy(baseTeamId = event.baseTeamId)
             }
+
+            is CreateTeamAssignmentEvent.LoadFromCsv -> {
+                viewModelScope.launch {
+                    val newTeamAssignment = loadTeamAssignmentFromCsv(event.file)
+                    if( newTeamAssignment != null ) {
+                        teamAssignment.value = newTeamAssignment
+                    }
+                }
+            }
+
         }
     }
 
@@ -115,6 +126,7 @@ sealed class CreateTeamAssignmentEvent {
     data class ChangeColors(val colors: CategoryColors) : CreateTeamAssignmentEvent()
     data class ChangeBaseTeamId(val baseTeamId: Int) : CreateTeamAssignmentEvent()
     data class LoadFromJson(val file: PlatformFile) : CreateTeamAssignmentEvent()
+    data class LoadFromCsv(val file: PlatformFile) : CreateTeamAssignmentEvent()
     data object DismissPopup : CreateTeamAssignmentEvent()
     data object ShowHelp : CreateTeamAssignmentEvent()
 }

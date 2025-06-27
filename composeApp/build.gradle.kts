@@ -84,6 +84,8 @@ kotlin {
 
             implementation( libs.apache.poi )
             implementation(libs.apache.poi.ooxml)
+
+            implementation(libs.kotlin.csv)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

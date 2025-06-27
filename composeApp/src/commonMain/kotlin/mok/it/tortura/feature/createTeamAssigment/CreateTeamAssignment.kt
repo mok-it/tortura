@@ -10,12 +10,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,6 +34,7 @@ fun CreateTeamAssignment(
     val viewModel = viewModel { CreateTeamAssignmentViewModel() }
     val teamAssignment by remember { viewModel.teamAssignment }
     val popup by remember { viewModel.popup }
+    val menuExpanded = remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val saveLauncher = rememberFileSaverLauncher { file ->
@@ -50,6 +49,12 @@ fun CreateTeamAssignment(
     val loadFromJsonLauncher = rememberFilePickerLauncher { file ->
         if (file != null) {
             viewModel.onEvent(CreateTeamAssignmentEvent.LoadFromJson(file))
+        }
+    }
+
+    val loadFromCsvLauncher = rememberFilePickerLauncher { file ->
+        if (file != null) {
+            viewModel.onEvent(CreateTeamAssignmentEvent.LoadFromCsv(file))
         }
     }
 
@@ -80,12 +85,33 @@ fun CreateTeamAssignment(
                     }
                 },
                 actions = {
-                    Button(
-                        onClick = {
-                            loadFromJsonLauncher.launch()
+
+                    Box{
+                        IconButton(
+                            onClick = { menuExpanded.value = !menuExpanded.value }
+                        ){
+                            Icon(Icons.Filled.MoreVert, null)
                         }
-                    ) {
-                        Text("Import")
+
+                        DropdownMenu(
+                            expanded = menuExpanded.value,
+                            onDismissRequest = { menuExpanded.value = false }
+                        ){
+                            DropdownMenuItem(
+                                text = { Text("Importálás CSV-ből") },
+                                onClick = {
+                                    loadFromCsvLauncher.launch()
+                                    menuExpanded.value = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Importálás JSON-ból") },
+                                onClick = {
+                                    loadFromJsonLauncher.launch()
+                                    menuExpanded.value = false
+                                }
+                            )
+                        }
                     }
 
                     HelpButton(
@@ -124,7 +150,7 @@ fun CreateTeamAssignment(
                                 Surface(color = Color.Cyan, modifier = Modifier.fillMaxWidth().wrapContentHeight()) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Text(
-                                            "${teamAssignment.baseTeamId + teamAssignment.teams.indexOf(team)}",
+                                            text = team.name ?: "${teamAssignment.baseTeamId + teamAssignment.teams.indexOf(team)}",
                                             modifier = Modifier.padding(end = 8.dp)
                                         )
                                         IconButton(onClick = {

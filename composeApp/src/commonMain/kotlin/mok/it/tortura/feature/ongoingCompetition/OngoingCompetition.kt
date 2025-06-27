@@ -220,7 +220,7 @@ fun OngoingCompetition(
             ) {
                 for (competition in competitions) {
                     val teams = competition.teamAssignment.teams
-                    teams.forEachIndexed { index, _ ->
+                    teams.forEachIndexed { index, team ->
                         Tab(
                             selected = tabIndex == teamsInPreviousCompetitions(competition) + index,
                             onClick = {
@@ -230,7 +230,7 @@ fun OngoingCompetition(
                             },
                             text = {
                                 Text(
-                                    text = "${competition.teamAssignment.baseTeamId + index}",
+                                    text = team.name ?: "${competition.teamAssignment.baseTeamId + index}",
                                     color = competition.teamAssignment.colorSchema.textColor,
                                 )
                             },
