@@ -58,6 +58,12 @@ fun CreateTeamAssignment(
         }
     }
 
+    val loadFromExcelLauncher = rememberFilePickerLauncher { file ->
+        if (file != null) {
+            viewModel.onEvent(CreateTeamAssignmentEvent.LoadFromExcel(file))
+        }
+    }
+
     when (popup) {
         CreateTeamAssignmentPopupType.PARSE_ERROR -> {
             ParseErrorPopup { viewModel.onEvent(CreateTeamAssignmentEvent.DismissPopup) }
@@ -72,6 +78,14 @@ fun CreateTeamAssignment(
         }
 
         CreateTeamAssignmentPopupType.NONE -> { /* No popup should be shown */
+        }
+
+        CreateTeamAssignmentPopupType.CSV_ERROR -> {
+            CsvErrorPopup { viewModel.onEvent(CreateTeamAssignmentEvent.DismissPopup) }
+        }
+
+        CreateTeamAssignmentPopupType.EXCEL_ERROR -> {
+            ExcelErrorPopup { viewModel.onEvent(CreateTeamAssignmentEvent.DismissPopup) }
         }
     }
 
@@ -108,6 +122,13 @@ fun CreateTeamAssignment(
                                 text = { Text("Importálás JSON-ból") },
                                 onClick = {
                                     loadFromJsonLauncher.launch()
+                                    menuExpanded.value = false
+                                }
+                            )
+                            DropdownMenuItem(
+                                text = { Text("Importálás Excelből") },
+                                onClick = {
+                                    loadFromExcelLauncher.launch()
                                     menuExpanded.value = false
                                 }
                             )

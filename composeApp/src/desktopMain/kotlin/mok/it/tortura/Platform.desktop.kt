@@ -7,6 +7,7 @@ import io.github.vinceglb.filekit.path
 import io.github.vinceglb.filekit.readString
 import io.github.vinceglb.filekit.writeString
 import mok.it.tortura.model.*
+import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.FileInputStream
 
@@ -90,7 +91,38 @@ actual fun loadTeamAssignmentFromExcel(file: PlatformFile): TeamAssignment? {
 
     val teams = mutableListOf<Team>()
 
-    TODO("Formátumot ki kell még találni")
+    for( i in 0 .. sheet.lastRowNum ){
+        val row = sheet.getRow(i)
+
+        val students = mutableListOf<Student>()
+        for( j in 1 ..< row.lastCellNum ){
+            if( row.getCell( j )?.stringCellValue != null && row.getCell( j ).stringCellValue != "" ) {
+                students.add(Student(name = row.getCell( j ).stringCellValue))
+            }
+        }
+
+        if( students.isEmpty() ) {
+            continue
+        }
+
+        val teamName = when( row.getCell(0).cellType ){
+            CellType.STRING -> row.getCell(0).stringCellValue
+            CellType.NUMERIC -> row.getCell(0).numericCellValue.toInt().toString()
+            else -> null
+        }
+
+        teams.add(
+            Team(
+                students = students,
+                name = teamName,
+            )
+        )
+    }
+
+    return TeamAssignment(
+        category = "",
+        teams = teams,
+    )
 }
 
 

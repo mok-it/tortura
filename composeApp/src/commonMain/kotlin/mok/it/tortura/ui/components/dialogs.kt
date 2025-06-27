@@ -82,3 +82,14 @@ fun ExcelErrorPopup(
         onDismiss
     )
 }
+
+@Composable
+fun CsvErrorPopup(onDismiss: () -> Unit) {
+    GenericErrorPopup(
+        "CSV hiba",
+        "A CSV fájl beolvasása nem sikerült, mert a fájl formátuma nem megfelelő." +
+                "Kérlek ellenőrizd a fájlt és próbáld újra." +
+                "Jelenleg csak a Batkabankból exportált CSV fájlok támogatottak.",
+        onDismiss
+    )
+}

@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import mok.it.tortura.loadTeamAssignmentFromCsv
+import mok.it.tortura.loadTeamAssignmentFromExcel
 import mok.it.tortura.model.Student
 import mok.it.tortura.model.Team
 import mok.it.tortura.model.TeamAssignment
@@ -82,6 +83,19 @@ class CreateTeamAssignmentViewModel : ViewModel() {
                     val newTeamAssignment = loadTeamAssignmentFromCsv(event.file)
                     if( newTeamAssignment != null ) {
                         teamAssignment.value = newTeamAssignment
+                    } else {
+                        popup.value = CreateTeamAssignmentPopupType.CSV_ERROR
+                    }
+                }
+            }
+
+            is CreateTeamAssignmentEvent.LoadFromExcel -> {
+                viewModelScope.launch {
+                    val newTeamAssignment = loadTeamAssignmentFromExcel(event.file)
+                    if (newTeamAssignment != null) {
+                        teamAssignment.value = newTeamAssignment
+                    } else {
+                        popup.value = CreateTeamAssignmentPopupType.EXCEL_ERROR
                     }
                 }
             }
@@ -127,6 +141,7 @@ sealed class CreateTeamAssignmentEvent {
     data class ChangeBaseTeamId(val baseTeamId: Int) : CreateTeamAssignmentEvent()
     data class LoadFromJson(val file: PlatformFile) : CreateTeamAssignmentEvent()
     data class LoadFromCsv(val file: PlatformFile) : CreateTeamAssignmentEvent()
+    data class LoadFromExcel(val file: PlatformFile) : CreateTeamAssignmentEvent()
     data object DismissPopup : CreateTeamAssignmentEvent()
     data object ShowHelp : CreateTeamAssignmentEvent()
 }
@@ -134,6 +149,8 @@ sealed class CreateTeamAssignmentEvent {
 enum class CreateTeamAssignmentPopupType {
     PARSE_ERROR,
     TYPE_ERROR,
+    CSV_ERROR,
+    EXCEL_ERROR,
     HELP,
     NONE
 }
