@@ -1,21 +1,28 @@
 package mok.it.tortura.feature.startCompetition
 
 import NavigateBackIcon
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
 import io.github.vinceglb.filekit.name
+import mok.it.tortura.feature.startCompetition.StartCompetitionViewModel.StartCompetitionEvent
+import mok.it.tortura.ui.CategoryColors
 import mok.it.tortura.ui.components.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,7 +36,7 @@ fun StartCompetiton(
     val popup by remember { viewModel.popup }
     val save = rememberFileSaverLauncher { file ->
         if (file != null) {
-            viewModel.onEvent(StartCompetitionViewModel.StartCompetitionEvent.SaveToFile(file))
+            viewModel.onEvent(StartCompetitionEvent.SaveToFile(file))
         }
     }
 
@@ -59,31 +66,92 @@ fun StartCompetiton(
                 val teamSelector = rememberFilePickerLauncher { file ->
                     if (file != null) {
                         viewModel.onEvent(
-                            StartCompetitionViewModel.StartCompetitionEvent.SelectTeamAssignment(it, file)
+                            StartCompetitionEvent.SelectTeamAssignment(it, file)
                         )
                     }
                 }
                 val problemSelector = rememberFilePickerLauncher { file ->
                     if (file != null) {
                         viewModel.onEvent(
-                            StartCompetitionViewModel.StartCompetitionEvent.SelectProblemSet(it, file)
+                            StartCompetitionEvent.SelectProblemSet(it, file)
                         )
                     }
                 }
-                Row {
-                    Text(it.teamAssignmentFile?.name ?: "Kérlek válassz csapatfájlt!")
-                    Button(onClick = {
-                        teamSelector.launch()
+                LazyRow {
+
+                    item {
+                        Text(it.teamAssignmentFile?.name ?: "Kérlek válassz csapatfájlt!")
+                        Button(
+                            onClick = {
+                                teamSelector.launch()
+                            }
+                        ) {
+                            Text("Választás...")
+                        }
                     }
-                    ) {
-                        Text("Választás...")
+                    item {
+                        Text(it.problemSetFile?.name ?: "Kérlek válassz feladatsorfájlt")
+                        Button(onClick = {
+                            problemSelector.launch()
+                        }
+                        ) {
+                            Text("Választás...")
+                        }
                     }
-                    Text(it.problemSetFile?.name ?: "Kérlek válassz feladatsorfájlt")
-                    Button(onClick = {
-                        problemSelector.launch()
+
+                    item {
+                        Text("Kategória:", modifier = Modifier.padding(10.dp))
+                        TextField(
+                            value = it.category,
+                            onValueChange = { string ->
+                                viewModel.onEvent(
+                                    StartCompetitionEvent.ChangeCompetitionCategory(it, string)
+                                )
+                            },
+                            modifier = Modifier.padding(10.dp),
+                        )
                     }
-                    ) {
-                        Text("Választás...")
+
+                    item {
+                        val colorDropDownExpanded = remember { mutableStateOf(false) }
+
+                        Box(
+                            modifier = Modifier.padding(10.dp),
+                        ) {
+                            TextField(
+                                it.colors.name,
+                                onValueChange = {},
+                                trailingIcon = {
+                                    IconButton(onClick = {
+                                        colorDropDownExpanded.value = !colorDropDownExpanded.value
+                                    }) {
+                                        Icon(Icons.Filled.ArrowDropDown, "Select color")
+                                    }
+                                },
+                            )
+
+                            DropdownMenu(
+                                expanded = colorDropDownExpanded.value,
+                                onDismissRequest = { colorDropDownExpanded.value = false },
+                            ) {
+                                val colors = listOf(
+                                    CategoryColors.BOCS, CategoryColors.KIS, CategoryColors.NAGY,
+                                    CategoryColors.JEGES
+                                )
+
+                                colors.forEach { color ->
+                                    DropdownMenuItem(
+                                        text = { Text(color.name) },
+                                        onClick = {
+                                            viewModel.onEvent(
+                                                StartCompetitionEvent.ChangeCompetitionColors(it, color)
+                                            )
+                                            colorDropDownExpanded.value = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -91,7 +159,7 @@ fun StartCompetiton(
                 IconButton(
                     onClick = {
                         viewModel.onEvent(
-                            StartCompetitionViewModel.StartCompetitionEvent.AddRow
+                            StartCompetitionEvent.AddRow
                         )
                     }
                 ) {
@@ -113,7 +181,7 @@ fun StartCompetiton(
                     Button(
                         enabled = viewModel.canSave,
                         onClick = {
-                            viewModel.onEvent(StartCompetitionViewModel.StartCompetitionEvent.SaveToDatabase)
+                            viewModel.onEvent(StartCompetitionEvent.SaveToDatabase)
                             onStart()
                         }
                     ) {

@@ -1,13 +1,6 @@
 package mok.it.tortura
 
-import kotbase.DataSource
-import kotbase.Database
-import kotbase.DatabaseConfigurationFactory
-import kotbase.Meta
-import kotbase.MutableDocument
-import kotbase.QueryBuilder
-import kotbase.SelectResult
-import kotbase.newConfig
+import kotbase.*
 import mok.it.tortura.model.Competition
 import mok.it.tortura.util.appDirs
 import mok.it.tortura.util.mapJsonFormat
@@ -39,6 +32,8 @@ object CompetitionDb {
             SelectResult.property("problemSet"),
             SelectResult.property("answers"),
             SelectResult.property("startTime"),
+            SelectResult.property("category"),
+            SelectResult.property("colors"),
             SelectResult.expression(Meta.id),
         )
             .from(DataSource.collection(collection))

@@ -10,6 +10,7 @@ import kotlinx.serialization.json.Json
 import mok.it.tortura.CompetitionDb
 import mok.it.tortura.model.Competition
 import mok.it.tortura.saveStringToFile
+import mok.it.tortura.ui.CategoryColors
 
 class StartCompetitionViewModel : ViewModel() {
     val rows = mutableStateOf(listOf(CompetitionDataFromFile()))
@@ -72,7 +73,12 @@ class StartCompetitionViewModel : ViewModel() {
                         saveStringToFile(
                             event.file, Json.encodeToString(
                                 rows.value.map {
-                                    Competition(it.teamAssignment!!, it.problemSet!!)
+                                    Competition(
+                                        it.teamAssignment!!,
+                                        it.problemSet!!,
+                                        category = it.category,
+                                        colors = it.colors
+                                    )
                                 }
                             ))
                     }
@@ -85,10 +91,29 @@ class StartCompetitionViewModel : ViewModel() {
                 } else {
                     CompetitionDb.overwriteDatabase(
                         rows.value.map {
-                            Competition(it.teamAssignment!!, it.problemSet!!)
+                            Competition(
+                                it.teamAssignment!!,
+                                it.problemSet!!,
+                                category = it.category,
+                                colors = it.colors
+                            )
                         }
                     )
                 }
+            }
+
+            is StartCompetitionEvent.ChangeCompetitionCategory -> {
+                val newCompetitions = rows.value.toMutableList()
+                val index = newCompetitions.indexOf(event.row)
+                newCompetitions[ index ] = event.row.changeCategory( event.newCategory )
+                rows.value = newCompetitions
+            }
+
+            is StartCompetitionEvent.ChangeCompetitionColors -> {
+                val newCompetitions = rows.value.toMutableList()
+                val index = newCompetitions.indexOf(event.row)
+                newCompetitions[ index ] = event.row.changeColors( event.newColors )
+                rows.value = newCompetitions
             }
         }
     }
@@ -102,6 +127,8 @@ class StartCompetitionViewModel : ViewModel() {
         data class SelectProblemSet(val data: CompetitionDataFromFile, val file: PlatformFile) : StartCompetitionEvent()
         data class SaveToFile(val file: PlatformFile) : StartCompetitionEvent()
         data object SaveToDatabase : StartCompetitionEvent()
+        data class ChangeCompetitionCategory(val row: CompetitionDataFromFile, val newCategory: String ) : StartCompetitionEvent()
+        data class ChangeCompetitionColors(val row: CompetitionDataFromFile, val newColors: CategoryColors ) : StartCompetitionEvent()
     }
 
     enum class StartCompetitionPopupType {
