@@ -6,13 +6,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import io.github.vinceglb.filekit.dialogs.compose.rememberFileSaverLauncher
+import kotlinx.coroutines.launch
+import mok.it.tortura.saveStringToFile
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,6 +27,21 @@ fun Evaluation(
     val tabIndex by remember { viewModel.tabIndex }
     var exportMenuExpanded by remember { mutableStateOf(false) }
 
+    val scope = rememberCoroutineScope()
+    val htmlSaveLauncher = rememberFileSaverLauncher { file ->
+        if (file != null) {
+            scope.launch {
+                saveStringToFile(file, viewModel.getPrintableHtml())
+            }
+        }
+    }
+    val csvSaveLauncher = rememberFileSaverLauncher { file ->
+        if (file != null) {
+            scope.launch {
+                saveStringToFile(file, viewModel.getCsv())
+            }
+        }
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -40,19 +58,31 @@ fun Evaluation(
                             .padding(16.dp)
                     ) {
                         IconButton(onClick = { exportMenuExpanded = !exportMenuExpanded }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                            Icon(Icons.Default.Download, contentDescription = "More options")
                         }
                         DropdownMenu(
                             expanded = exportMenuExpanded,
                             onDismissRequest = { exportMenuExpanded = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Exportálás nyomtatnató PDF-be") },
-                                onClick = { /* Do something... */ }
+                                text = { Text("Exportálás nyomtatható HTML-be") },
+                                onClick = {
+                                    htmlSaveLauncher.launch(
+                                        "${competitions[tabIndex].category}-eredmenyek",
+                                        "html"
+                                    )
+                                    exportMenuExpanded = false
+                                }
                             )
                             DropdownMenuItem(
-                                text = { Text("Option 2") },
-                                onClick = { /* Do something... */ }
+                                text = { Text("Exportálás CSV-be") },
+                                onClick = {
+                                    csvSaveLauncher.launch(
+                                        "${competitions[tabIndex].category}-eredmenyek",
+                                        "csv"
+                                    )
+                                    exportMenuExpanded = false
+                                }
                             )
                         }
                     }

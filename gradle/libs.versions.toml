@@ -23,6 +23,7 @@ kotbase = "3.1.9-1.1.1"
 apache-poi = "5.4.1"
 appdirs = "2.0.0"
 kotlin-csv = "1.10.0"
+flyingsaucer = "9.6.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -50,6 +51,8 @@ apache-poi = { group = "org.apache.poi", name = "poi", version.ref = "apache-poi
 apache-poi-ooxml = { group = "org.apache.poi", name = "poi-ooxml", version.ref = "apache-poi" }
 appdirs = { module = "ca.gosyer:kotlin-multiplatform-appdirs", version.ref = "appdirs" }
 kotlin-csv = { module = "com.jsoizo:kotlin-csv-jvm", version.ref = "kotlin-csv" }
+flyingsaucer-core = { module = "org.xhtmlrenderer:flying-saucer-core", version.ref = "flyingsaucer" }
+flyingsaucer-pdf = { module = "org.xhtmlrenderer:flying-saucer-pdf", version.ref = "flyingsaucer" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -10,8 +10,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -104,7 +104,7 @@ fun CreateTeamAssignment(
                         IconButton(
                             onClick = { menuExpanded.value = !menuExpanded.value }
                         ) {
-                            Icon(Icons.Filled.MoreVert, null)
+                            Icon(Icons.Filled.Upload, null)
                         }
 
                         DropdownMenu(

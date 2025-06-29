@@ -10,7 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -94,7 +94,7 @@ fun CreateProblemSet(
                             .padding(16.dp)
                     ) {
                         IconButton(onClick = { menuExpanded = !menuExpanded }) {
-                            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+                            Icon(Icons.Default.Upload, contentDescription = "More options")
                         }
                         DropdownMenu(
                             expanded = menuExpanded,

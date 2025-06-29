@@ -82,10 +82,14 @@ kotlin {
             implementation(libs.kotbase)
             implementation(libs.appdirs)
 
-            implementation( libs.apache.poi )
+            implementation(libs.apache.poi)
             implementation(libs.apache.poi.ooxml)
 
             implementation(libs.kotlin.csv)
+            implementation(libs.flyingsaucer.core)
+            implementation(libs.flyingsaucer.pdf)
+            implementation("com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10")
+            implementation("com.openhtmltopdf:openhtmltopdf-slf4j:1.0.10")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -139,7 +143,7 @@ compose.desktop {
                 iconFile.set(project.file("src/desktopMain/resources/icon.png"))
             }
 
-            windows{
+            windows {
                 shortcut = true
                 iconFile.set(project.file("src/desktopMain/resources/icon.ico"))
             }

@@ -11,7 +11,7 @@ import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.FileInputStream
 
-class JVMPlatform: Platform {
+class JVMPlatform : Platform {
     override val name: String = "Java ${System.getProperty("java.version")}"
     override val excelImportImplemented: Boolean = true
 }
@@ -80,6 +80,7 @@ actual fun loadProblemSetFromExcel(file: PlatformFile): ProblemSet? {
     }
 }
 
+//val asdf = PdfRendererBuilder
 
 
 actual fun loadTeamAssignmentFromExcel(file: PlatformFile): TeamAssignment? {
@@ -90,21 +91,21 @@ actual fun loadTeamAssignmentFromExcel(file: PlatformFile): TeamAssignment? {
 
     val teams = mutableListOf<Team>()
 
-    for( i in 0 .. sheet.lastRowNum ){
+    for (i in 0..sheet.lastRowNum) {
         val row = sheet.getRow(i)
 
         val students = mutableListOf<Student>()
-        for( j in 1 ..< row.lastCellNum ){
-            if( row.getCell( j )?.stringCellValue != null && row.getCell( j ).stringCellValue != "" ) {
-                students.add(Student(name = row.getCell( j ).stringCellValue))
+        for (j in 1..<row.lastCellNum) {
+            if (row.getCell(j)?.stringCellValue != null && row.getCell(j).stringCellValue != "") {
+                students.add(Student(name = row.getCell(j).stringCellValue))
             }
         }
 
-        if( students.isEmpty() ) {
+        if (students.isEmpty()) {
             continue
         }
 
-        val teamName = when( row.getCell(0).cellType ){
+        val teamName = when (row.getCell(0).cellType) {
             CellType.STRING -> row.getCell(0).stringCellValue
             CellType.NUMERIC -> row.getCell(0).numericCellValue.toInt().toString()
             else -> null
@@ -126,16 +127,16 @@ actual fun loadTeamAssignmentFromExcel(file: PlatformFile): TeamAssignment? {
 
 actual suspend fun loadTeamAssignmentFromCsv(file: PlatformFile): TeamAssignment? {
     val csvData = file.readString()
-    val rows = csvReader{
+    val rows = csvReader {
         insufficientFieldsRowBehaviour = InsufficientFieldsRowBehaviour.EMPTY_STRING
     }.readAll(csvData)
 
     val teams = mutableListOf<Team>()
-    for( row in rows ){
+    for (row in rows) {
         val students = mutableListOf<Student>()
-        for( i in 1 ..< row.size ){
-            if( row[ i ] != "" ) {
-                students.add(Student( name = row[ i ] ) )
+        for (i in 1..<row.size) {
+            if (row[i] != "") {
+                students.add(Student(name = row[i]))
             }
 
         }
